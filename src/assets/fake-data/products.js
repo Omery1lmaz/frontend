@@ -28,6 +28,7 @@ const products = [
     id: "01",
     title: "Chicken Burger",
     price: 24.0,
+    seller: 1,
     image01: product_01_image_01,
     image02: product_01_image_02,
     image03: product_01_image_03,
@@ -38,6 +39,7 @@ const products = [
 
   {
     id: "02",
+    seller: 1,
     title: "Vegetarian Pizza",
     price: 115.0,
     image01: product_02_image_01,
@@ -51,6 +53,7 @@ const products = [
   {
     id: "03",
     title: "Double Cheese Margherita",
+    seller: 2,
     price: 110.0,
     image01: product_03_image_01,
     image02: product_03_image_02,
@@ -65,6 +68,7 @@ const products = [
     title: "Maxican Green Wave",
     price: 110.0,
     image01: product_04_image_01,
+    seller: 2,
     image02: product_04_image_02,
     image03: product_04_image_03,
     category: "Pizza",
@@ -76,6 +80,7 @@ const products = [
     id: "05",
     title: "Cheese Burger",
     price: 24.0,
+    seller: 1,
     image01: product_05_image_01,
     image02: product_05_image_02,
     image03: product_05_image_03,
@@ -89,6 +94,7 @@ const products = [
     price: 24.0,
     image01: product_01_image_01,
     image02: product_01_image_02,
+    seller: 1,
     image03: product_01_image_03,
     category: "Burger",
 
@@ -100,6 +106,7 @@ const products = [
     title: "Seafood Pizza",
     price: 115.0,
     image01: product_02_image_02,
+    seller: 3,
     image02: product_02_image_01,
     image03: product_02_image_03,
     category: "Pizza",
@@ -112,6 +119,7 @@ const products = [
     title: "Thin Cheese Pizza",
     price: 110.0,
     image01: product_03_image_02,
+    seller: 2,
     image02: product_03_image_01,
     image03: product_03_image_03,
     category: "Pizza",
@@ -122,6 +130,7 @@ const products = [
   {
     id: "09",
     title: "Pizza With Mushroom",
+    seller: 3,
     price: 110.0,
     image01: product_04_image_02,
     image02: product_04_image_01,
@@ -135,6 +144,7 @@ const products = [
     id: "10",
     title: "Classic Hamburger",
     price: 24.0,
+    seller: 3,
     image01: product_05_image_02,
     image02: product_05_image_01,
     image03: product_05_image_03,
@@ -145,6 +155,7 @@ const products = [
 
   {
     id: "11",
+    seller: 1,
     title: "Crunchy Bread ",
     price: 35.0,
     image01: product_06_image_01,
@@ -157,6 +168,7 @@ const products = [
 
   {
     id: "12",
+    seller: 3,
     title: "Delicious Bread ",
     price: 35.0,
     image01: product_06_image_02,
@@ -169,6 +181,7 @@ const products = [
 
   {
     id: "13",
+    seller: 2,
     title: "Loaf Bread ",
     price: 35.0,
     image01: product_06_image_03,

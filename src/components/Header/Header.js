@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 
+import Cookies from "js-cookie";
 import { Container } from "reactstrap";
 import logo from "../../assets/images/res-logo.png";
 import { NavLink, Link } from "react-router-dom";
@@ -23,8 +24,8 @@ const nav__links = [
     path: "/cart",
   },
   {
-    display: "Contact",
-    path: "/contact",
+    display: "Add Category",
+    path: "/add-category",
   },
 ];
 
@@ -33,6 +34,14 @@ const Header = () => {
   const headerRef = useRef(null);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const dispatch = useDispatch();
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+
+  const logout = () => {
+    Cookies.remove("connect.sid");
+    window.location.reload(false);
+  };
 
   const toggleMenu = () => menuRef.current.classList.toggle("show__menu");
 
@@ -93,6 +102,19 @@ const Header = () => {
                 <i class="ri-user-line"></i>
               </Link>
             </span>
+            {user ? (
+              <span className="user">
+                <Link to="/">
+                  <i
+                    class="ri-user-line"
+                    style={{ color: "red" }}
+                    onClick={logout}
+                  ></i>
+                </Link>
+              </span>
+            ) : (
+              ""
+            )}
 
             <span className="mobile__menu" onClick={toggleMenu}>
               <i class="ri-menu-line"></i>

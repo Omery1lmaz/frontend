@@ -32,7 +32,7 @@ const EditCategory = () => {
     sellerCategories,
     category,
     product,
-    messageP
+    messageP,
   } = useSelector((state) => state.product);
 
   const categoryId = id;
@@ -49,10 +49,10 @@ const EditCategory = () => {
     }
     if (messageP._id) {
       toast.success("Kategori güncelleştirildi");
+      navigate("/category-list");
     }
     dispatch(getCategoryById({ id, userId }));
   }, [messageP]);
-
 
   return !category.description ? (
     <div>Bekleyiniz</div>
@@ -67,7 +67,7 @@ const EditCategory = () => {
         onSubmit={async (values) => {
           const { name, description } = values;
           const category = { name, description, userId };
-          dispatch(updateCategory({category, id}));
+          dispatch(updateCategory({ category, id }));
         }}
       >
         {(formik) => (

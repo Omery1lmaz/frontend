@@ -9,6 +9,22 @@ const getCategoriesHelper = async () => {
   return response.data;
 };
 
+const deleteCategoryById = async ({ id, user }) => {
+  console.log("İD Get ", id);
+  console.log("User İD Get Helper  ", user);
+
+  const response = await axios.delete(
+    `http://localhost:4000/api/products/category/${id}`,
+    {
+      data: {
+        user: user,
+      },
+    }
+  );
+
+  return response.data;
+};
+
 const getCategoryByIdHelper = async ({ id, userId }) => {
   console.log("İD Get ", id);
   console.log("User İD Get Helper  ", userId);
@@ -16,6 +32,15 @@ const getCategoryByIdHelper = async ({ id, userId }) => {
   const response = await axios.post(
     `http://localhost:4000/api/products/category/${id}`,
     userId
+  );
+
+  return response.data;
+};
+
+const getCategoriesBySellerHelper = async ({ id, user }) => {
+  const response = await axios.get(
+    `http://localhost:4000/api/products/categories/${user._id}`,
+    user
   );
 
   return response.data;
@@ -34,7 +59,7 @@ const addCategoriesHelper = async (category) => {
 // @Post
 // @Update Product
 // @Private
-const updateCategory = async ({category, id}) => {
+const updateCategory = async ({ category, id }) => {
   console.log("categoryID", id);
   const response = await axios.put(
     `http://localhost:4000/api/products/categories/${id}`,
@@ -56,8 +81,8 @@ const addProduct = async (product) => {
 // @Post
 // @Update Product
 // @Private
-const updateProduct = async (product, productId) => {
-  console.log(product);
+const updateProduct = async ({product, productId}) => {
+  console.log('update product helper', product);
   const response = await axios.post(
     `http://localhost:4000/api/products/${productId}`,
     product,
@@ -81,6 +106,21 @@ const getProductsBySeller = async (id) => {
   );
   return response.data;
 };
+const deleteProductById = async ({ id, user }) => {
+  console.log("İD Get ", id);
+  console.log("User İD Get Helper  ", user);
+
+  const response = await axios.delete(
+    `http://localhost:4000/api/products/${id}`,
+    {
+      data: {
+        user: user,
+      },
+    }
+  );
+
+  return response.data;
+};
 
 const productService = {
   getCategoriesHelper,
@@ -91,5 +131,8 @@ const productService = {
   updateProduct,
   getCategoryByIdHelper,
   updateCategory,
+  getCategoriesBySellerHelper,
+  deleteCategoryById,
+  deleteProductById,
 };
 export default productService;

@@ -35,12 +35,20 @@ const cartSlice = createSlice({
     // =========== add item ============
     addItem(state, action) {
       const newItem = action.payload;
-      const existingItem = state.cartItems.find(
-        (item) => item.id === newItem.id
-      );
-      state.totalQuantity++;
+      const existingItem = state.cartItems.find((item) => {
+        return item.id === newItem.id;
+      });
+      const deneme = state.cartItems.find((item) => {
+        if (item.seller !== newItem.seller) {
+          state.cartItems = [];
+        }
+        state.totalQuantity = 0;
 
-      if (!existingItem) {
+        return item.id === newItem.id;
+      });
+      state.totalQuantity++;
+      console.log(newItem, "new item");
+      if (!deneme) {
         // ===== note: if you use just redux you should not mute state array instead of clone the state array, but if you use redux toolkit that will not a problem because redux toolkit clone the array behind the scene
 
         state.cartItems.push({
@@ -50,6 +58,7 @@ const cartSlice = createSlice({
           price: newItem.price,
           quantity: 1,
           totalPrice: newItem.price,
+          seller: newItem.seller,
         });
       } else {
         existingItem.quantity++;

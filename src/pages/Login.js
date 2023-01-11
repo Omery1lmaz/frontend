@@ -21,7 +21,7 @@ const Login = () => {
       .required("Password is required"),
   });
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );

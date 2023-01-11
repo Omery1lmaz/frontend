@@ -55,44 +55,13 @@ const Checkout = () => {
 
                 <div className="form__group">
                   <input
-                    type="email"
-                    placeholder="Enter your email"
+                    type="number"
+                    placeholder="Enter your table"
                     required
                     onChange={(e) => setEnterEmail(e.target.value)}
                   />
                 </div>
-                <div className="form__group">
-                  <input
-                    type="number"
-                    placeholder="Phone number"
-                    required
-                    onChange={(e) => setEnterNumber(e.target.value)}
-                  />
-                </div>
-                <div className="form__group">
-                  <input
-                    type="text"
-                    placeholder="Country"
-                    required
-                    onChange={(e) => setEnterCountry(e.target.value)}
-                  />
-                </div>
-                <div className="form__group">
-                  <input
-                    type="text"
-                    placeholder="City"
-                    required
-                    onChange={(e) => setEnterCity(e.target.value)}
-                  />
-                </div>
-                <div className="form__group">
-                  <input
-                    type="number"
-                    placeholder="Postal code"
-                    required
-                    onChange={(e) => setPostalCode(e.target.value)}
-                  />
-                </div>
+              
                 <button type="submit" className="addTOCart__btn">
                   Payment
                 </button>

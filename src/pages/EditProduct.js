@@ -25,20 +25,17 @@ const EditProduct = () => {
   );
   const { isSuccessP, isErrorP, isLoadingP, sellerCategories, product } =
     useSelector((state) => state.product);
-    
+
   useEffect(() => {
     dispatch(getProductsById(id));
+    dispatch(getCategoriesBySeller({ id, user: user }));
     if (isErrorP) {
       toast.error(message);
     }
     if (isSuccessP) {
       toast.success(message);
     }
-    if (user) {
-      console.log(product);
-      dispatch(getCategoriesBySeller(user._id));
-    }
-  }, [isErrorP, user, isSuccessP]);
+  }, [isErrorP, isSuccessP]);
   const validate = Yup.object({
     Name: Yup.string().required("Name is required"),
     Brand: Yup.string().required("Brand is required"),
@@ -51,7 +48,7 @@ const EditProduct = () => {
       .integer()
       .required("Price is required"),
     Category: Yup.array()
-    .min(1, "Kategor Seçiniz")
+      .min(1, "Kategor Seçiniz")
       // .oneOf(
       //   [sellerCategories.map((category) => category._id)],
       //   "Lütfen kategori Seçiniz"
@@ -73,18 +70,20 @@ const EditProduct = () => {
           Brand: product.brand ? product.brand : "",
           Description: product.description ? product.description : "",
           Price: product.price,
-          Category:  [],
+          Category: [],
         }}
         validationSchema={validate}
-        onSubmit ={(values, { resetForm }) => {
+        onSubmit={(values, { resetForm }) => {
           console.log(values);
           const { Name, Brand, Description, Price, Category } = values;
           const product = { Name, Brand, Description, Price, Category };
-          console.log("Product Edit Pagee : " + product.Name + product.Brand + product.Description)
-          dispatch(updateProduct(product, productId));
-          if (isSuccessP) {
-            navigate('/product-list')
-          }
+          console.log(
+            "Product Edit Pagee : " +
+              product.Name +
+              product.Brand +
+              product.Description
+          );
+          dispatch(updateProduct({ product, productId }));
           resetForm({ values: "" });
         }}
       >
@@ -129,7 +128,9 @@ const EditProduct = () => {
                             value={formik.values.Name}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            onClick={console.log(" Category values "+formik.values.Category)}
+                            onClick={console.log(
+                              " Category values " + formik.values.Category
+                            )}
                           />
                         </div>
                         {formik.errors.Name && formik.touched.Name ? (

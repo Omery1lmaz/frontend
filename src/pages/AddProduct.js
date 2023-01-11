@@ -37,7 +37,7 @@ const AddProduct = () => {
       toast.success(message);
     }
     if (user) {
-      dispatch(getCategoriesBySeller(user._id));
+      dispatch(getCategoriesBySeller({ id: user._id, user: user }));
     }
   }, [isErrorP, user, isSuccessP]);
   console.log(sellerCategories.map((category) => console.log(category)));
@@ -67,10 +67,10 @@ const AddProduct = () => {
     <>
       <Formik
         initialValues={{
-          Name: "sada",
-          Brand: "sada",
-          Description: "sadasadasadasadasadasadasadasadasadasadasadasada",
-          Price: 3,
+          Name: "",
+          Brand: "",
+          Description: "",
+          Price: 1,
           Category: "",
         }}
         validationSchema={validate}
