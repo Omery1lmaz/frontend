@@ -9,6 +9,15 @@ const getCategoriesHelper = async () => {
   return response.data;
 };
 
+const getOrderBySeller = async () => {
+  const response = await axios.get(
+    "http://localhost:4000/api/products/order/seller",
+    { withCredentials: true }
+  );
+  console.log(response.data, "response dataw");
+
+  return response.data;
+};
 const deleteCategoryById = async ({ id, user }) => {
   console.log("İD Get ", id);
   console.log("User İD Get Helper  ", user);
@@ -20,6 +29,16 @@ const deleteCategoryById = async ({ id, user }) => {
         user: user,
       },
     }
+  );
+
+  return response.data;
+};
+
+const getProduct = async ({ id }) => {
+  console.log("İD Get ", id);
+
+  const response = await axios.get(
+    `http://localhost:4000/api/products/${id}`
   );
 
   return response.data;
@@ -81,8 +100,8 @@ const addProduct = async (product) => {
 // @Post
 // @Update Product
 // @Private
-const updateProduct = async ({product, productId}) => {
-  console.log('update product helper', product);
+const updateProduct = async ({ product, productId }) => {
+  console.log("update product helper", product);
   const response = await axios.post(
     `http://localhost:4000/api/products/${productId}`,
     product,
@@ -134,5 +153,7 @@ const productService = {
   getCategoriesBySellerHelper,
   deleteCategoryById,
   deleteProductById,
+  getOrderBySeller,
+  getProduct,
 };
 export default productService;

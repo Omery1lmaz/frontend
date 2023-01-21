@@ -23,6 +23,7 @@ import EditProduct from "../pages/EditProduct";
 import CategoryList from "../pages/CategoryList";
 import EditCategory from "../pages/EditCategory";
 import SellerPage from "../pages/SellerPage";
+import SellerOrders from "../pages/SellerOrders";
 const Routers = () => {
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -43,7 +44,7 @@ const Routers = () => {
       <Route path="/" element={<Navigate to="/home/6335f47dd765bd4893812492" />} />
       <Route path="/home/:id" element={<SellerPage />} />
       <Route path="/foods" element={<AllFoods />} />
-      <Route path="/home" element={<SellerPage />} />
+      <Route path="/home" element={<SellerOrders />} />
       <Route path="/foods/:id" element={<FoodDetails />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/checkout" element={<Checkout />} />

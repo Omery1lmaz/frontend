@@ -21,12 +21,47 @@ export const getCategories = createAsyncThunk(
   }
 );
 
+export const getOrderBySeller = createAsyncThunk(
+  "/getOrderBySeller",
+  async (thunkAPI) => {
+    try {
+      return await productService.getOrderBySeller();
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const getCategoryById = createAsyncThunk(
   "/getCategoryById",
   async ({ id, userId }, thunkAPI) => {
     try {
       console.log("id", id, userId);
       return await productService.getCategoryByIdHelper({ id, userId });
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getProduct = createAsyncThunk(
+  "/getProduct",
+  async ({ id }, thunkAPI) => {
+    try {
+      console.log("id", id);
+      return await productService.getProduct({ id });
     } catch (error) {
       const message =
         (error.response &&
@@ -183,10 +218,10 @@ export const addProduct = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
   "/updateProduct",
-  async ({product, productId}, { thunkAPI }) => {
-    console.log('updateProduct', product, productId);
+  async ({ product, productId }, { thunkAPI }) => {
+    console.log("updateProduct", product, productId);
     try {
-      return await productService.updateProduct({product, productId});
+      return await productService.updateProduct({ product, productId });
     } catch (error) {
       const message =
         (error.response &&
@@ -208,6 +243,7 @@ const initialState = {
   isLoadingP: false,
   messageP: "",
   products: [],
+  orders: [],
   product: {},
 };
 
@@ -219,6 +255,19 @@ const productSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      .addCase(getProduct.fulfilled, (state, action) => {
+        state.product = action.payload;
+        state.isLoadingP = false;
+      })
+      .addCase(getProduct.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(getProduct.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
       .addCase(getCategories.fulfilled, (state, action) => {
         state.categories = action.payload;
         state.isLoadingP = false;
@@ -230,6 +279,19 @@ const productSlice = createSlice({
         state.messageP = action.payload;
       })
       .addCase(deleteCategoryById.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
+      .addCase(getOrderBySeller.fulfilled, (state, action) => {
+        state.orders = action.payload;
+        state.isLoadingP = false;
+      })
+      .addCase(getOrderBySeller.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(getOrderBySeller.pending, (state, action) => {
         state.isLoadingP = true;
       })
       .addCase(deleteCategoryById.fulfilled, (state, action) => {
