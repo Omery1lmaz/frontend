@@ -44,7 +44,7 @@ const cartSlice = createSlice({
         }
         state.totalQuantity = 0;
 
-        return item.id === newItem.id;
+        return item.id === newItem.id && item.variation == newItem.variation;
       });
       state.totalQuantity++;
       console.log(newItem, "new item");

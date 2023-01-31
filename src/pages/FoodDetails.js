@@ -24,7 +24,7 @@ const FoodDetails = () => {
   const { user, isLoading, isError, isSuccess, message, product } = useSelector(
     (state) => state.product
   );
-
+  const [size, setSize] = useState();
   const { name, defaultPrice, categories, description, image, variations } =
     product;
   const [price, setPrice] = useState(defaultPrice);
@@ -37,6 +37,7 @@ const FoodDetails = () => {
         title: name,
         price,
         image01: image,
+        variation: size && size,
       })
     );
   };
@@ -55,7 +56,11 @@ const FoodDetails = () => {
   }, []);
 
   const handleChange = (event) => {
-    setPrice(event.target.value);
+    const variation = variations.find((item) => item._id == event.target.value);
+    if (variation) {
+      setSize(variation.size);
+      setPrice(variation.price);
+    }
   };
 
   const submitHandler = (e) => {
@@ -67,9 +72,9 @@ const FoodDetails = () => {
   }, [product]);
 
   useEffect(() => {
-    if(variations && variations.length > 0){
+    if (variations && variations.length > 0) {
       setPrice(variations[0].price);
-      console.log("test")
+      setSize(variations[0].size);
     }
   }, [variations]);
 
@@ -91,15 +96,6 @@ const FoodDetails = () => {
                   Price: <span>${price}</span>
                 </p>
                 <p className="category mb-5">Category: Food</p>
-                {/* <div>
-                  <span className="size-span">Size: </span>
-                  <select className="select">
-                    <option>12</option>
-                    <option>24</option>
-                    <option>36</option>
-                  </select>
-                </div> */}
-
                 {Array.isArray(variations) &&
                 variations &&
                 variations.length > 1 ? (
@@ -108,12 +104,11 @@ const FoodDetails = () => {
                     <select
                       id="select-size"
                       className="select"
-                      value={price}
                       onChange={handleChange}
                     >
                       {variations.map((item) => {
                         return (
-                          <option key={item.id} value={item.price}>
+                          <option key={item.id} value={item._id}>
                             {item.size}
                           </option>
                         );
