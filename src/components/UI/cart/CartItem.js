@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ListGroupItem } from "reactstrap";
 
 import "../../../styles/cart-item.css";
@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { cartActions } from "../../../store/shopping-cart/cartSlice";
 
 const CartItem = ({ item }) => {
-  const { id, title, price, image01, quantity, totalPrice } = item;
+  const { id, title, price, image01, quantity, totalPrice, variation } = item;
 
   const dispatch = useDispatch();
 
@@ -18,17 +18,37 @@ const CartItem = ({ item }) => {
         title,
         price,
         image01,
+        variation,
       })
     );
   };
 
   const decreaseItem = () => {
-    dispatch(cartActions.removeItem(id));
+    dispatch(
+      cartActions.removeItem({
+        id,
+        title,
+        price,
+        image01,
+        variation,
+      })
+    );
   };
 
   const deleteItem = () => {
-    dispatch(cartActions.deleteItem(id));
+    dispatch(
+      cartActions.deleteItem({
+        id,
+        title,
+        price,
+        image01,
+        variation,
+      })
+    );
   };
+  useEffect(() => {
+    console.log(variation);
+  }, [variation]);
 
   return (
     <ListGroupItem className="border-0 cart__item">
@@ -50,6 +70,11 @@ const CartItem = ({ item }) => {
                 <i class="ri-subtract-line"></i>
               </span>
             </div>
+            {variation && (
+              <div>
+                <span>Size: {variation}</span>
+              </div>
+            )}
           </div>
 
           <span className="delete__btn" onClick={deleteItem}>

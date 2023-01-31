@@ -37,7 +37,7 @@ const FoodDetails = () => {
         title: name,
         price,
         image01: image,
-        variation: size && size,
+        variation: size ? size : null,
       })
     );
   };
