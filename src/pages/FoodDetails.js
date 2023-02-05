@@ -25,15 +25,24 @@ const FoodDetails = () => {
   const { isLoading, isError, isSuccess, message, product } = useSelector(
     (state) => state.product
   );
-  const { user } = useSelector((state) => state.auth);
+  const {
+    name,
+    defaultPrice,
+    categories,
+    description,
+    image,
+    variations,
+    user,
+  } = product;
+  const auth = useSelector((state) => state.auth);
+  const currentUser = auth.user;
   const [size, setSize] = useState();
-  const { name, defaultPrice, categories, description, image, variations } =
-    product;
+
   const [price, setPrice] = useState(defaultPrice);
 
   const addItem = () => {
-    console.log(user, "user test deneme ");
-    user
+    console.log(currentUser, "user test deneme ");
+    currentUser
       ? dispatch(
           cartActions.addItem({
             id,
@@ -41,10 +50,14 @@ const FoodDetails = () => {
             price,
             image01: image,
             variation: size ? size : null,
+            seller: user?.name,
           })
         )
       : infoNotification("lütfen önce giriş yapınız");
   };
+  useEffect(() => {
+    console.log(product);
+  }, [product]);
 
   useEffect(() => {
     dispatch(getProduct({ id }));
@@ -94,6 +107,7 @@ const FoodDetails = () => {
             <Col lg="6" md="6">
               <div className="single__product-content">
                 <h2 className="product__title mb-3">{name}</h2>
+                <span>{user?.name}</span>
                 <p className="product__price">
                   Price: <span>${price}</span>
                 </p>

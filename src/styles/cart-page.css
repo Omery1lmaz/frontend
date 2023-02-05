@@ -11,9 +11,15 @@ th {
 .table > :not(caption) > * > * {
   border-bottom: none;
 }
-
+.seller_company {
+  font-size: 20px;
+  text-transform: uppercase;
+}
 tr {
   border-bottom: 1px solid var(--primary-color) !important;
+}
+.addTOCart__btn {
+  width: 100%;
 }
 thead,
 tbody,
@@ -31,7 +37,7 @@ th {
   cursor: pointer;
 }
 
- button a:hover {
+button a:hover {
   color: var(--secondary-color);
   transition: 0.25s;
 }
@@ -41,7 +47,6 @@ th {
   font-size: 1.5rem;
 }
 .card-right-side {
-  height: 300px;
   border-radius: 15px;
   display: flex;
   flex-direction: column;
@@ -53,6 +58,10 @@ th {
   font-weight: 500;
   line-height: 2rem;
   border-bottom: 1px solid var(--primary-color);
+}
+.fa-turkish-lira-sign {
+  font-size: 20px;
+  margin-right: 3px;
 }
 @media only screen and (max-width: 768px) {
   th,

@@ -1,8 +1,13 @@
 .checkout__bill {
-  background: #fde4e4;
+  background: var(--primary-color);
   padding: 30px;
+  border-radius: 5px;
+  color: white;
 }
-
+.checkout_company {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 15px;
+}
 .checkout__total {
   border-top: 1px solid #ddd;
   padding-top: 30px;

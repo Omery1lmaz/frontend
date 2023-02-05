@@ -18,9 +18,9 @@ const Cart = () => {
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   return (
     <Helmet title="Cart">
-      <Container>
+      <Container style={{ margin: "30px auto" }}>
         <Row>
-          <Col lg="8">
+          <Col lg="8" style={{ overflowX: "scroll" }}>
             {cartItems.length === 0 ? (
               <h5 className="text-center">Your cart is empty</h5>
             ) : (
@@ -42,16 +42,23 @@ const Cart = () => {
             )}
           </Col>
           <Col lg="4">
-            <div className="mt-4 card-right-side">
+            <div className="mt-4 card-right-side mt-0">
               <h3 className="order-title">Order Summary</h3>
               <div className="d-flex justify-content-between align-items-center">
                 <h6>Subtotal:</h6>
-                <span className="cart__subtotal">{totalAmount}</span>
+                <span className="cart__subtotal">
+                  <i class="fa-solid fa-turkish-lira-sign"></i>
+                  {totalAmount}
+                </span>
+              </div>
+              <div className="d-flex justify-content-between align-items-center">
+                <h6>Company:</h6>
+                <span className="seller_company">{cartItems[0].seller}</span>
               </div>
               <p>Taxes and shipping will calculate at checkout</p>
-              <button className="addTOCart__btn">
-                <Link to="/checkout">Proceed to checkout</Link>
-              </button>
+              <Link to="/checkout">
+                <button className="addTOCart__btn">Proceed to checkout</button>
+              </Link>
             </div>
           </Col>
         </Row>
@@ -126,10 +133,8 @@ const Tr = (props) => {
           </span>
         </div>
       </td>
-      {/* <td className="text-center">{quantity}</td> */}
       <td className="text-center cart__item-del">
         <i class="fa-solid fa-xmark" onClick={deleteItem}></i>
-        {/* <i class="ri-delete-bin-line" onClick={deleteItem}></i> */}
       </td>
     </tr>
   );

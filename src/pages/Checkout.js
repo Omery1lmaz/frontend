@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Container, Row, Col } from "reactstrap";
 import CommonSection from "../components/UI/common-section/CommonSection";
@@ -16,10 +16,10 @@ const Checkout = () => {
 
   const shippingInfo = [];
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
-  const shippingCost = 30;
+  const shippingCost = 0;
 
   const totalAmount = cartTotalAmount + Number(shippingCost);
-
+  const cartItems = useSelector((state) => state.cart.cartItems);
   const submitHandler = (e) => {
     e.preventDefault();
     const userShippingAddress = {
@@ -34,10 +34,8 @@ const Checkout = () => {
     shippingInfo.push(userShippingAddress);
     console.log(shippingInfo);
   };
-
   return (
     <Helmet title="Checkout">
-      <CommonSection title="Checkout" />
       <section>
         <Container>
           <Row>
@@ -61,7 +59,7 @@ const Checkout = () => {
                     onChange={(e) => setEnterEmail(e.target.value)}
                   />
                 </div>
-              
+
                 <button type="submit" className="addTOCart__btn">
                   Payment
                 </button>
@@ -70,7 +68,15 @@ const Checkout = () => {
 
             <Col lg="4" md="6">
               <div className="checkout__bill">
-                <h6 className="d-flex align-items-center justify-content-between mb-3">
+                <div className="checkout_company">
+                  <h5 className="d-flex align-items-center justify-content-between">
+                    Company:{" "}
+                    <span style={{ textTransform: "uppercase" }}>
+                      {cartItems[0].seller}
+                    </span>
+                  </h5>
+                </div>
+                <h6 className="d-flex align-items-center justify-content-between mb-3 mt-3">
                   Subtotal: <span>${cartTotalAmount}</span>
                 </h6>
                 <h6 className="d-flex align-items-center justify-content-between mb-3">

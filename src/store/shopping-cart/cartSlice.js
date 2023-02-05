@@ -60,6 +60,7 @@ const cartSlice = createSlice({
           totalPrice: newItem.price,
           seller: newItem.seller,
           variation: newItem.variation,
+          seller: newItem.seller ? newItem.seller : null,
         });
       } else {
         deneme.quantity++;
