@@ -14,7 +14,7 @@
   right: 0;
   width: 400px;
   height: 100%;
-  background: #fff;
+  background: #F7F7F7;
   z-index: 999999;
 }
 
@@ -27,7 +27,7 @@
 
 .cart__close span i {
   font-size: 1.1rem;
-  background: #212245;
+  background: var(--primary-color);
   padding: 5px;
   border-radius: 50%;
   color: #fff;
@@ -45,7 +45,7 @@
   padding: 5px 20px;
   width: 100%;
   height: 80px;
-  background: #df2020;
+  background: var(--primary-color);
 }
 
 .cart__bottom h6 {
@@ -62,8 +62,8 @@
   border: none;
   padding: 4px 20px;
   border-radius: 5px;
-  background: #fff;
-  color: #212245;
+  background: var(--secondary-color);
+  color: white;
 }
 
 .cart__bottom button a {

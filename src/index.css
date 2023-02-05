@@ -5,6 +5,10 @@
 
 /* reset default style */
 
+:root {
+  --primary-color: #8229fd;
+  --secondary-color: #7dc4f6;
+}
 * {
   margin: 0;
   padding: 0;

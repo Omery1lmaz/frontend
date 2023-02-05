@@ -72,19 +72,6 @@ const EditCategory = () => {
       >
         {(formik) => (
           <div class="container tm-mt-big tm-mb-big">
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
-            />
-
             <div class="row">
               <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
                 <div class="tm-bg-primary-dark tm-block tm-block-h-auto">

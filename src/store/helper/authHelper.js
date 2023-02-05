@@ -6,11 +6,10 @@ const login = async (user) => {
   const response = await axios.post(
     "http://localhost:4000/api/users/login",
     user,
-    { withCredentials: true }
+    {
+      withCredentials: true,
+    }
   );
-
-  console.log("response error s" + response.data);
-
   return response.data;
 };
 

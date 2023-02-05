@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RegisterUser } from "../store/authenticationSlices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "../styles/login.css";
 
 const Register = () => {
   const validate = Yup.object({
@@ -50,24 +51,17 @@ const Register = () => {
     >
       {(formik) => (
         <Helmet title="Signup">
-          <ToastContainer 
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-          />
-          <CommonSection title="Signup" />
-          <section>
-            <Container>
-              <Row>
-                <Col lg="6" md="6" sm="12" className="m-auto text-center">
-                  <form className="form mb-5" onSubmit={formik.handleSubmit}>
+          <div className="buble"></div>
+          <div className="vawe">
+            <Container className="login-container">
+              <div className="right-side"></div>
+              <Row className="login-row">
+                <Col lg="6" md="6" sm="12" className="m-auto text-center w-100">
+                  <h3 className="login-text">Register</h3>
+                  <form
+                    className="form mb-5 login-form w-60"
+                    onSubmit={formik.handleSubmit}
+                  >
                     <div className="form__group">
                       <input
                         type="text"
@@ -110,15 +104,22 @@ const Register = () => {
                         <div class="error">* {formik.errors.password}</div>
                       ) : null}
                     </div>
-                    <button type="submit" className="addTOCart__btn">
-                      Sign Up
-                    </button>
+
+                    <div className="d-flex flex-column align-items-center">
+                      <button type="submit" className="login-button w-100">
+                        Sign Up
+                      </button>
+                      <span className="login-create-acc">
+                        <Link to="/login">
+                          Already have an account? Login{" "}
+                        </Link>
+                      </span>
+                    </div>
                   </form>
-                  <Link to="/login">Already have an account? Login</Link>
                 </Col>
               </Row>
             </Container>
-          </section>
+          </div>
         </Helmet>
       )}
     </Formik>

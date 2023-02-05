@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from "react";
 import Helmet from "../components/Helmet/Helmet";
-import CommonSection from "../components/UI/common-section/CommonSection";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import { Formik, Form } from "formik";
@@ -11,6 +10,7 @@ import { loginUser } from "../store/authenticationSlices";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "../styles/login.css";
 
 const Login = () => {
   const token = Cookies.get("connect.sid");
@@ -21,22 +21,14 @@ const Login = () => {
       .required("Password is required"),
   });
   const navigate = useNavigate();
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
-  useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
-    if (isSuccess || user) {
-      navigate("/");
-    }
-  }, [user, isError, isSuccess, message, navigate, dispatch]);
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-  };
+  useEffect(() => {
+    user && navigate("/home");
+  }, [user]);
 
   return (
     <Formik
@@ -45,7 +37,7 @@ const Login = () => {
         password: "",
       }}
       validationSchema={validate}
-      onSubmit={(values) => {
+      onSubmit={async (values) => {
         console.log(values);
         const { email, password } = values;
         const user = { email, password };
@@ -54,25 +46,17 @@ const Login = () => {
     >
       {(formik) => (
         <Helmet title="Login">
-          <CommonSection title="Login" />
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
-
-          <section>
-            <Container>
-              <Row>
-                <Col lg="6" md="6" sm="12" className="m-auto text-center">
-                  <form className="form mb-5" onSubmit={formik.handleSubmit}>
+          <div className="buble"></div>
+          <div className="vawe">
+            <Container className="login-container">
+              <div className="right-side"></div>
+              <Row className="login-row">
+                <Col lg="6" md="6" sm="12" className="m-auto text-center w-100">
+                  <h3 className="login-text">Login</h3>
+                  <form
+                    className="form mb-5 login-form w-60"
+                    onSubmit={formik.handleSubmit}
+                  >
                     <div className="form__group">
                       <input
                         type="email"
@@ -101,17 +85,26 @@ const Login = () => {
                         <div class="error">* {formik.errors.password}</div>
                       ) : null}
                     </div>
-                    <button type="submit" className="addTOCart__btn">
-                      Login
-                    </button>
+                    <div className="d-flex flex-column align-items-end">
+                      <span>
+                        <a href="/reset-password" className="login-create-acc">
+                          Forget Password
+                        </a>
+                      </span>
+                      <button type="submit" className="login-button w-100">
+                        Login
+                      </button>
+                    </div>
+                    <span className="login-create-acc">
+                      <Link to="/register">
+                        Don't have an account? Create an account
+                      </Link>
+                    </span>
                   </form>
-                  <Link to="/register">
-                    Don't have an account? Create an account
-                  </Link>
                 </Col>
               </Row>
             </Container>
-          </section>
+          </div>
         </Helmet>
       )}
     </Formik>

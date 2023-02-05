@@ -1,6 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { browserHistory } from "..";
+import AddCategory from "../pages/AddCategory";
+import {
+  errorNotification,
+  successNotification,
+} from "../services/notification";
 import authService from "./helper/authHelper";
 
 const user = null;
@@ -13,6 +19,8 @@ export const loginUser = createAsyncThunk(
     try {
       const response = await authService.login(user);
       console.log(response);
+      successNotification("Giriş başarılı");
+      browserHistory.push("/home");
       return response;
     } catch (error) {
       const message =
@@ -21,6 +29,8 @@ export const loginUser = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      browserHistory.push("/home");
+      errorNotification(error.response.data);
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }
@@ -30,7 +40,9 @@ export const RegisterUser = createAsyncThunk(
   "registerUser",
   async (user, thunkAPI) => {
     try {
-      return await authService.register(user);
+      const response = await authService.register(user);
+      successNotification("Emailinizi onaylayınız");
+      return response;
     } catch (error) {
       const message =
         (error.response &&
@@ -38,6 +50,7 @@ export const RegisterUser = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      errorNotification(error.response.data);
       return thunkAPI.rejectWithValue(error.response.data);
     }
   }

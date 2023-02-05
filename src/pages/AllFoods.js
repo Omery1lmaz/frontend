@@ -44,7 +44,21 @@ const AllFoods = () => {
 
   return (
     <Helmet title="All-Foods">
-      <CommonSection title="All Foods" />
+      <div className="vawe">
+        <div className="buble"></div>
+        <div className="content">
+          <div className="left-side">
+            <h3>Lorem Ipsum</h3>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta ad
+              et est, fugiat repudiandae neque illo delectus commodi magnam
+              explicabo autem voluptates eaque velit vero facere mollitia.
+            </p>
+          </div>
+          <div className="right-side"></div>
+        </div>
+      </div>
+      {/* <CommonSection title="All Foods" />
 
       <section>
         <Container>
@@ -91,7 +105,7 @@ const AllFoods = () => {
             </div>
           </Row>
         </Container>
-      </section>
+      </section> */}
     </Helmet>
   );
 };

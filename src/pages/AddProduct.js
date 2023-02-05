@@ -40,7 +40,26 @@ const AddProduct = () => {
       dispatch(getCategoriesBySeller({ id: user._id, user: user }));
     }
   }, [isErrorP, user, isSuccessP]);
-  console.log(sellerCategories.map((category) => console.log(category)));
+
+  const [inputList, setinputList] = useState([]);
+
+  const handleinputchange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...inputList];
+    list[index][name] = value;
+    setinputList(list);
+  };
+
+  const handleremove = (index) => {
+    const list = [...inputList];
+    list.splice(index, 1);
+    setinputList(list);
+  };
+
+  const handleaddclick = () => {
+    setinputList([...inputList, { size: "", price: 0 }]);
+  };
+
   const validate = Yup.object({
     Name: Yup.string().required("Name is required"),
     Brand: Yup.string().required("Brand is required"),
@@ -63,6 +82,10 @@ const AddProduct = () => {
   const ButtonHandleSubmit = (e) => {
     e.preventDefault();
   };
+  useEffect(() => {
+    console.log(inputList, "inputlist");
+  }, [inputList]);
+
   return (
     <>
       <Formik
@@ -77,27 +100,63 @@ const AddProduct = () => {
         onSubmit={(values, { resetForm }) => {
           console.log(values);
           const { Name, Brand, Description, Price, Category } = values;
-          const product = { Name, Brand, Description, Price, Category };
+          const product = {
+            Name,
+            Brand,
+            Description,
+            defaultPrice: Price,
+            Category,
+            variations: inputList,
+          };
           dispatch(addProduct(product));
           resetForm({ values: "" });
+          setinputList([]);
         }}
       >
         {(formik) => (
           <div class="container tm-mt-big tm-mb-big">
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
-            />
-
             <div class="row">
+              <div className="row">
+                <div className="col-sm-12">
+                  {inputList.map((x, i) => {
+                    return (
+                      <div className="row mb-3">
+                        <div class="form-group col-md-4">
+                          <label>Size</label>
+                          <input
+                            type="text"
+                            name="size"
+                            class="form-control"
+                            placeholder="Enter First Name"
+                            onChange={(e) => handleinputchange(e, i)}
+                          />
+                        </div>
+                        <div class="form-group col-md-4">
+                          <label>Price</label>
+                          <input
+                            type="number"
+                            name="price"
+                            class="form-control"
+                            placeholder="Enter Last Name"
+                            onChange={(e) => handleinputchange(e, i)}
+                          />
+                        </div>
+                        <div class="form-group col-md-2 mt-4">
+                          <button
+                            className="btn btn-danger mx-1"
+                            onClick={() => handleremove(i)}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <button className="btn btn-success" onClick={handleaddclick}>
+                    Add More
+                  </button>
+                </div>
+              </div>
               <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">
                 <div class="tm-bg-primary-dark tm-block tm-block-h-auto">
                   <div class="row">
@@ -214,6 +273,7 @@ const AddProduct = () => {
                         </div>
                         <div class="col-12">
                           <button
+                            style={{ width: "250px" }}
                             type="submit"
                             class="btn btn-primary btn-block text-uppercase"
                             onSubmit={ButtonHandleSubmit}

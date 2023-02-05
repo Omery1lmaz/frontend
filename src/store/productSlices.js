@@ -392,7 +392,7 @@ const productSlice = createSlice({
       })
       .addCase(getProductsBySeller.fulfilled, (state, action) => {
         state.products = action.payload;
-        state.isLoadingP = false;
+        state.isLisLoadingPoadingP = false;
         state.isSuccessP = true;
       })
       .addCase(getProductsBySeller.rejected, (state, action) => {

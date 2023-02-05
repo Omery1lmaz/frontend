@@ -27,7 +27,6 @@ const SellerPage = () => {
   };
   useEffect(() => {
     dispatch(getProductsBySeller(id));
-    console.log(products);
   }, []);
 
   return (

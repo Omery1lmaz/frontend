@@ -37,9 +37,7 @@ const deleteCategoryById = async ({ id, user }) => {
 const getProduct = async ({ id }) => {
   console.log("İD Get ", id);
 
-  const response = await axios.get(
-    `http://localhost:4000/api/products/${id}`
-  );
+  const response = await axios.get(`http://localhost:4000/api/products/${id}`);
 
   return response.data;
 };

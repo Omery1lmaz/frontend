@@ -29,19 +29,20 @@ const Routers = () => {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
-
+  let sayac = 0;
   useEffect(async () => {
     const token = Cookies.get("connect.sid");
     if (token) {
-      if (!user) {
+      if (!user && sayac === 0) {
         dispatch(GetUserDetails());
+        sayac++;
       }
     }
   }, []);
-
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/home/6335f47dd765bd4893812492" />} />
+      <Route path="/" element={<Home />} />
+      {/* <Route path="/" element={<Navigate to="/home/6335f47dd765bd4893812492" />} /> */}
       <Route path="/home/:id" element={<SellerPage />} />
       <Route path="/foods" element={<AllFoods />} />
       <Route path="/home" element={<SellerOrders />} />

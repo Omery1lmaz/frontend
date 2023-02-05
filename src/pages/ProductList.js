@@ -5,7 +5,6 @@ import * as Yup from "yup";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { GetUserDetails } from "../store/authenticationSlices";
 import {
   addCategories,
   deleteProductById,

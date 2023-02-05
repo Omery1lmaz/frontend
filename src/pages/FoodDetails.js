@@ -13,6 +13,7 @@ import "../styles/product-details.css";
 
 import ProductCard from "../components/UI/product-card/ProductCard";
 import { getProduct } from "../store/productSlices";
+import { infoNotification } from "../services/notification";
 
 const FoodDetails = () => {
   const [tab, setTab] = useState("desc");
@@ -21,32 +22,33 @@ const FoodDetails = () => {
   const [reviewMsg, setReviewMsg] = useState("");
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { user, isLoading, isError, isSuccess, message, product } = useSelector(
+  const { isLoading, isError, isSuccess, message, product } = useSelector(
     (state) => state.product
   );
+  const { user } = useSelector((state) => state.auth);
   const [size, setSize] = useState();
   const { name, defaultPrice, categories, description, image, variations } =
     product;
   const [price, setPrice] = useState(defaultPrice);
-  // const relatedProduct = products.filter((item) => category === item.category);
 
   const addItem = () => {
-    dispatch(
-      cartActions.addItem({
-        id,
-        title: name,
-        price,
-        image01: image,
-        variation: size ? size : null,
-      })
-    );
+    console.log(user, "user test deneme ");
+    user
+      ? dispatch(
+          cartActions.addItem({
+            id,
+            title: name,
+            price,
+            image01: image,
+            variation: size ? size : null,
+          })
+        )
+      : infoNotification("lütfen önce giriş yapınız");
   };
 
   useEffect(() => {
     dispatch(getProduct({ id }));
     console.log(product, "product");
-    // const test = document.getElementById("select-size").value;
-    // console.log(test);
     if (variations && variations.length > 0) {
       console.log("price startks");
       console.log(variations[0].price, "variations default price");
@@ -116,13 +118,11 @@ const FoodDetails = () => {
                     </select>
                   </div>
                 ) : null}
-
                 <button onClick={addItem} className="addTOCart__btn btn">
                   Add to Cart
                 </button>
               </div>
             </Col>
-
             <Col lg="12">
               <div className="tabs d-flex align-items-center gap-5 py-3">
                 <h6
@@ -171,7 +171,6 @@ const FoodDetails = () => {
                         required
                       />
                     </div>
-
                     <div className="form__group">
                       <input
                         type="text"
@@ -180,7 +179,6 @@ const FoodDetails = () => {
                         required
                       />
                     </div>
-
                     <div className="form__group">
                       <textarea
                         rows={5}

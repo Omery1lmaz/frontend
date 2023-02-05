@@ -186,7 +186,7 @@ const Home = () => {
         </Container>
       </section>
 
-      <section>
+      {/* <section>
         <Container>
           <Row>
             <Col lg="12" className="text-center">
@@ -242,7 +242,7 @@ const Home = () => {
             ))}
           </Row>
         </Container>
-      </section>
+      </section> */}
 
       <section className="why__choose-us">
         <Container>
@@ -302,7 +302,7 @@ const Home = () => {
         </Container>
       </section>
 
-      <section className="pt-0">
+      {/* <section className="pt-0">
         <Container>
           <Row>
             <Col lg="12" className="text-center mb-5 ">
@@ -316,7 +316,7 @@ const Home = () => {
             ))}
           </Row>
         </Container>
-      </section>
+      </section> */}
 
       <section>
         <Container>

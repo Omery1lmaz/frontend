@@ -4,7 +4,6 @@ import * as Yup from "yup";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { GetUserDetails } from "../store/authenticationSlices";
 import { addCategories, getCategoriesBySeller } from "../store/productSlices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -51,18 +50,6 @@ const AddCategory = () => {
     >
       {(formik) => (
         <>
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
           <div class="container tm-mt-big tm-mb-big">
             <div class="row">
               <div class="col-xl-9 col-lg-10 col-md-12 col-sm-12 mx-auto">

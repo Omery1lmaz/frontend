@@ -1,0 +1,50 @@
+.login-container {
+  width: 100%;
+  height: calc(100vh - 80px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.login-row {
+}
+.login-form {
+  width: 100%;
+  min-width: 350px;
+  max-width: 500px;
+}
+
+.login-button {
+  border: none !important ;
+  padding: 7px 25px !important;
+  background: var(--primary-color) !important;
+  color: #fff !important;
+  border-radius: 5px !important;
+  font-size: 0.9rem !important;
+}
+
+.login-create-acc {
+  font-size: 13px;
+  margin-top: 15px;
+}
+.login-text {
+  font-size: 39px;
+  margin-bottom: 0px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .buble,
+  .right-side {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .login-container {
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .login-form {
+    min-width: 100px !important;
+    width: 250px !important;
+  }
+}

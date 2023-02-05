@@ -3,24 +3,29 @@ import { ListGroupItem } from "reactstrap";
 
 import "../../../styles/cart-item.css";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../../../store/shopping-cart/cartSlice";
+import { infoNotification } from "../../../services/notification";
 
 const CartItem = ({ item }) => {
   const { id, title, price, image01, quantity, totalPrice, variation } = item;
 
   const dispatch = useDispatch();
-
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
   const incrementItem = () => {
-    dispatch(
-      cartActions.addItem({
-        id,
-        title,
-        price,
-        image01,
-        variation,
-      })
-    );
+    user
+      ? dispatch(
+          cartActions.addItem({
+            id,
+            title,
+            price,
+            image01,
+            variation,
+          })
+        )
+      : infoNotification("Lütfen giriş yapınız");
   };
 
   const decreaseItem = () => {

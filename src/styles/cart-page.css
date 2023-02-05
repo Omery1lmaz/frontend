@@ -3,26 +3,57 @@ th {
 }
 
 .cart__img-box {
-  width: 80px;
+  display: flex;
+}
+.cart__img-box span {
+  margin-left: 15px;
+}
+.table > :not(caption) > * > * {
+  border-bottom: none;
 }
 
+tr {
+  border-bottom: 1px solid var(--primary-color) !important;
+}
+thead,
+tbody,
+tfoot,
+tr,
+td,
+th {
+  border-color: var(--primary-color) !important;
+}
 .cart__img-box img {
-  width: 100%;
+  width: 80px;
 }
 
 .cart__item-del i {
   cursor: pointer;
 }
 
-.cart__page-btn button a:hover {
-  color: #fff;
+ button a:hover {
+  color: var(--secondary-color);
+  transition: 0.25s;
 }
 
 .cart__subtotal {
-  color: #df2020;
+  color: var(--primary-color);
   font-size: 1.5rem;
 }
-
+.card-right-side {
+  height: 300px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 10px;
+  background-color: var(--secondary-color);
+}
+.order-title {
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 2rem;
+  border-bottom: 1px solid var(--primary-color);
+}
 @media only screen and (max-width: 768px) {
   th,
   td {

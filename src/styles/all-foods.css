@@ -8,7 +8,59 @@
 .search__widget input {
   border: none;
 }
+.vawe {
+  width: 100%;
+  height: calc(100vh - 100px);
+  position: relative;
+}
+.content {
+  width: 100%;
+  height: 500px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+.left-side {
+  width: 50%;
+  height: auto;
+}
+.vawe::before {
+  width: 100%;
+  height: 430px;
+  background-size: cover;
+  position: absolute;
+  content: "";
+  z-index: -1;
+  top: calc(100% - 430px);
+  background-repeat: no-repeat;
+  background-image: url(./wave.svg);
+}
 
+.buble::before {
+  width: 150px;
+  height: 100%;
+  left: -1%;
+  position: absolute;
+  background-size: contain;
+  content: "";
+  background-repeat: no-repeat;
+  background-image: url(./buble.svg);
+}
+.right-side {
+  display: contents;
+}
+.right-side::before {
+  width: 40%;
+  min-width: 450px;
+  height: 62%;
+  background-size: contain;
+  content: "";
+  top: 10%;
+  left: 50%;
+  background-repeat: no-repeat;
+  background-image: url(./right-side.svg);
+}
 .search__widget input:focus {
   outline: none;
 }

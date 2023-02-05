@@ -69,7 +69,6 @@
 .form {
   width: 60%;
   margin: auto;
-  background: #fde4e4;
   padding: 20px;
   border-radius: 5px;
 }
@@ -82,8 +81,8 @@
   width: 100%;
   background: transparent;
   padding: 7px 20px;
-  border: none;
-  border-bottom: 1px solid #2122454c;
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
 }
 
 .form__group input:focus,
