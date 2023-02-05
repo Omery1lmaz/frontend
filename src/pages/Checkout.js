@@ -36,7 +36,7 @@ const Checkout = () => {
   };
   return (
     <Helmet title="Checkout">
-      <section>
+      <section >
         <Container>
           <Row>
             <Col lg="8" md="6">
@@ -60,6 +60,16 @@ const Checkout = () => {
                   />
                 </div>
 
+                <div className="form__group d-flex mb-1">
+                  <input
+                    type="checkbox"
+                    placeholder="Enter your table"
+                    style={{ width: "max-content", marginRight: '5px' }}
+                    required
+                  />
+                  <span>Lorem ipsum</span>
+                </div>
+
                 <button type="submit" className="addTOCart__btn">
                   Payment
                 </button>
@@ -70,7 +80,7 @@ const Checkout = () => {
               <div className="checkout__bill">
                 <div className="checkout_company">
                   <h5 className="d-flex align-items-center justify-content-between">
-                    Company:{" "}
+                    Company:
                     <span style={{ textTransform: "uppercase" }}>
                       {cartItems[0].seller}
                     </span>

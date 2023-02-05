@@ -59,27 +59,35 @@ const CartItem = ({ item }) => {
     <ListGroupItem className="border-0 cart__item">
       <div className="cart__item-info d-flex gap-2">
         <img src={image01} alt="product-img" />
-
         <div className="cart__product-info w-100 d-flex align-items-center gap-4 justify-content-between">
-          <div>
-            <h6 className="cart__product-title">{title}</h6>
-            <p className=" d-flex align-items-center gap-5 cart__product-price">
-              {quantity}x <span>${totalPrice}</span>
-            </p>
-            <div className=" d-flex align-items-center justify-content-between increase__decrease-btn">
-              <span className="increase__btn" onClick={incrementItem}>
-                <i class="ri-add-line"></i>
-              </span>
-              <span className="quantity">{quantity}</span>
-              <span className="decrease__btn" onClick={decreaseItem}>
-                <i class="ri-subtract-line"></i>
-              </span>
+          <div className="w-100">
+            <div className="d-flex align-items-center  justify-content-between w-100 mb-2">
+              <h6 className="cart__product-title">{title}</h6>
+              <p className=" d-flex align-items-center gap-5 cart__product-price m-0">
+                <span>${totalPrice}</span>
+              </p>
             </div>
-            {variation && (
-              <div>
-                <span>Size: {variation}</span>
+            <div className="d-flex align-items-center  justify-content-between w-100 mb-2 mt-2">
+              <div className=" d-flex align-items-center justify-content-between increase__decrease-btn">
+                <span className="increase__btn" onClick={incrementItem}>
+                  <i class="ri-add-line"></i>
+                </span>
+                <span className="quantity">{quantity}</span>
+                <span className="decrease__btn" onClick={decreaseItem}>
+                  <i class="ri-subtract-line"></i>
+                </span>
               </div>
-            )}
+              {variation && (
+                <div>
+                  <span>
+                    Size:
+                    <strong style={{ color: "var(--primary-color)" }}>
+                      {variation}
+                    </strong>
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
           <span className="delete__btn" onClick={deleteItem}>

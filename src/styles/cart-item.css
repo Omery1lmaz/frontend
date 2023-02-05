@@ -23,6 +23,7 @@
   background: var(--primary-color);
   padding: 2px 5px;
   border-radius: 5px;
+  width: 90px;
 }
 
 .increase__btn,
