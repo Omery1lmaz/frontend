@@ -218,17 +218,22 @@ const AddProduct = () => {
                             onBlur={formik.handleBlur}
                             onClick={console.log(formik.values.Category)}
                           >
-                            {sellerCategories.map((category) => (
-                              <label>
-                                <Field
-                                  type="checkbox"
-                                  name="Category"
-                                  id="Category"
-                                  value={category._id}
-                                />
-                                {category.name}
-                              </label>
-                            ))}
+                            {sellerCategories &&
+                            sellerCategories?.length >= 1 ? (
+                              sellerCategories.map((category) => (
+                                <label>
+                                  <Field
+                                    type="checkbox"
+                                    name="Category"
+                                    id="Category"
+                                    value={category._id}
+                                  />
+                                  {category.name}
+                                </label>
+                              ))
+                            ) : (
+                              <div>You need to add category</div>
+                            )}
                           </div>
 
                           {formik.errors.Category && formik.touched.Category ? (

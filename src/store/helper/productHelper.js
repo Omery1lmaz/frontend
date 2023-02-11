@@ -10,6 +10,7 @@ const getCategoriesHelper = async () => {
 };
 
 const getOrderBySeller = async () => {
+  
   const response = await axios.get(
     "http://localhost:4000/api/products/order/seller",
     { withCredentials: true }
@@ -18,6 +19,40 @@ const getOrderBySeller = async () => {
 
   return response.data;
 };
+
+const deleteOrder = async ({ id }) => {
+  return axios.delete(`http://localhost:4000/api/products/order/${id}`, {
+    withCredentials: true,
+  });
+};
+
+const createOrder = async ({
+  orderMessage,
+  products,
+  name,
+  user,
+  seller,
+  shippingAddress,
+  productsQnty,
+}) => {
+  const response = axios.post(
+    "http://localhost:4000/api/products/order",
+    {
+      name,
+      products,
+      user,
+      seller,
+      shippingAddress,
+      productsQnty,
+      orderMessage,
+    },
+    { withCredentials: true }
+  );
+  console.log(response.data, "response dataw");
+
+  return response.data;
+};
+
 const deleteCategoryById = async ({ id, user }) => {
   console.log("İD Get ", id);
   console.log("User İD Get Helper  ", user);
@@ -111,7 +146,7 @@ const updateProduct = async ({ product, productId }) => {
 // Get Product By Id
 
 const getProductsByIdHelper = async (id) => {
-  const response = await axios.get(`http://localhost:4000/api/products/${id}`);
+  const response = axios.get(`http://localhost:4000/api/products/${id}`);
   return response.data;
 };
 
@@ -153,5 +188,7 @@ const productService = {
   deleteProductById,
   getOrderBySeller,
   getProduct,
+  createOrder,
+  deleteOrder,
 };
 export default productService;

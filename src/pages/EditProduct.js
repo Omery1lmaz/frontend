@@ -25,17 +25,15 @@ const EditProduct = () => {
   );
   const { isSuccessP, isErrorP, isLoadingP, sellerCategories, product } =
     useSelector((state) => state.product);
-
+  let name = "";
+  let brand = "";
+  let description = "";
+  let price = "";
+  let category = [""];
   useEffect(() => {
     dispatch(getProductsById(id));
     dispatch(getCategoriesBySeller({ id, user: user }));
-    if (isErrorP) {
-      toast.error(message);
-    }
-    if (isSuccessP) {
-      toast.success(message);
-    }
-  }, [isErrorP, isSuccessP]);
+  }, []);
   const validate = Yup.object({
     Name: Yup.string().required("Name is required"),
     Brand: Yup.string().required("Brand is required"),
@@ -55,10 +53,20 @@ const EditProduct = () => {
       // )
       .required("Required"),
   });
-  const productId = product._id;
   const ButtonHandleSubmit = (e) => {
     e.preventDefault();
   };
+  const productId = product?._id;
+
+  useEffect(() => {
+    if (product) {
+      name = product.name;
+      brand = product.brand;
+      description = product.description;
+      category = product.categories;
+      price = product.defaultPrice;
+    }
+  }, [product]);
 
   return isLoading && isLoadingP ? (
     <div>Bekleyiniz</div>
@@ -66,17 +74,23 @@ const EditProduct = () => {
     <>
       <Formik
         initialValues={{
-          Name: product.name ? product.name : "",
-          Brand: product.brand ? product.brand : "",
-          Description: product.description ? product.description : "",
-          Price: product.price,
-          Category: [],
+          Name: name,
+          Brand: brand,
+          Description: description,
+          Price: price,
+          Category: category,
         }}
         validationSchema={validate}
         onSubmit={(values, { resetForm }) => {
           console.log(values);
           const { Name, Brand, Description, Price, Category } = values;
-          const product = { Name, Brand, Description, Price, Category };
+          const product = {
+            Name,
+            Brand,
+            Description,
+            defaultPrice: Price,
+            Category,
+          };
           console.log(
             "Product Edit Pagee : " +
               product.Name +

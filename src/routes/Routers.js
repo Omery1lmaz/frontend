@@ -24,6 +24,7 @@ import CategoryList from "../pages/CategoryList";
 import EditCategory from "../pages/EditCategory";
 import SellerPage from "../pages/SellerPage";
 import SellerOrders from "../pages/SellerOrders";
+import OrderList from "../pages/OrderList";
 const Routers = () => {
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -55,6 +56,7 @@ const Routers = () => {
       <Route path="/add-product" element={<AddProduct />} />
       <Route path="/edit-product/:id" element={<EditProduct />} />
       {user && <Route path="/add-category" element={<AddCategory />} />}
+      {user && <Route path="/orders" element={<OrderList />} />}
       {user && <Route path="/edit-category/:id" element={<EditCategory />} />}
       {user && <Route path="/category-list" element={<CategoryList />} />}
       {user && <Route path="/product-list" element={<ProductList />} />}

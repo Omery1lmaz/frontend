@@ -6,7 +6,10 @@ body {
   padding: 25px;
   width: 100%;
   height: 100%;
-  background-color: #fde4e4;
+  background-color: #fff;
+}
+p {
+  color: black;
 }
 .container {
   padding: 15px;
@@ -34,10 +37,12 @@ body {
 }
 ul {
   list-style-type: none;
-  color: black;
+  color: var(--primary-color);
 }
 a {
   text-decoration: none;
+
+  color: black;
 }
 
 .hover_underline {
@@ -55,12 +60,11 @@ a {
   height: 2px;
   bottom: 5px;
   left: 0;
-  background-color: red;
+  background-color: var(--secondary-color);
   transform-origin: bottom right;
   transition: transform 0.25s ease-out;
 }
 .social_links {
-  width: 250px;
   display: flex;
   justify-content: space-around;
 }
@@ -91,7 +95,6 @@ input::placeholder {
   background-color: rgba(0, 217, 54, 0.2);
 }
 .social_links_div {
-  width: 250px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -148,7 +151,7 @@ button {
 }
 
 .newsletter span {
-  background: #df2020;
+  background: var(--primary-color);
   align-items: center;
   padding: 5px 15px;
   border-radius: 5px;
@@ -159,7 +162,7 @@ button {
 }
 .social_deneme i {
   padding: 5px;
-  background: #df2020;
+  background: var(--primary-color);
   color: #fff;
   border-radius: 50%;
 }
@@ -211,6 +214,9 @@ button {
   .footer_col {
     width: 100%;
     margin-bottom: 30px;
+  }
+  .social_links {
+    width: 250px;
   }
 }
 .img {

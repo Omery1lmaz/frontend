@@ -8,7 +8,8 @@ import { cartActions } from "../../../store/shopping-cart/cartSlice";
 import { infoNotification } from "../../../services/notification";
 
 const CartItem = ({ item }) => {
-  const { id, title, price, image01, quantity, totalPrice, variation } = item;
+  const { id, title, price, image01, quantity, totalPrice, variation, seller } =
+    item;
 
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -23,6 +24,7 @@ const CartItem = ({ item }) => {
             price,
             image01,
             variation,
+            seller,
           })
         )
       : infoNotification("Lütfen giriş yapınız");

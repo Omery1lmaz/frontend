@@ -1,5 +1,4 @@
 .single__product-content {
-  padding-left: 50px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -7,10 +6,10 @@
 }
 
 .product__price {
-  display: flex;
   align-items: center;
   column-gap: 1rem;
   margin-bottom: 0;
+  color: black;
 }
 .product__price span {
   font-size: 2rem;
@@ -20,13 +19,17 @@
   height: 35px;
 }
 .select {
-  border: 1px solid red;
+  border: 1px solid var(--primary-color);
+  background-color: white;
   margin-left: 1px;
   border-radius: 8px;
   padding: 3px;
 }
 .size-span {
   margin-right: 10px;
+}
+button {
+  margin-top: 15px !important;
 }
 
 .category {
@@ -58,12 +61,14 @@
 }
 
 .tab__content p {
+  width: 100%;
+  overflow-x: hidden;
   line-height: 30px;
   color: #212245b6;
 }
 
 .tab__active {
-  color: #df2020;
+  color: var(--primary-color);
 }
 
 .form {

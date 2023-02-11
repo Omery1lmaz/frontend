@@ -1,77 +1,99 @@
 import { Table, Button, Row, Col, Container } from "react-bootstrap";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteProductById, getProductsBySeller } from "../store/productSlices";
+import {
+  deleteOrder,
+  deleteProductById,
+  getOrderBySeller,
+  getProductsBySeller,
+} from "../store/productSlices";
 
-const ProductList = () => {
+const OrderList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
-  const { isSuccessP, isErrorP, isLoadingP, sellerCategories, products } =
-    useSelector((state) => state.product);
-  const deleteProduct = (id) => {
-    dispatch(deleteProductById({ id, user }));
+
+  const [selectedProduct, setSelectedProduct] = useState();
+
+  useEffect(() => {
+    console.log(selectedProduct);
+  }, [selectedProduct]);
+
+  const {
+    isSuccessP,
+    isErrorP,
+    isLoadingP,
+    sellerCategories,
+    products,
+    orders,
+  } = useSelector((state) => state.product);
+  const handleDelete = (id) => {
+    dispatch(deleteOrder({ id }));
   };
   useEffect(() => {
-    dispatch(getProductsBySeller(user._id));
-    console.log(products);
+    dispatch(getOrderBySeller());
   }, []);
   return (
     <>
       <Container style={{ margin: "30px auto" }}>
+        <Col className="d-flex justify-content-center align-items-center ">
+          <h4>Orders</h4>
+        </Col>
         <Row>
-          <Col className="d-flex justify-content-center align-items-center flex-column">
-            <h4>Products</h4>
-            <Button className="my-3">
-              <i className="fas fa-plus"></i> Create Product
-            </Button>
-          </Col>
           <Col
-            lg="12"
-            className="d-flex justify-content-center align-items-center"
+            lg="8"
+            className="d-flex justify-content-center align-items-center flex-column order-table"
           >
-            {products.length === 0 ? (
-              <h5 className="text-center">Your cart is empty</h5>
+            {orders.length === 0 ? (
+              <h5 className="text-center">No Order</h5>
             ) : (
               <table className="table">
                 <thead>
                   <tr>
-                    <th>Image</th>
-                    <th className="text-center">Price</th>
+                    <th style={{ width: "200px" }}>Name</th>
+                    <th className="text-center" style={{ width: "100px" }}>
+                      Price
+                    </th>
                     <th className="text-center">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((item) => (
-                    <tr>
-                      <td className="text-center cart__img-box">
-                        <img src={item.image} alt="" />
-                        <span>{item.name}</span>
-                      </td>
-                      <td className="text-center">
-                        <span>${item.defaultPrice}</span>
-                      </td>
-                      <td className="text-center cart__item-del">
-                        <i
-                          class="fa-solid fa-xmark"
-                          onClick={(e) => deleteProduct(item._id)}
-                        ></i>
-                        <i
-                          class="fa-regular fa-pen-to-square margin-left"
-                          onClick={(e) => navigate(`/edit-product/${item._id}`)}
-                        ></i>
-                      </td>
-                    </tr>
-                  ))}
+                  {orders &&
+                    Array.isArray(orders) &&
+                    orders.map((item) => (
+                      <tr onClick={() => setSelectedProduct(item.items)}>
+                        <td className="text-center cart__img-box">
+                          <span>{item.name}</span>
+                        </td>
+                        <td className="text-center">
+                          <span>${item.totalPrice}</span>
+                        </td>
+                        <td className="text-center cart__item-del">
+                          <i
+                            class="fa-solid fa-xmark"
+                            onClick={(e) => handleDelete(item._id)}
+                          ></i>
+                          <i
+                            class="fa-regular fa-pen-to-square margin-left"
+                            onClick={(e) =>
+                              navigate(`/edit-product/${item._id}`)
+                            }
+                          ></i>
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             )}
+          </Col>
+          <Col lg="4" className="d-flex ml-5">
+            <div></div>
           </Col>
         </Row>
         <Row className="align-items-center">
@@ -143,4 +165,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default OrderList;

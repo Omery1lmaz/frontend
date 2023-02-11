@@ -71,7 +71,10 @@ const Login = () => {
                         <div class="error">* {formik.errors.email}</div>
                       ) : null}
                     </div>
-                    <div className="form__group">
+                    <div
+                      className="form__group"
+                      style={{ marginBottom: "5px" }}
+                    >
                       <input
                         type="password"
                         id="password"

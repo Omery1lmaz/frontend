@@ -14,13 +14,18 @@ const Cart = () => {
     (state) => state.auth
   );
 
+    
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   return (
     <Helmet title="Cart">
       <Container style={{ margin: "30px auto" }}>
         <Row>
-          <Col lg="8" style={{ overflowX: "scroll" }}>
+          <Col
+            lg="8"
+            style={{ overflow: "auto", height: "500px" }}
+            className="d-flex justify-content-center align-items-center"
+          >
             {cartItems.length === 0 ? (
               <h5 className="text-center">Your cart is empty</h5>
             ) : (
@@ -53,7 +58,7 @@ const Cart = () => {
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <h6>Company:</h6>
-                <span className="seller_company">{cartItems[0].seller}</span>
+                <span className="seller_company">{cartItems[0]?.seller.name}</span>
               </div>
               <p>Taxes and shipping will calculate at checkout</p>
               <Link to="/checkout">
@@ -63,12 +68,13 @@ const Cart = () => {
           </Col>
         </Row>
       </Container>
+     
     </Helmet>
   );
 };
 
 const Tr = (props) => {
-  const { id, image01, title, price, quantity, variation } = props.item;
+  const { id, image01, title, price, quantity, variation, seller } = props.item;
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
@@ -82,6 +88,7 @@ const Tr = (props) => {
             price,
             image01,
             variation,
+            seller: seller ? seller : null
           })
         )
       : infoNotification("Lütfen giriş yapınız");
@@ -141,3 +148,5 @@ const Tr = (props) => {
 };
 
 export default Cart;
+
+

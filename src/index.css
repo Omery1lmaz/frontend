@@ -16,7 +16,9 @@
 }
 
 /* base style */
-
+.margin-left {
+  margin-left: 15px !important;
+}
 body {
   background: #fcfcfc;
   font-family: "Istok Web", sans-serif;

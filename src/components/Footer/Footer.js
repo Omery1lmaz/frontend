@@ -13,9 +13,6 @@ const Footer = () => {
         <div className={styles.footer_col1}>
           <ul>
             <li>
-              <img className={styles.img} src={logo} alt="logo" />
-            </li>
-            <li>
               <h4 className={styles.hover_underline}> Tasty Treaty</h4>
             </li>
             <li>
@@ -66,14 +63,6 @@ const Footer = () => {
             </li>
             <li>
               <p>Subscribe our newsletter</p>
-            </li> 
-            <li >
-              <div className={styles.newsletter} >
-                <input placeholder="Enter your email "></input>
-                <span>
-                  <i class="ri-send-plane-line"></i>
-                </span>
-              </div>
             </li>
           </ul>
         </div>
@@ -84,9 +73,7 @@ const Footer = () => {
         </span>
         <ul className={styles.social_links}>
           <li>
-            <span>
-              Follow:
-            </span>
+            <span>Follow:</span>
           </li>
           <li>
             <a>

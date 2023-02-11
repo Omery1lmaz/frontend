@@ -41,7 +41,7 @@ const cartSlice = createSlice({
         return item.id === newItem.id;
       });
       const deneme = state.cartItems.find((item) => {
-        if (item.seller !== newItem.seller) {
+        if (item.seller.id !== newItem.seller.id) {
           state.cartItems = [];
         }
         state.totalQuantity = 0;
@@ -50,7 +50,6 @@ const cartSlice = createSlice({
       });
       if (!deneme) {
         // ===== note: if you use just redux you should not mute state array instead of clone the state array, but if you use redux toolkit that will not a problem because redux toolkit clone the array behind the scene
-
         state.cartItems.push({
           id: newItem.id,
           title: newItem.title,
@@ -82,7 +81,12 @@ const cartSlice = createSlice({
         quantity
       );
     },
-
+    removeAllItems(state, action) {
+      state.totalAmount = 0;
+      let quantity = 0;
+      state.totalQuantity = quantity;
+      setItemFunc((state.cartItems = []), state.totalAmount, quantity);
+    },
     // ========= remove item ========
 
     removeItem(state, action) {
@@ -134,24 +138,14 @@ const cartSlice = createSlice({
 
     deleteItem(state, action) {
       const product = action.payload;
-      console.log(product, "product delete item");
-      console.log(state.cartItems.length, "state");
       if (state.cartItems.length == 1) state.cartItems = [];
       const existingItem = state.cartItems.find((item) => {
         if (product.variation && state.cartItems.length > 1) {
-          console.log("product has a variation");
-          console.log("product id", product.id);
-          console.log("item id", item.id);
-          console.log(
-            item.id == product.id && item.variation == product.variation,
-            "test safjıashfash"
-          );
           return item.id == product.id && item.variation == product.variation;
         } else return item.id !== product.id;
       });
 
       if (existingItem) {
-        console.log(existingItem, "existing item delete");
         state.cartItems = state.cartItems.filter((item) => {
           if (product.variation) {
             return item.id == product.id && item.variation != product.variation;

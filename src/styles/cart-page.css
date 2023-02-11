@@ -51,7 +51,6 @@ button a:hover {
   display: flex;
   flex-direction: column;
   padding: 25px 10px;
-  background-color: var(--secondary-color);
 }
 .order-title {
   font-size: 24px;

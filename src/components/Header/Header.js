@@ -28,6 +28,25 @@ const nav__links = [
   },
 ];
 
+const seller_nav__links = [
+  {
+    display: "Add Product",
+    path: "/add-product",
+  },
+  {
+    display: "Products",
+    path: "/product-list",
+  },
+  {
+    display: "Orders",
+    path: "/orders",
+  },
+  {
+    display: "Add Category",
+    path: "/add-category",
+  },
+];
+
 const Header = () => {
   const menuRef = useRef(null);
   const headerRef = useRef(null);
@@ -75,17 +94,29 @@ const Header = () => {
           {/* ======= menu ======= */}
           <div className="navigation" ref={menuRef} onClick={toggleMenu}>
             <div className="menu d-flex align-items-center gap-5">
-              {nav__links.map((item, index) => (
-                <NavLink
-                  to={item.path}
-                  key={index}
-                  className={(navClass) =>
-                    navClass.isActive ? "active__menu" : ""
-                  }
-                >
-                  {item.display}
-                </NavLink>
-              ))}
+              {user?.isAdmin
+                ? seller_nav__links.map((item, index) => (
+                    <NavLink
+                      to={item.path}
+                      key={index}
+                      className={(navClass) =>
+                        navClass.isActive ? "active__menu" : ""
+                      }
+                    >
+                      {item.display}
+                    </NavLink>
+                  ))
+                : nav__links.map((item, index) => (
+                    <NavLink
+                      to={item.path}
+                      key={index}
+                      className={(navClass) =>
+                        navClass.isActive ? "active__menu" : ""
+                      }
+                    >
+                      {item.display}
+                    </NavLink>
+                  ))}
             </div>
           </div>
 

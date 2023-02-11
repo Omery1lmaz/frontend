@@ -1,8 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
+import {
+  errorNotification,
+  successNotification,
+} from "../services/notification";
 import authService from "./helper/authHelper";
 import productService from "./helper/productHelper";
+import { useSelector } from "react-redux";
 
 export const getCategories = createAsyncThunk(
   "/getCategories",
@@ -21,6 +26,53 @@ export const getCategories = createAsyncThunk(
   }
 );
 
+export const createOrder = createAsyncThunk(
+  "/createOrder",
+  async (
+    {
+      orderMessage,
+      name,
+      products,
+      user,
+      seller,
+      shippingAddress,
+      productsQnty,
+    },
+    thunkAPI
+  ) => {
+    try {
+      const response = await productService.createOrder({
+        name,
+        products,
+        user,
+        seller,
+        shippingAddress,
+        orderMessage,
+        productsQnty,
+      });
+      const v = {
+        response,
+        status: "ok",
+      };
+      console.log("test");
+      successNotification("Order Oluşturuldu");
+      return {
+        response,
+        status: "200",
+      };
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification(error.response.data);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const getOrderBySeller = createAsyncThunk(
   "/getOrderBySeller",
   async (thunkAPI) => {
@@ -33,6 +85,26 @@ export const getOrderBySeller = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteOrder = createAsyncThunk(
+  "/deleteOrder",
+  async ({ id }, thunkAPI) => {
+    try {
+      const { data } = await productService.deleteOrder({ id });
+      successNotification("Order Başarıyla silindi");
+      return data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification(error.response.data);
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -169,7 +241,8 @@ export const getProductsById = createAsyncThunk(
   "/getProducts",
   async (id, thunkAPI) => {
     try {
-      return await productService.getProductsByIdHelper(id);
+      const response = await productService.getProductsByIdHelper(id);
+      return response;
     } catch (error) {
       const message =
         (error.response &&
@@ -177,6 +250,7 @@ export const getProductsById = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      errorNotification(error.response.data);
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -186,7 +260,8 @@ export const getProductsBySeller = createAsyncThunk(
   "/getProductsBySeller",
   async (id, thunkAPI) => {
     try {
-      return await productService.getProductsBySeller(id);
+      const res = await productService.getProductsBySeller(id);
+      return res;
     } catch (error) {
       const message =
         (error.response &&
@@ -194,6 +269,7 @@ export const getProductsBySeller = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      errorNotification(error.response.data);
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -252,7 +328,6 @@ const productSlice = createSlice({
   name: "users",
   initialState,
   reducers: {},
-
   extraReducers: (builder) => {
     builder
       .addCase(getProduct.fulfilled, (state, action) => {
@@ -268,6 +343,34 @@ const productSlice = createSlice({
       .addCase(getProduct.pending, (state, action) => {
         state.isLoadingP = true;
       })
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.isLoadingP = false;
+        state.orders = action.payload;
+      })
+      .addCase(deleteOrder.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(deleteOrder.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
+
+      .addCase(createOrder.fulfilled, (state, action) => {
+        state.orders = action.payload;
+        state.isLoadingP = false;
+      })
+      .addCase(createOrder.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(createOrder.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
+
       .addCase(getCategories.fulfilled, (state, action) => {
         state.categories = action.payload;
         state.isLoadingP = false;
