@@ -10,6 +10,7 @@ import {
   getOrderBySeller,
   getProductsBySeller,
 } from "../store/productSlices";
+import "../styles/order-list.css";
 
 const OrderList = () => {
   const navigate = useNavigate();
@@ -19,11 +20,11 @@ const OrderList = () => {
     (state) => state.auth
   );
 
-  const [selectedProduct, setSelectedProduct] = useState();
+  const [selectedOrder, setSelectedOrder] = useState();
 
   useEffect(() => {
-    console.log(selectedProduct);
-  }, [selectedProduct]);
+    console.log(selectedOrder);
+  }, [selectedOrder]);
 
   const {
     isSuccessP,
@@ -41,14 +42,15 @@ const OrderList = () => {
   }, []);
   return (
     <>
+      <Col className="d-flex justify-content-center align-items-center mt-5">
+        <h4>Orders</h4>
+      </Col>
+
       <Container style={{ margin: "30px auto" }}>
-        <Col className="d-flex justify-content-center align-items-center ">
-          <h4>Orders</h4>
-        </Col>
         <Row>
           <Col
             lg="8"
-            className="d-flex justify-content-center align-items-center flex-column order-table"
+            className="d-flex justify-content-center align-items-center  order-table"
           >
             {orders.length === 0 ? (
               <h5 className="text-center">No Order</h5>
@@ -67,7 +69,7 @@ const OrderList = () => {
                   {orders &&
                     Array.isArray(orders) &&
                     orders.map((item) => (
-                      <tr onClick={() => setSelectedProduct(item.items)}>
+                      <tr onClick={() => setSelectedOrder(item)}>
                         <td className="text-center cart__img-box">
                           <span>{item.name}</span>
                         </td>
@@ -93,12 +95,45 @@ const OrderList = () => {
             )}
           </Col>
           <Col lg="4" className="d-flex ml-5">
-            <div></div>
+            {selectedOrder && (
+              <div className="order-right-side">
+                <p>
+                  <strong>Order Owner :</strong> {selectedOrder.name}
+                </p>
+                <p>
+                  <strong>Order Table : </strong>
+                  {selectedOrder.shippingAddress.table}
+                </p>
+                <p>
+                  <strong>Order cost :</strong> {selectedOrder.totalPrice}
+                </p>
+                <div className="order-right-side-products d-flex flex-column">
+                  <p className="products-title">Products</p>
+                  {selectedOrder.items.map((product) => {
+                    return (
+                      <div className="product ">
+                        <span
+                          style={{
+                            display: "block",
+                            marginBottom: "15px !important",
+                          }}
+                        >
+                          <strong>Name : </strong> {product.name}
+                        </span>
+                        {product.variation && (
+                          <span style={{ marginBottom: "15px !important" }}>
+                            <strong>Size :</strong> {product.variation}
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </Col>
         </Row>
-        <Row className="align-items-center">
-          <Col className="text-right"></Col>
-        </Row>
+        <Row className="align-items-center"></Row>
       </Container>
 
       {/* <>

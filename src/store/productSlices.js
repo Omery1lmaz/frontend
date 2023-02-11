@@ -30,6 +30,7 @@ export const createOrder = createAsyncThunk(
   "/createOrder",
   async (
     {
+      totalPrice,
       orderMessage,
       name,
       products,
@@ -49,6 +50,7 @@ export const createOrder = createAsyncThunk(
         shippingAddress,
         orderMessage,
         productsQnty,
+        totalPrice,
       });
       const v = {
         response,

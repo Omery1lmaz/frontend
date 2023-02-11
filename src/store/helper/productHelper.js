@@ -10,7 +10,6 @@ const getCategoriesHelper = async () => {
 };
 
 const getOrderBySeller = async () => {
-  
   const response = await axios.get(
     "http://localhost:4000/api/products/order/seller",
     { withCredentials: true }
@@ -27,6 +26,7 @@ const deleteOrder = async ({ id }) => {
 };
 
 const createOrder = async ({
+  totalPrice,
   orderMessage,
   products,
   name,
@@ -38,6 +38,7 @@ const createOrder = async ({
   const response = axios.post(
     "http://localhost:4000/api/products/order",
     {
+      totalPrice,
       name,
       products,
       user,

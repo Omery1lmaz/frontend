@@ -69,6 +69,7 @@ const Checkout = () => {
       image: item.image01,
       qty: item.quantity,
       name: item.title,
+      variation: item.variation ? item.variation : null,
     };
   });
   const submitHandler = (e) => {
@@ -92,6 +93,10 @@ const Checkout = () => {
                 onSubmit={(values, { resetForm }) => {
                   console.log(values);
                   const { Name, Table, orderMessage } = values;
+                  console.log(
+                    cartTotalAmount,
+                    "cart total amount before dispacth"
+                  );
                   dispatch(
                     createOrder({
                       name: Name,
@@ -101,6 +106,7 @@ const Checkout = () => {
                       seller: cartItems[0].seller.id,
                       shippingAddress: { table: Table },
                       productsQnty: cartItems.totalQuantity,
+                      totalPrice: cartTotalAmount,
                     })
                   );
                   resetForm({ values: "" });
@@ -146,7 +152,7 @@ const Checkout = () => {
                         value={formik.values.orderMessage}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        style={{height: '80px'}}
+                        style={{ height: "80px" }}
                       />
                     </div>
 
