@@ -26,6 +26,7 @@ import SellerPage from "../pages/SellerPage";
 import SellerOrders from "../pages/SellerOrders";
 import OrderList from "../pages/OrderList";
 import UserOrderList from "../pages/UserOrderList";
+import OrderDetail from "../pages/OrderDetail";
 const Routers = () => {
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -47,6 +48,7 @@ const Routers = () => {
       {/* <Route path="/" element={<Navigate to="/home/6335f47dd765bd4893812492" />} /> */}
       <Route path="/home/:id" element={<SellerPage />} />
       <Route path="/order" element={<UserOrderList />} />
+      <Route path="/order-detail/:id" element={<OrderDetail />} />
       <Route path="/foods" element={<AllFoods />} />
       <Route path="/home" element={<SellerOrders />} />
       <Route path="/foods/:id" element={<FoodDetails />} />

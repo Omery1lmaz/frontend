@@ -26,6 +26,11 @@ const UpdateOrderStatus = async ({ id, status }) => {
   );
   return response.data;
 };
+const getOrderById = async ({ id }) => {
+  return axios.get(`http://localhost:4000/api/products/order/${id}`, {
+    withCredentials: true,
+  });
+};
 
 const deleteOrder = async ({ id }) => {
   return axios.delete(`http://localhost:4000/api/products/order/${id}`, {
@@ -186,6 +191,7 @@ const deleteProductById = async ({ id, user }) => {
 const productService = {
   getCategoriesHelper,
   addCategoriesHelper,
+  getOrderById,
   addProduct,
   getProductsBySeller,
   getProductsByIdHelper,

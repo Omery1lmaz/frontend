@@ -131,6 +131,26 @@ export const deleteOrder = createAsyncThunk(
   }
 );
 
+export const getOrderById = createAsyncThunk(
+  "/getOrderById",
+  async ({ id }, thunkAPI) => {
+    try {
+      const { data } = await productService.getOrderById({ id });
+      successNotification("Order Başarıyla getirildi");
+      return data;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification(error.response.data);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const getCategoryById = createAsyncThunk(
   "/getCategoryById",
   async ({ id, userId }, thunkAPI) => {
@@ -341,6 +361,7 @@ const initialState = {
   messageP: "",
   products: [],
   orders: [],
+  order: {},
   product: {},
 };
 
@@ -352,6 +373,19 @@ const productSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(getOrderById.fulfilled, (state, action) => {
+        state.isLoadingP = false;
+        state.order = action.payload;
+      })
+      .addCase(getOrderById.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(getOrderById.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
       .addCase(updateOrderStatus.fulfilled, (state, action) => {
         state.isLoadingP = false;
       })

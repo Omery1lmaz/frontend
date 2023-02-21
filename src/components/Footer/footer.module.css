@@ -200,7 +200,7 @@ button {
     margin-left: 0px !important;
     margin-top: 5px !important;
     width: 100%;
-    background-color: #fde4e4;
+    background-color: var(--primary-color);
   }
   input {
     width: 100%;
