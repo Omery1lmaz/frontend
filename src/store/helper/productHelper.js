@@ -8,14 +8,22 @@ const getCategoriesHelper = async () => {
 
   return response.data;
 };
-
 const getOrderBySeller = async () => {
   const response = await axios.get(
     "http://localhost:4000/api/products/order/seller",
     { withCredentials: true }
   );
-  console.log(response.data, "response dataw");
-
+  const arrayfororders = [...response.data];
+  arrayfororders.sort((a, b) => new Date(b.date) - new Date(a.date));
+  return arrayfororders;
+};
+const UpdateOrderStatus = async ({ id, status }) => {
+  console.log(status);
+  const response = await axios.put(
+    `http://localhost:4000/api/products/order/${id}`,
+    { status },
+    { withCredentials: true }
+  );
   return response.data;
 };
 
@@ -191,5 +199,6 @@ const productService = {
   getProduct,
   createOrder,
   deleteOrder,
+  UpdateOrderStatus,
 };
 export default productService;

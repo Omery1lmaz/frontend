@@ -25,6 +25,7 @@ import EditCategory from "../pages/EditCategory";
 import SellerPage from "../pages/SellerPage";
 import SellerOrders from "../pages/SellerOrders";
 import OrderList from "../pages/OrderList";
+import UserOrderList from "../pages/UserOrderList";
 const Routers = () => {
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(

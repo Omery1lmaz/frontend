@@ -271,9 +271,27 @@ const AddProduct = () => {
                                 onBlur={formik.handleBlur}
                               />
                             </div>
+
                             {formik.errors.Brand && formik.touched.Brand ? (
                               <div class="error">* {formik.errors.Brand}</div>
                             ) : null}
+                            <div class="form-group mb-3 col-xs-12 col-sm-6">
+                              <label for="Brand">Image</label>
+                              <input
+                                id="Image"
+                                name="Image"
+                                type="file"
+                                accept=".png, .jpg, .jpeg"
+                                class="form-control validate"
+                                required
+                                onChange={(e) =>
+                                  console.log(
+                                    e.target.files,
+                                    "e target value image"
+                                  )
+                                }
+                              />
+                            </div>
                           </div>
                         </div>
                         <div class="col-12">

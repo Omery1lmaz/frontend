@@ -25,6 +25,25 @@ export const getCategories = createAsyncThunk(
     }
   }
 );
+export const updateOrderStatus = createAsyncThunk(
+  "/updateOrderStatus",
+  async ({ id, status }, thunkAPI) => {
+    try {
+      const response = await productService.UpdateOrderStatus({ id, status });
+      successNotification(response);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification(error.response.data);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const createOrder = createAsyncThunk(
   "/createOrder",
@@ -326,12 +345,25 @@ const initialState = {
 };
 
 // Then, handle actions in your reducers:
+
 const productSlice = createSlice({
   name: "users",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        state.isLoadingP = false;
+      })
+      .addCase(updateOrderStatus.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(updateOrderStatus.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
       .addCase(getProduct.fulfilled, (state, action) => {
         state.product = action.payload;
         state.isLoadingP = false;

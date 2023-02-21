@@ -146,7 +146,6 @@ const Checkout = () => {
                       <input
                         type="area"
                         placeholder="Enter your message"
-                        required
                         id="orderMessage"
                         name="orderMessage"
                         value={formik.values.orderMessage}

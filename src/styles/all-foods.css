@@ -1,3 +1,7 @@
+:root {
+  --toastify-color-warning: var(--primary-color);
+  --toastify-color-success: var(--primary-color);
+}
 .search__widget,
 .sorting__widget select {
   padding: 7px 15px;
