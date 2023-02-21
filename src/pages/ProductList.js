@@ -43,7 +43,7 @@ const ProductList = () => {
                 <thead>
                   <tr>
                     <th>Product</th>
-                    <th>Table</th>
+                    <th className="text-center">Variation</th>
                     <th className="text-center">Price</th>
                     <th className="text-center">Actions</th>
                   </tr>
@@ -56,7 +56,20 @@ const ProductList = () => {
                         <span>{item.name}</span>
                       </td>
                       <td className="text-center">
-                        <span>${item.shippingAddress.table}</span>
+                        {item.variations.length == 0 ? (
+                          <span> No Variation</span>
+                        ) : (
+                          <select id="select-size" className="select variation">
+                            {item.variations.map((item) => {
+                              return (
+                                <option key={item.id} value={item._id}>
+                                  {item.size + " " + item.price + "₺"}
+                                  {/* <i className="fa-solid fa-turkish-lira-sign"></i> */}
+                                </option>
+                              );
+                            })}
+                          </select>
+                        )}
                       </td>
                       <td className="text-center">
                         <span>${item.defaultPrice}</span>
