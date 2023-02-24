@@ -1,14 +1,36 @@
-import { Table, Button, Row, Col, Container } from "react-bootstrap";
+import { Table, Row, Col, Container } from "react-bootstrap";
 import React, { useRef, useEffect } from "react";
 import { Formik, Form } from "formik";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { deleteProductById, getProductsBySeller } from "../store/productSlices";
+import Modal from "@mui/material/Modal";
+
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 const ProductList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [open, setOpen] = React.useState(false);
+  const [deal, setDeal] = React.useState(false);
+  const [deleteProductId, setDeleteProductId] = React.useState();
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
@@ -16,6 +38,7 @@ const ProductList = () => {
   const { isSuccessP, isErrorP, isLoadingP, sellerCategories, products } =
     useSelector((state) => state.product);
   const deleteProduct = (id) => {
+    console.log(id, "id deneme test s<jfjsak");
     dispatch(deleteProductById({ id, user }));
   };
   useEffect(() => {
@@ -77,10 +100,14 @@ const ProductList = () => {
                       <td className="text-center cart__item-del">
                         <i
                           class="fa-solid fa-xmark"
-                          onClick={(e) => deleteProduct(item._id)}
+                          onClick={(e) => {
+                            // deleteProduct(item._id)
+                            setDeleteProductId(item._id);
+                            handleOpen();
+                          }}
                         ></i>
                         <i
-                          class="fa-regular fa-pen-to-square margin-left"
+                          class="fa-regular fa-pen-to-square madeleteProduct(item._id)rgin-left"
                           onClick={(e) => navigate(`/edit-product/${item._id}`)}
                         ></i>
                       </td>
@@ -94,6 +121,42 @@ const ProductList = () => {
         <Row className="align-items-center">
           <Col className="text-right"></Col>
         </Row>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Are u sure to delete product
+            </Typography>
+            <Typography
+              id="modal-modal-description"
+              className="d-flex"
+              sx={{ mt: 2 }}
+            >
+              <button
+                className="w-50"
+                onClick={() => {
+                  deleteProduct(deleteProductId);
+                  handleClose();
+                }}
+              >
+                Yes
+              </button>
+              <button className="w-50 ml-2">No</button>
+            </Typography>
+            <Button
+              onClick={() => {
+                handleClose();
+                setDeal(true);
+              }}
+            >
+              Okudum, Onaylıyorum
+            </Button>
+          </Box>
+        </Modal>
       </Container>
     </>
   );

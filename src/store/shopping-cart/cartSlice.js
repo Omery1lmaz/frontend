@@ -93,13 +93,17 @@ const cartSlice = createSlice({
       const product = action.payload;
       console.log(product, "remove item");
       const existingItem = state.cartItems.find((item) => {
+        console.log(product.variation, "product variation remove item");
         console.log(
           item.id === product.id && product.variation == item.variation
         );
         if (product.variation) {
           console.log("product has a variation");
           return item.id == product.id && item.variation == product.variation;
-        } else return item.id !== product.id;
+        } else {
+          console.log("Product no variation remove action");
+          return item.id == product.id;
+        }
       });
 
       if (
@@ -109,10 +113,23 @@ const cartSlice = createSlice({
       ) {
         state.cartItems = state.cartItems.filter((item) => {
           if (product.variation) {
-            return item.id == product.id && item.variation != product.variation;
+            console.log(
+              item.id == product.id && item.variation !== product.variation,
+              "filterr"
+            );
+            console.log(
+              item.variation !== product.variation &&
+                item.title !== product.title &&
+                item.id !== product.id
+            );
+            return (
+              item.variation !== product.variation &&
+              item.title !== product.title 
+            );
           } else return item.id !== product.id;
         });
       } else {
+        console.log(existingItem, "existing item");
         existingItem.quantity--;
         existingItem.totalPrice =
           Number(existingItem.totalPrice) - Number(existingItem.price);

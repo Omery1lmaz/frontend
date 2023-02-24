@@ -25,15 +25,14 @@ const FoodDetails = () => {
   const { isLoading, isError, isSuccess, message, product } = useSelector(
     (state) => state.product
   );
-  const {
-    name,
-    defaultPrice,
-    categories,
-    description,
-    image,
-    variations,
-    user,
-  } = product;
+  const [name, setName] = useState();
+  const [defaultPrice, setDefaultPrice] = useState("");
+  const [categories, setCategories] = useState("");
+  const [image, setImage] = useState("");
+  const [description, setDescription] = useState("");
+  const [variations, setVariations] = useState("");
+  const [user, setUser] = useState("");
+
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
   const [size, setSize] = useState();
@@ -50,13 +49,27 @@ const FoodDetails = () => {
             price,
             image01: image,
             variation: size ? size : null,
-            seller: {name: user?.name, id: user?._id},
+            seller: {
+              name: user?.name,
+              id: user?._id,
+              isTakeAway: user?.isTakeAway,
+            },
           })
         )
       : infoNotification("lütfen önce giriş yapınız");
   };
   useEffect(() => {
-    console.log(product);
+    console.log(typeof name, "type of product name");
+    if (product && !name) {
+      setName(product.name);
+      setDefaultPrice(product.defaultPrice);
+      setCategories(product.categories);
+      setDescription(product.description);
+      setImage(product.image);
+      setVariations(product.variations);
+      setUser(product.user);
+      setPrice(product.defaultPrice);
+    }
   }, [product]);
 
   useEffect(() => {

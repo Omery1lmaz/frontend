@@ -39,6 +39,7 @@ const deleteOrder = async ({ id }) => {
 };
 
 const createOrder = async ({
+  isTakeAway,
   totalPrice,
   orderMessage,
   products,
@@ -51,6 +52,7 @@ const createOrder = async ({
   const response = axios.post(
     "http://localhost:4000/api/products/order",
     {
+      isTakeAway,
       totalPrice,
       name,
       products,
@@ -104,11 +106,21 @@ const getCategoryByIdHelper = async ({ id, userId }) => {
 };
 
 const getCategoriesBySellerHelper = async ({ id, user }) => {
+  console.log("asdasddatajdnsajkfnjsk");
   const response = await axios.get(
-    `http://localhost:4000/api/products/categories/${user._id}`,
-    user
+    `http://localhost:4000/api/products/categories/seller`,
+    { withCredentials: true }
   );
+  console.log(response.data, "datajdnsajkfnjsk");
+  return response.data;
+};
 
+const getCategoriesBySellerIdHelper = async (id) => {
+  console.log("asdasddatajdnsajkfnjsk");
+  const response = await axios.get(
+    `http://localhost:4000/api/products/categories/${id}`
+  );
+  console.log(response.data, "datajdnsajkfnjsk");
   return response.data;
 };
 
@@ -160,7 +172,8 @@ const updateProduct = async ({ product, productId }) => {
 // Get Product By Id
 
 const getProductsByIdHelper = async (id) => {
-  const response = axios.get(`http://localhost:4000/api/products/${id}`);
+  const response = await axios.get(`http://localhost:4000/api/products/${id}`);
+  console.log(response.data);
   return response.data;
 };
 
@@ -169,6 +182,14 @@ const getProductsByIdHelper = async (id) => {
 const getProductsBySeller = async (id) => {
   const response = await axios.get(
     `http://localhost:4000/api/products/seller/${id}`
+  );
+  return response.data;
+};
+
+const getCatsHelper = async () => {
+  const response = await axios.get(
+    `http://localhost:4000/api/products/categories/seller`,
+    { withCredentials: true }
   );
   return response.data;
 };
@@ -189,6 +210,7 @@ const deleteProductById = async ({ id, user }) => {
 };
 
 const productService = {
+  getCatsHelper,
   getCategoriesHelper,
   addCategoriesHelper,
   getOrderById,
@@ -206,5 +228,6 @@ const productService = {
   createOrder,
   deleteOrder,
   UpdateOrderStatus,
+  getCategoriesBySellerIdHelper,
 };
 export default productService;

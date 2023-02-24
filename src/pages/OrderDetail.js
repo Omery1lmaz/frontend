@@ -56,7 +56,7 @@ const OrderDetail = () => {
   return (
     <>
       <Container style={{ marginTop: "30px" }}>
-        {order && (
+        {order && order.isReady && (
           <>
             <div className="order-detail d-flex flex-column">
               <p className="order-detail-title">Sipariş Detayı</p>

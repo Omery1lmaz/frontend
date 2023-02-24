@@ -10,6 +10,7 @@ import {
   addCategories,
   deleteCategoryById,
   getCategoriesBySeller,
+  getCatsBySeller,
   getProductsBySeller,
 } from "../store/productSlices";
 import { ToastContainer, toast } from "react-toastify";
@@ -26,7 +27,7 @@ const CategoryList = () => {
     useSelector((state) => state.product);
 
   useEffect(() => {
-    dispatch(getCategoriesBySeller({ id: user._id, user: user }));
+    dispatch(getCatsBySeller());
     console.log(sellerCategories);
   }, []);
 

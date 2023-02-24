@@ -57,6 +57,7 @@ export const createOrder = createAsyncThunk(
       seller,
       shippingAddress,
       productsQnty,
+      isTakeAway
     },
     thunkAPI
   ) => {
@@ -70,6 +71,7 @@ export const createOrder = createAsyncThunk(
         orderMessage,
         productsQnty,
         totalPrice,
+        isTakeAway
       });
       const v = {
         response,
@@ -223,12 +225,12 @@ export const deleteProductById = createAsyncThunk(
   }
 );
 
-export const getCategoriesBySeller = createAsyncThunk(
-  "/getCategoriesBySeller",
-  async ({ id, user }, thunkAPI) => {
+export const getCatsBySeller = createAsyncThunk(
+  "/getCatsBySeller",
+  async (thunkAPI) => {
     try {
-      console.log("getCategoriesBySeller", id, user);
-      return await productService.getCategoriesBySellerHelper({ id, user });
+      const res = await productService.getCatsHelper();
+      return res;
     } catch (error) {
       const message =
         (error.response &&
@@ -236,7 +238,45 @@ export const getCategoriesBySeller = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      errorNotification(error.response.data);
       return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getCategoriesBySeller = createAsyncThunk(
+  "/getCategoriesBySeller",
+  async (thunkAPI) => {
+    try {
+      console.log("aşsdkjakldjaskljdklasj");
+      const response = await productService.getCategoriesBySellerHelper();
+      console.log(response, "response get categories");
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+    }
+  }
+);
+
+export const getCategoriesBySellerId = createAsyncThunk(
+  "/getCategoriesBySellerId",
+  async (id, thunkAPI) => {
+    console.log(id, "id");
+    try {
+      const response = await productService.getCategoriesBySellerIdHelper(id);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
     }
   }
 );
@@ -283,6 +323,7 @@ export const getProductsById = createAsyncThunk(
   async (id, thunkAPI) => {
     try {
       const response = await productService.getProductsByIdHelper(id);
+      console.log(response, "response");
       return response;
     } catch (error) {
       const message =
@@ -371,8 +412,35 @@ const productSlice = createSlice({
   name: "users",
   initialState,
   reducers: {},
+
   extraReducers: (builder) => {
     builder
+      .addCase(getCategoriesBySellerId.fulfilled, (state, action) => {
+        state.isLoadingP = false;
+        state.categories = action.payload;
+      })
+      .addCase(getCategoriesBySellerId.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(getCategoriesBySellerId.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
+      .addCase(getCatsBySeller.fulfilled, (state, action) => {
+        state.isLoadingP = false;
+        state.sellerCategories = action.payload;
+      })
+      .addCase(getCatsBySeller.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(getCatsBySeller.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
       .addCase(getOrderById.fulfilled, (state, action) => {
         state.isLoadingP = false;
         state.order = action.payload;
@@ -563,7 +631,7 @@ const productSlice = createSlice({
       })
       .addCase(getProductsBySeller.fulfilled, (state, action) => {
         state.products = action.payload;
-        state.isLisLoadingPoadingP = false;
+        state.isLoadingP = false;
         state.isSuccessP = true;
       })
       .addCase(getProductsBySeller.rejected, (state, action) => {

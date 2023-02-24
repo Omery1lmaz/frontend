@@ -74,7 +74,10 @@ const UserOrderList = () => {
                   <span>20 Nisan 2023</span>
                   <div className="d-flex justify-content-between">
                     <span>Toplam: {item.totalPrice}₺</span>
-                    <div className="d-flex justify-content-between align-items-center details">
+                    <div
+                      className="d-flex justify-content-between align-items-center details order-link"
+                      onClick={() => navigate(`/order-detail/${item._id}`)}
+                    >
                       <span>Detaylar</span>
                       <i class="fa-solid fa-chevron-right"></i>
                     </div>

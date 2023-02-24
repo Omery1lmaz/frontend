@@ -15,9 +15,9 @@ import {
   addCategories,
   addProduct,
   getCategoriesBySeller,
+  getCatsBySeller,
 } from "../store/productSlices";
-import MultiSelect from "react-multiple-select-dropdown-lite";
-import "react-multiple-select-dropdown-lite/dist/index.css";
+import Multiselect from "multiselect-react-dropdown";
 
 const AddProduct = () => {
   const navigate = useNavigate();
@@ -30,16 +30,8 @@ const AddProduct = () => {
     (state) => state.product
   );
   useEffect(() => {
-    if (isErrorP) {
-      toast.error(message);
-    }
-    if (isSuccessP) {
-      toast.success(message);
-    }
-    if (user) {
-      dispatch(getCategoriesBySeller({ id: user._id, user: user }));
-    }
-  }, [isErrorP, user, isSuccessP]);
+    dispatch(getCatsBySeller());
+  }, []);
 
   const [inputList, setinputList] = useState([]);
 
@@ -104,7 +96,7 @@ const AddProduct = () => {
             Name,
             Brand,
             Description,
-            defaultPrice: Price,
+            Price,
             Category,
             variations: inputList,
           };
@@ -208,33 +200,37 @@ const AddProduct = () => {
                         <div class="form-group mb-3">
                           {/* CATEGORY */}
                           <label for="Category">Category</label>
-                          <div
-                            role="group"
-                            aria-labelledby="checkbox-group"
+                          <Multiselect
                             id="Category"
                             name="Category"
-                            value={formik.values.Category}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            onClick={console.log(formik.values.Category)}
-                          >
-                            {sellerCategories &&
-                            sellerCategories?.length >= 1 ? (
-                              sellerCategories.map((category) => (
-                                <label>
-                                  <Field
-                                    type="checkbox"
-                                    name="Category"
-                                    id="Category"
-                                    value={category._id}
-                                  />
-                                  {category.name}
-                                </label>
-                              ))
-                            ) : (
-                              <div>You need to add category</div>
-                            )}
-                          </div>
+                            options={
+                              Array.isArray(sellerCategories) &&
+                              sellerCategories.length >= 1
+                                ? sellerCategories.map((cat) => {
+                                    return {
+                                      name: cat.name,
+                                      _id: cat._id,
+                                    };
+                                  })
+                                : []
+                            } // Options to display in the dropdown
+                            selectedValues={
+                              formik.values.Category
+                                ? formik.values.Category
+                                : []
+                            }
+                            placeholder="Select Category"
+                            // Preselected value to persist in dropdown
+                            onSelect={(selectedList, selectedItem) => {
+                              formik.values.Category = selectedList;
+                              console.log(formik.values.Category);
+                            }} // Function will trigger on select event
+                            onRemove={(selectedList, selectedItem) => {
+                              formik.values.Category = selectedList;
+                              console.log(formik.values.Category);
+                            }} // Function will trigger on remove event
+                            displayValue="name" // Property name to display in the dropdown options
+                          />
 
                           {formik.errors.Category && formik.touched.Category ? (
                             <div class="error">* {formik.errors.Category}</div>

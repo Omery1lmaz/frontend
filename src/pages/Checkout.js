@@ -51,7 +51,8 @@ const Checkout = () => {
       .required("Table is required")
       .min(0, "Table must be beetwen 0 and 100")
       .max(100, "Table must be beetwen 0 and 100"),
-    Deal: Yup.bool().required("Deal is required"),
+    Deal: Yup.boolean().oneOf([true], "Lütfen sözleşmeyi onaylayınız"),
+    isTakeAway: Yup.boolean(),
   });
 
   useEffect(() => {
@@ -88,11 +89,12 @@ const Checkout = () => {
                   Table: "",
                   orderMessage: "",
                   Deal: false,
+                  isTakeAway: false,
                 }}
                 validationSchema={validate}
                 onSubmit={(values, { resetForm }) => {
                   console.log(values);
-                  const { Name, Table, orderMessage } = values;
+                  const { Name, Table, orderMessage, isTakeAway } = values;
                   console.log(
                     cartTotalAmount,
                     "cart total amount before dispacth"
@@ -107,6 +109,7 @@ const Checkout = () => {
                       shippingAddress: { table: Table },
                       productsQnty: cartItems.totalQuantity,
                       totalPrice: cartTotalAmount,
+                      isTakeAway,
                     })
                   );
                   resetForm({ values: "" });
@@ -129,7 +132,9 @@ const Checkout = () => {
                         onBlur={formik.handleBlur}
                       />
                     </div>
-
+                    {formik.errors.Name && formik.touched.Name ? (
+                      <div class="error">* {formik.errors.Name}</div>
+                    ) : null}
                     <div className="form__group">
                       <input
                         type="number"
@@ -142,6 +147,9 @@ const Checkout = () => {
                         onBlur={formik.handleBlur}
                       />
                     </div>
+                    {formik.errors.Table && formik.touched.Table ? (
+                      <div class="error">* {formik.errors.Table}</div>
+                    ) : null}
                     <div className="form__group">
                       <input
                         type="area"
@@ -154,7 +162,10 @@ const Checkout = () => {
                         style={{ height: "80px" }}
                       />
                     </div>
-
+                    {formik.errors.orderMessage &&
+                    formik.touched.orderMessage ? (
+                      <div class="error">* {formik.errors.orderMessage}</div>
+                    ) : null}
                     <div className="form__group d-flex mb-1">
                       <input
                         type="checkbox"
@@ -165,10 +176,30 @@ const Checkout = () => {
                         onClick={() => handleOpen()}
                         onChange={formik.handleChange}
                         value={formik.values.Deal}
-                        required
                       />
                       <span>Lorem ipsum</span>
                     </div>
+                    {formik.errors.Deal && formik.touched.Deal ? (
+                      <div class="error">* {formik.errors.Deal}</div>
+                    ) : null}
+                    {Array.isArray(cartItems) &&
+                      cartItems.length >= 1 &&
+                      cartItems[0].seller.isTakeAway && (
+                        <div className="form__group d-flex mb-1">
+                          <input
+                            type="checkbox"
+                            placeholder="isTakeAway"
+                            id="isTakeAway"
+                            name="isTakeAway"
+                            style={{ width: "max-content", marginRight: "5px" }}
+                            onClick={() => handleOpen()}
+                            onChange={formik.handleChange}
+                            value={formik.values.isTakeAway}
+                          />
+                          <span>Take Away</span>
+                        </div>
+                      )}
+
                     <button type="submit" className="addTOCart__btn">
                       Payment
                     </button>

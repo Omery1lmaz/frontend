@@ -100,6 +100,8 @@ const OrderList = () => {
                             <span>${item.totalPrice}</span>
                           </td>
                           <td className="text-center">
+                          </td>
+                          <td className="text-center">
                             <span>{moment(item.date).fromNow()}</span>
                           </td>
                           <td className="text-center">

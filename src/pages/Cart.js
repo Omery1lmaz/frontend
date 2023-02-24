@@ -14,7 +14,6 @@ const Cart = () => {
     (state) => state.auth
   );
 
-    
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   return (
@@ -58,7 +57,9 @@ const Cart = () => {
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <h6>Company:</h6>
-                <span className="seller_company">{cartItems[0]?.seller.name}</span>
+                <span className="seller_company">
+                  {cartItems[0]?.seller.name}
+                </span>
               </div>
               <p>Taxes and shipping will calculate at checkout</p>
               <Link to="/checkout">
@@ -68,7 +69,6 @@ const Cart = () => {
           </Col>
         </Row>
       </Container>
-     
     </Helmet>
   );
 };
@@ -88,7 +88,7 @@ const Tr = (props) => {
             price,
             image01,
             variation,
-            seller: seller ? seller : null
+            seller: seller ? seller : null,
           })
         )
       : infoNotification("Lütfen giriş yapınız");
@@ -148,5 +148,3 @@ const Tr = (props) => {
 };
 
 export default Cart;
-
-
