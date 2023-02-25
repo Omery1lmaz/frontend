@@ -51,7 +51,7 @@ const ProductList = () => {
         <Row>
           <Col className="d-flex justify-content-center align-items-center flex-column">
             <h4>Products</h4>
-            <Button className="my-3">
+            <Button className="my-3" onClick={() => navigate("/add-product")}>
               <i className="fas fa-plus"></i> Create Product
             </Button>
           </Col>

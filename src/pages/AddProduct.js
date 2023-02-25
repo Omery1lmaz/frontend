@@ -55,9 +55,7 @@ const AddProduct = () => {
   const validate = Yup.object({
     Name: Yup.string().required("Name is required"),
     Brand: Yup.string().required("Brand is required"),
-    Description: Yup.string()
-      .required("Description is required")
-      .min(36, "Minimum 36 Karakter olmalıdır"),
+    Description: Yup.string().required("Description is required"),
     Price: Yup.number("Ürün fiyatı harf içermemelidir")
       .min(1, "Fiyat 1 ya da daha yüksek olmalıdır")
       .positive()

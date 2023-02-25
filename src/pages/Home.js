@@ -98,15 +98,14 @@ const Home = () => {
           <Row>
             <Col lg="6" md="6">
               <div className="hero__content  ">
-                <h5 className="mb-3">Easy way to make an order</h5>
                 <h1 className="mb-4 hero__title">
-                  <span>HUNGRY?</span> Just wait <br /> food at
-                  <span> your door</span>
+                  <span>Bi tıkla Sipariş</span>te <br /> sipariş vermek hiç bu kadar kolay olmamıştı
+                  {/* <span>Bi tıkla Sipariş</span> ile <br /> artık siparişler bi' tık uzağınızda */}
+                  <p>İstediğiniz zaman garsonsuz sipariş verebilir</p>
                 </h1>
 
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui
-                  magni delectus tenetur autem, sint veritatis!
+                  
                 </p>
 
                 <div className="hero__btns d-flex align-items-center gap-5 mt-4">
