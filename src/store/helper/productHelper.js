@@ -1,5 +1,4 @@
 import axios from "axios";
-import Cookies from "js-cookie";
 
 const getCategoriesHelper = async () => {
   const response = await axios.get(
@@ -106,7 +105,6 @@ const getCategoryByIdHelper = async ({ id, userId }) => {
 };
 
 const getCategoriesBySellerHelper = async ({ id, user }) => {
-  console.log("asdasddatajdnsajkfnjsk");
   const response = await axios.get(
     `http://localhost:4000/api/products/categories/seller`,
     { withCredentials: true }
@@ -116,7 +114,6 @@ const getCategoriesBySellerHelper = async ({ id, user }) => {
 };
 
 const getCategoriesBySellerIdHelper = async (id) => {
-  console.log("asdasddatajdnsajkfnjsk");
   const response = await axios.get(
     `http://localhost:4000/api/products/categories/${id}`
   );
@@ -186,6 +183,15 @@ const getProductsBySeller = async (id) => {
   return response.data;
 };
 
+const getProductsBySellerWithLimit = async ({ id, skip }) => {
+  console.log(skip, "skip 1");
+  const limit = 10;
+  const response = await axios.get(
+    `http://localhost:4000/api/products/seller/limit/${id}/${limit}/${skip}`
+  );
+  return response.data;
+};
+
 const getCatsHelper = async () => {
   const response = await axios.get(
     `http://localhost:4000/api/products/categories/seller`,
@@ -228,6 +234,7 @@ const productService = {
   createOrder,
   deleteOrder,
   UpdateOrderStatus,
+  getProductsBySellerWithLimit,
   getCategoriesBySellerIdHelper,
 };
 export default productService;

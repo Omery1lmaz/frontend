@@ -57,7 +57,7 @@ export const createOrder = createAsyncThunk(
       seller,
       shippingAddress,
       productsQnty,
-      isTakeAway
+      isTakeAway,
     },
     thunkAPI
   ) => {
@@ -71,7 +71,7 @@ export const createOrder = createAsyncThunk(
         orderMessage,
         productsQnty,
         totalPrice,
-        isTakeAway
+        isTakeAway,
       });
       const v = {
         response,
@@ -357,6 +357,30 @@ export const getProductsBySeller = createAsyncThunk(
   }
 );
 
+export const getProductsBySellerLimit = createAsyncThunk(
+  "/getProductsBySellerLimit",
+  async ({ id, skip }, thunkAPI) => {
+    console.log(skip, "skip");
+    const v = skip == 1 ? 0 : skip * 10 - 10;
+    try {
+      const res = await productService.getProductsBySellerWithLimit({
+        id,
+        skip: v,
+      });
+      return res;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification(error.response.data);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const addProduct = createAsyncThunk(
   "/addProduct",
   async (product, thunkAPI) => {
@@ -404,6 +428,7 @@ const initialState = {
   orders: [],
   order: {},
   product: {},
+  sellerProducts: [],
 };
 
 // Then, handle actions in your reducers:
@@ -426,6 +451,19 @@ const productSlice = createSlice({
         state.messageP = action.payload;
       })
       .addCase(getCategoriesBySellerId.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
+      .addCase(getProductsBySellerLimit.fulfilled, (state, action) => {
+        state.isLoadingP = false;
+        state.sellerProducts = action.payload;
+      })
+      .addCase(getProductsBySellerLimit.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(getProductsBySellerLimit.pending, (state, action) => {
         state.isLoadingP = true;
       })
       .addCase(getCatsBySeller.fulfilled, (state, action) => {

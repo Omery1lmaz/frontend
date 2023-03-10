@@ -63,7 +63,7 @@ const Routers = () => {
       {user && <Route path="/orders" element={<OrderList />} />}
       {user && <Route path="/edit-category/:id" element={<EditCategory />} />}
       {user && <Route path="/category-list" element={<CategoryList />} />}
-      {user && <Route path="/product-list" element={<ProductList />} />}
+      {user && <Route path="/product-list/:page" element={<ProductList />} />}
       <Route path="/users/:id/verify/:token" element={<VerifyUser />} />
       <Route path="/reset-password" element={<ForgetPassword />} />
       <Route

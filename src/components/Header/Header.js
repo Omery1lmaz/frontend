@@ -35,7 +35,7 @@ const seller_nav__links = [
   },
   {
     display: "Products",
-    path: "/product-list",
+    path: "/product-list/1",
   },
   {
     display: "Orders",
