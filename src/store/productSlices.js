@@ -73,10 +73,6 @@ export const createOrder = createAsyncThunk(
         totalPrice,
         isTakeAway,
       });
-      const v = {
-        response,
-        status: "ok",
-      };
       console.log("test");
       successNotification("Order Oluşturuldu");
       return {

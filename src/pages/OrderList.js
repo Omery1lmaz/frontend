@@ -1,21 +1,15 @@
-import { Table, Row, Col, Container } from "react-bootstrap";
-import React, { useRef, useEffect, useState } from "react";
-import { Formik, Form } from "formik";
-import Cookies from "js-cookie";
+import { Row, Col, Container } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
 import {
-  deleteOrder,
-  deleteProductById,
   getOrderBySeller,
   getOrderBySellerWithLimit,
-  getProductsBySeller,
   updateOrderStatus,
 } from "../store/productSlices";
 import "../styles/order-list.css";
@@ -49,8 +43,6 @@ const OrderList = () => {
   const dispatch = useDispatch();
   const { page } = useParams();
   const [open, setOpen] = useState(false);
-  const [status, setStatus] = useState();
-  const [date, setDate] = useState();
   const [filterOpen, setFilterOpen] = useState(false);
   const [filter, setFilter] = useState({});
   const [limit, setLimit] = useState(10);
@@ -60,9 +52,6 @@ const OrderList = () => {
   const handleCloseFilter = () => setFilterOpen(false);
   const [activePage, setActivePage] = useState(1);
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
   const filterStatusHandle = (e) => {
     setFilter({ ...filter, isReady: e.target.value });
   };
@@ -83,7 +72,7 @@ const OrderList = () => {
   };
   useEffect(() => {
     page && setActivePage(parseInt(page));
-    page == activePage ? getOrders() : setActivePage(parseInt(page));
+    page === activePage ? getOrders() : setActivePage(parseInt(page));
   }, []);
 
   useEffect(() => {
