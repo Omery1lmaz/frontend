@@ -39,7 +39,7 @@ const seller_nav__links = [
   },
   {
     display: "Orders",
-    path: "/orders",
+    path: "/orders/1",
   },
   {
     display: "Add Category",

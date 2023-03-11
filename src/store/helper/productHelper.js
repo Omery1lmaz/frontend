@@ -192,6 +192,17 @@ const getProductsBySellerWithLimit = async ({ id, skip }) => {
   return response.data;
 };
 
+const getOrderBySellerWithLimit = async ({ skip, limit, query }) => {
+  console.log(query, "query helper");
+  console.log(limit, "limit helper");
+  const response = await axios.put(
+    `http://localhost:4000/api/products/order/seller/limit/${limit}/${skip}`,
+    { query },
+    { withCredentials: true }
+  );
+  return response.data;
+};
+
 const getCatsHelper = async () => {
   const response = await axios.get(
     `http://localhost:4000/api/products/categories/seller`,
@@ -236,5 +247,6 @@ const productService = {
   UpdateOrderStatus,
   getProductsBySellerWithLimit,
   getCategoriesBySellerIdHelper,
+  getOrderBySellerWithLimit,
 };
 export default productService;

@@ -89,7 +89,7 @@ const ProductList = () => {
           >
             {Array.isArray(sellerProducts.products) &&
             sellerProducts.products.length === 0 ? (
-              <h5 className="text-center">Your cart is empty</h5>
+              <h5 className="text-center">No Product</h5>
             ) : (
               <table className="table">
                 <thead>
@@ -134,7 +134,6 @@ const ProductList = () => {
                           <i
                             class="fa-solid fa-xmark"
                             onClick={(e) => {
-                              // deleteProduct(item._id)
                               setDeleteProductId(item._id);
                               handleOpen();
                             }}

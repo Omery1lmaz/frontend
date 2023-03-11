@@ -60,7 +60,7 @@ const Routers = () => {
       <Route path="/add-product" element={<AddProduct />} />
       <Route path="/edit-product/:id" element={<EditProduct />} />
       {user && <Route path="/add-category" element={<AddCategory />} />}
-      {user && <Route path="/orders" element={<OrderList />} />}
+      {user && <Route path="/orders/:page" element={<OrderList />} />}
       {user && <Route path="/edit-category/:id" element={<EditCategory />} />}
       {user && <Route path="/category-list" element={<CategoryList />} />}
       {user && <Route path="/product-list/:page" element={<ProductList />} />}

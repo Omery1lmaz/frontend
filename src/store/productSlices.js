@@ -7,7 +7,7 @@ import {
 } from "../services/notification";
 import authService from "./helper/authHelper";
 import productService from "./helper/productHelper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export const getCategories = createAsyncThunk(
   "/getCategories",
@@ -381,6 +381,31 @@ export const getProductsBySellerLimit = createAsyncThunk(
   }
 );
 
+export const getOrderBySellerWithLimit = createAsyncThunk(
+  "/getOrderBySellerWithLimit",
+  async ({ skip, limit, query }, thunkAPI) => {
+    console.log(limit, "limit");
+    const v = skip === 1 ? 0 : skip * 10 - 10;
+    try {
+      const res = await productService.getOrderBySellerWithLimit({
+        skip: v,
+        limit,
+        query,
+      });
+      return res;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification(error.response.data);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const addProduct = createAsyncThunk(
   "/addProduct",
   async (product, thunkAPI) => {
@@ -440,6 +465,19 @@ const productSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      .addCase(getOrderBySellerWithLimit.fulfilled, (state, action) => {
+        state.isLoadingP = false;
+        state.orders = action.payload;
+      })
+      .addCase(getOrderBySellerWithLimit.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(getOrderBySellerWithLimit.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
       .addCase(getCategoriesBySellerId.fulfilled, (state, action) => {
         state.isLoadingP = false;
         state.categories = action.payload;

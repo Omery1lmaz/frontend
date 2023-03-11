@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -14,6 +14,7 @@ import {
   deleteOrder,
   deleteProductById,
   getOrderBySeller,
+  getOrderBySellerWithLimit,
   getProductsBySeller,
   updateOrderStatus,
 } from "../store/productSlices";
@@ -30,38 +31,109 @@ const style = {
   p: 4,
 };
 
+const pageLimitOptions = [
+  { label: 10, value: 10 },
+  { label: 25, value: 25 },
+  { label: 50, value: 50 },
+  { label: 100, value: 100 },
+];
+
+const statues = [
+  { label: "Not Started", value: "Not Started" },
+  { label: "InProgress", value: "InProgress" },
+  { label: "Ready", value: "Ready" },
+];
+
 const OrderList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [open, setOpen] = React.useState(false);
+  const { page } = useParams();
+  const [open, setOpen] = useState(false);
+  const [status, setStatus] = useState();
+  const [date, setDate] = useState();
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filter, setFilter] = useState({});
+  const [limit, setLimit] = useState(10);
   const handleOpen = () => setOpen(true);
+  const handleOpenFilter = () => setFilterOpen(true);
   const handleClose = () => setOpen(false);
+  const handleCloseFilter = () => setFilterOpen(false);
+  const [activePage, setActivePage] = useState(1);
 
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
+  const filterStatusHandle = (e) => {
+    setFilter({ ...filter, isReady: e.target.value });
+  };
+  const filterDateHandle = (e) => {
+    setFilter({ ...filter, date: { $gte: new Date(e.target.value) } });
+  };
 
   const [selectedOrder, setSelectedOrder] = useState();
-  let { isSuccessP, isErrorP, isLoadingP, sellerCategories, products, orders } =
-    useSelector((state) => state.product);
-  const handleDelete = (id) => {
-    dispatch(deleteOrder({ id }));
+  let { orders } = useSelector((state) => state.product);
+  const getOrders = () => {
+    dispatch(
+      getOrderBySellerWithLimit({
+        skip: parseInt(activePage),
+        limit,
+        query: filter,
+      })
+    );
   };
+  useEffect(() => {
+    page && setActivePage(parseInt(page));
+    page == activePage ? getOrders() : setActivePage(parseInt(page));
+  }, []);
+
+  useEffect(() => {
+    parseInt(page) <= 0 && navigate("/orders/1");
+    setActivePage(1);
+  }, []);
+  useEffect(() => {
+    getOrders();
+    navigate(`/orders/${activePage}`);
+  }, [activePage]);
 
   useEffect(() => {
     dispatch(getOrderBySeller());
+    console.log(limit, "limit active");
   }, []);
+
+  const pageLimitHandlechange = (e) => {
+    setLimit(e.target.value);
+  };
+
   useEffect(() => {
-    console.log(selectedOrder);
-  }, [selectedOrder]);
+    getOrders();
+    console.log(limit, "limit active");
+  }, [limit]);
 
   return (
     <>
       <Col className="d-flex justify-content-center align-items-center mt-5">
         <h4>Orders</h4>
       </Col>
-
       <Container style={{ margin: "30px auto" }}>
+        <Col className="d-flex align-items-baseline">
+          <div>
+            <span>Limit: </span>
+            <select
+              id="select-size"
+              className="select"
+              onChange={pageLimitHandlechange}
+            >
+              {pageLimitOptions.map((item) => {
+                return (
+                  <option key={item.value} value={item.value}>
+                    {item.label}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          <button onClick={() => handleOpenFilter()}>Filter</button>
+        </Col>
         <Row>
           <Col
             lg="8"
@@ -73,7 +145,12 @@ const OrderList = () => {
               <table className="table">
                 <thead>
                   <tr>
-                    <th style={{ width: "200px" }}>Name</th>
+                    <th
+                      style={{ width: "200px" }}
+                      onClick={() => handleOpenFilter}
+                    >
+                      Name
+                    </th>
                     <th className="text-center">Table</th>
                     <th className="text-center" style={{ width: "100px" }}>
                       Price
@@ -174,7 +251,25 @@ const OrderList = () => {
             )}
           </Col>
         </Row>
-        <Row className="align-items-center"></Row>
+        <Row className="align-items-center">
+          <Col className="d-flex justify-content-center align-items-center">
+            <button
+              onClick={() => {
+                activePage >= 2 && setActivePage(activePage - 1);
+              }}
+              disabled={page == 1}
+            >
+              Önceki Sayfa
+            </button>
+            <button
+              onClick={() => {
+                setActivePage(activePage + 1);
+              }}
+            >
+              Sonraki Sayfa
+            </button>
+          </Col>
+        </Row>
       </Container>
       <Modal
         open={open}
@@ -230,6 +325,40 @@ const OrderList = () => {
               <i class="ri-shopping-basket-line m-0"></i>
               <span className="ml-2">Ready</span>
             </button>
+          </Typography>
+        </Box>
+      </Modal>
+      <Modal
+        open={filterOpen}
+        onClose={handleCloseFilter}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Filter
+          </Typography>
+          <Typography
+            id="modal-modal-description"
+            className="w-100 d-flex flex-column justify-content-around"
+            sx={{ mt: 2 }}
+          >
+            <h5>Status Filter</h5>
+            <select
+              id="select-size"
+              className="select"
+              onChange={filterStatusHandle}
+            >
+              {statues.map((item) => {
+                return (
+                  <option key={item.value} value={item.value}>
+                    {item.label}
+                  </option>
+                );
+              })}
+            </select>
+            <input type="date" onChange={filterDateHandle}></input>
+            <button onClick={() => getOrders()}>Search</button>
           </Typography>
         </Box>
       </Modal>
