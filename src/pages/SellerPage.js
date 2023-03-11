@@ -12,17 +12,17 @@ const SellerPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
-  console.log(id, "id");
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.product
   );
   const [selectedSize, setSelectedSize] = useState();
+  const [filteredProducts, setFilteredProducts] = useState();
+  const [searchName, setSearchName] = useState("");
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
 
   const { isSuccessP, isErrorP, is, LoadingP, categories, products } =
     useSelector((state) => state.product);
-  console.log(products, "sellerCategories");
   useEffect(() => {
     dispatch(getProductsBySeller(id));
   }, []);
@@ -53,6 +53,18 @@ const SellerPage = () => {
         )
       : infoNotification("lütfen önce giriş yapınız");
   };
+  useEffect(() => {
+    console.log(searchName, "searchName");
+  }, [searchName]);
+
+  useEffect(() => {
+    console.log(filteredProducts, "filteredProducts");
+    if (searchName.trim() === "") {
+      console.log("trim boş");
+      setFilteredProducts(products);
+    }
+    console.log("trim", searchName.trim());
+  }, [filteredProducts]);
 
   return (
     <>
@@ -79,6 +91,7 @@ const SellerPage = () => {
               </div>
             </div>
           </div>
+
           <div style={{ display: "flex", justifyContent: "center" }}>
             <div className={`${styles.wrapper} ${styles.container2}`}>
               <ul className={styles.ul} style={{ overflowX: "auto" }}>
@@ -99,6 +112,18 @@ const SellerPage = () => {
               </ul>
             </div>
           </div>
+          <input
+            placeholder="Search Product"
+            className={`${styles.container} ${styles.test1}`}
+            style={{ border: "1px solid black" }}
+            onChange={(e) => {
+              setSearchName(e.target.value);
+              let x = products.filter((item) =>
+                item.name.toLowerCase().includes(searchName.toLowerCase())
+              );
+              setFilteredProducts(x);
+            }}
+          />
           {categories.map((category) => {
             return (
               <>
@@ -108,6 +133,7 @@ const SellerPage = () => {
                 >
                   <p className={styles.title}>{category.name}</p>
                 </div>
+
                 <div
                   style={{
                     display: "flex",
@@ -116,9 +142,8 @@ const SellerPage = () => {
                   }}
                 >
                   <div className={styles.container}>
-                    {products.map((product) => {
+                    {filteredProducts.map((product) => {
                       const a = product.categories.map((cat) => {
-                        console.log(cat, category, "cat category");
                         if (cat == category._id) {
                           return (
                             <div key={product._id} className={styles.card}>
@@ -150,24 +175,6 @@ const SellerPage = () => {
                                       </span>
                                     </>
                                   )}
-                                {/* <div
-                                  className=" d-flex align-items-center justify-content-between increase__decrease-btn"
-                                  style={{ background: "#000" }}
-                                >
-                                  <span
-                                    className="increase__btn"
-                                    // onClick={incrementItem}
-                                  >
-                                    <i class="ri-add-line"></i>
-                                  </span>
-                                  <span className="quantity">1</span>
-                                  <span
-                                    className="decrease__btn"
-                                    // onClick={decreaseItem}
-                                  >
-                                    <i class="ri-subtract-line"></i>
-                                  </span>
-                                </div> */}
                                 <i
                                   className={`fa fa-plus ${styles.icon}`}
                                   aria-hidden="true"
