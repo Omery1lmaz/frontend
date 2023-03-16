@@ -30,6 +30,10 @@ const nav__links = [
 
 const seller_nav__links = [
   {
+    display: "Dashboard",
+    path: "/",
+  },
+  {
     display: "Add Product",
     path: "/add-product",
   },

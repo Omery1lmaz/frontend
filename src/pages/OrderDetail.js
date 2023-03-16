@@ -33,26 +33,13 @@ const style = {
 
 const OrderDetail = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
-
-  const [selectedOrder, setSelectedOrder] = useState();
   let { order } = useSelector((state) => state.product);
 
   useEffect(() => {
     dispatch(getOrderById({ id }));
   }, []);
-  useEffect(() => {
-    console.log(selectedOrder);
-  }, [selectedOrder]);
-
   return (
     <>
       <Container style={{ marginTop: "30px" }}>

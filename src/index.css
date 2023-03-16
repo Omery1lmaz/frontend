@@ -6,8 +6,11 @@
 /* reset default style */
 
 :root {
-  --primary-color: #8229fd;
-  --secondary-color: #7dc4f6;
+  /* --primary-color: #8229fd; */
+  /* --primary-color: #fd7463; */
+  --primary-color: #ed4d2a;
+
+  --secondary-color: #4ab8b8;
 }
 * {
   margin: 0;

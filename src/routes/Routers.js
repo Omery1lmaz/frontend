@@ -27,6 +27,7 @@ import SellerOrders from "../pages/SellerOrders";
 import OrderList from "../pages/OrderList";
 import UserOrderList from "../pages/UserOrderList";
 import OrderDetail from "../pages/OrderDetail";
+import AdminDashboard from "../pages/AdminDashboard";
 const Routers = () => {
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -44,32 +45,43 @@ const Routers = () => {
   }, []);
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={user?.isAdmin ? <AdminDashboard /> : <Home />} />
       {/* <Route path="/" element={<Navigate to="/home/6335f47dd765bd4893812492" />} /> */}
-      <Route path="/home/:id" element={<SellerPage />} />
-      <Route path="/order" element={<UserOrderList />} />
-      <Route path="/order-detail/:id" element={<OrderDetail />} />
-      <Route path="/foods" element={<AllFoods />} />
-      <Route path="/home" element={<SellerOrders />} />
-      <Route path="/foods/:id" element={<FoodDetails />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/add-product" element={<AddProduct />} />
-      <Route path="/edit-product/:id" element={<EditProduct />} />
-      {user && <Route path="/add-category" element={<AddCategory />} />}
-      {user && <Route path="/orders/:page" element={<OrderList />} />}
-      {user && <Route path="/edit-category/:id" element={<EditCategory />} />}
-      {user && <Route path="/category-list" element={<CategoryList />} />}
-      {user && <Route path="/product-list/:page" element={<ProductList />} />}
-      <Route path="/users/:id/verify/:token" element={<VerifyUser />} />
+      <Route path="/home/:id" element={<SellerPage />} /> {/*OK*/}
+      <Route path="/order" element={<UserOrderList />} /> {/*OK*/}
+      <Route path="/order-detail/:id" element={<OrderDetail />} /> {/*OK*/}
+      <Route path="/foods" element={<AllFoods />} /> {/*Dont*/}
+      <Route path="/home" element={<SellerOrders />} /> {/*Dont*/}
+      <Route path="/foods/:id" element={<FoodDetails />} /> {/*OK*/}
+      <Route path="/cart" element={<Cart />} /> {/*OK*/}
+      <Route path="/checkout" element={<Checkout />} /> {/*OK*/}
+      <Route path="/login" element={<Login />} /> {/*OK*/}
+      <Route path="/register" element={<Register />} /> {/*OK*/}
+      <Route path="/contact" element={<Contact />} /> {/*Dont*/}
+      <Route path="/add-product" element={<AddProduct />} /> {/*Dont*/}
+      <Route path="/edit-product/:id" element={<EditProduct />} /> {/*Dont*/}
+      {user && <Route path="/add-category" element={<AddCategory />} />}{" "}
+      {/*Dont*/}
+      {user && <Route path="/orders/:page" element={<OrderList />} />}{" "}
+      {/*Dont*/}
+      {user && (
+        <Route path="/edit-category/:id" element={<EditCategory />} />
+      )}{" "}
+      {/*Dont*/}
+      {user && <Route path="/category-list" element={<CategoryList />} />}{" "}
+      {/*Dont*/}
+      {user && (
+        <Route path="/product-list/:page" element={<ProductList />} />
+      )}{" "}
+      {/*Dont*/}
+      <Route path="/users/:id/verify/:token" element={<VerifyUser />} />{" "}
+      {/*Dont*/}
       <Route path="/reset-password" element={<ForgetPassword />} />
       <Route
         path="/users/:id/reset-password/:token"
         element={<ResetPassword />}
-      />
+      />{" "}
+      {/*Dont*/}
     </Routes>
   );
 };

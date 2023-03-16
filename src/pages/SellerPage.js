@@ -142,71 +142,73 @@ const SellerPage = () => {
                   }}
                 >
                   <div className={styles.container}>
-                    {filteredProducts.map((product) => {
-                      const a = product.categories.map((cat) => {
-                        if (cat == category._id) {
-                          return (
-                            <div key={product._id} className={styles.card}>
-                              <div className={styles.card_div}>
-                                <p className={styles.productTitle}>
-                                  {product.name}
-                                </p>
-                                <img
-                                  src={product.image}
-                                  className={styles.productImg}
-                                  alt="ks"
-                                ></img>
-                              </div>
-                              <p>
-                                {Array.isArray(product.variations) &&
-                                product.variations &&
-                                product.variations.length > 1
-                                  ? product.variations[0].price
-                                  : product.defaultPrice}
-                                ₺
-                              </p>
-                              <div className={styles.card_div}>
-                                {Array.isArray(product.variations) &&
+                    {filteredProducts &&
+                      Array.isArray(filteredProducts) &&
+                      filteredProducts.map((product) => {
+                        const a = product.categories.map((cat) => {
+                          if (cat == category._id) {
+                            return (
+                              <div key={product._id} className={styles.card}>
+                                <div className={styles.card_div}>
+                                  <p className={styles.productTitle}>
+                                    {product.name}
+                                  </p>
+                                  <img
+                                    src={product.image}
+                                    className={styles.productImg}
+                                    alt="ks"
+                                  ></img>
+                                </div>
+                                <p>
+                                  {Array.isArray(product.variations) &&
                                   product.variations &&
-                                  product.variations.length > 1 && (
-                                    <>
-                                      <span>
-                                        Variaion: {product.variations[0].size}
-                                      </span>
-                                    </>
-                                  )}
-                                <i
-                                  className={`fa fa-plus ${styles.icon}`}
-                                  aria-hidden="true"
-                                  onClick={() =>
-                                    addItem({
-                                      id: product._id,
-                                      title: product.name,
-                                      price:
-                                        Array.isArray(product.variations) &&
-                                        product.variations &&
-                                        product.variations.length >= 1
-                                          ? product.variations[0].price
-                                          : product.defaultPrice,
-                                      image01: product.image,
-                                      variation:
-                                        Array.isArray(product.variations) &&
-                                        product.variations &&
-                                        product.variations.length >= 1
-                                          ? product.variations[0].size
-                                          : null,
-                                      sellerId: product.user._id,
-                                      sellerName: product.user.name,
-                                    })
-                                  }
-                                ></i>
+                                  product.variations.length > 1
+                                    ? product.variations[0].price
+                                    : product.defaultPrice}
+                                  ₺
+                                </p>
+                                <div className={styles.card_div}>
+                                  {Array.isArray(product.variations) &&
+                                    product.variations &&
+                                    product.variations.length > 1 && (
+                                      <>
+                                        <span>
+                                          Variaion: {product.variations[0].size}
+                                        </span>
+                                      </>
+                                    )}
+                                  <i
+                                    className={`fa fa-plus ${styles.icon}`}
+                                    aria-hidden="true"
+                                    onClick={() =>
+                                      addItem({
+                                        id: product._id,
+                                        title: product.name,
+                                        price:
+                                          Array.isArray(product.variations) &&
+                                          product.variations &&
+                                          product.variations.length >= 1
+                                            ? product.variations[0].price
+                                            : product.defaultPrice,
+                                        image01: product.image,
+                                        variation:
+                                          Array.isArray(product.variations) &&
+                                          product.variations &&
+                                          product.variations.length >= 1
+                                            ? product.variations[0].size
+                                            : null,
+                                        sellerId: product.user._id,
+                                        sellerName: product.user.name,
+                                      })
+                                    }
+                                  ></i>
+                                </div>
                               </div>
-                            </div>
-                          );
-                        }
-                      });
-                      return a;
-                    })}
+                            );
+                          }
+                        });
+                        return a;
+                      })}
                   </div>
                 </div>
               </>

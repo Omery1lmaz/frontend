@@ -17,9 +17,6 @@ import { infoNotification } from "../services/notification";
 
 const FoodDetails = () => {
   const [tab, setTab] = useState("desc");
-  const [enteredName, setEnteredName] = useState("");
-  const [enteredEmail, setEnteredEmail] = useState("");
-  const [reviewMsg, setReviewMsg] = useState("");
   const { id } = useParams();
   const dispatch = useDispatch();
   const { isLoading, isError, isSuccess, message, product } = useSelector(
@@ -59,7 +56,6 @@ const FoodDetails = () => {
       : infoNotification("lütfen önce giriş yapınız");
   };
   useEffect(() => {
-    console.log(typeof name, "type of product name");
     if (product && !name) {
       setName(product.name);
       setDefaultPrice(product.defaultPrice);

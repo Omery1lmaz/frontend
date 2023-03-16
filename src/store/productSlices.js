@@ -25,6 +25,23 @@ export const getCategories = createAsyncThunk(
     }
   }
 );
+
+export const getAdminDashBoardInf = createAsyncThunk(
+  "/getAdminDashBoardInf",
+  async ({query},thunkAPI) => {
+    try {
+      return await productService.getAdminDashboardInf({query});
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 export const updateOrderStatus = createAsyncThunk(
   "/updateOrderStatus",
   async ({ id, status }, thunkAPI) => {
@@ -450,6 +467,7 @@ const initialState = {
   order: {},
   product: {},
   sellerProducts: [],
+  getAdminDashBoardInf: {},
 };
 
 // Then, handle actions in your reducers:
@@ -472,6 +490,19 @@ const productSlice = createSlice({
         state.messageP = action.payload;
       })
       .addCase(getOrderBySellerWithLimit.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
+      .addCase(getAdminDashBoardInf.fulfilled, (state, action) => {
+        state.isLoadingP = false;
+        state.getAdminDashBoardInf = action.payload;
+      })
+      .addCase(getAdminDashBoardInf.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(getAdminDashBoardInf.pending, (state, action) => {
         state.isLoadingP = true;
       })
       .addCase(getCategoriesBySellerId.fulfilled, (state, action) => {

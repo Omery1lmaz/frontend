@@ -2,37 +2,49 @@ import axios from "axios";
 
 const getCategoriesHelper = async () => {
   const response = await axios.get(
-    "http://localhost:4000/api/products/categories"
+    "http://localhost:4000/api/categories/categories"
   );
 
   return response.data;
 };
 const getOrderBySeller = async () => {
   const response = await axios.get(
-    "http://localhost:4000/api/products/order/seller",
+    "http://localhost:4000/api/orders/order/seller",
     { withCredentials: true }
   );
   const arrayfororders = [...response.data];
   arrayfororders.sort((a, b) => new Date(b.date) - new Date(a.date));
   return arrayfororders;
 };
+
+const getAdminDashboardInf = async ({ query }) => {
+  const res = await axios.post(
+    "http://localhost:4000/api/admin/adminDashboard",
+    { query: query },
+    {
+      withCredentials: true,
+    }
+  );
+  return res.data;
+};
+
 const UpdateOrderStatus = async ({ id, status }) => {
   console.log(status);
   const response = await axios.put(
-    `http://localhost:4000/api/products/order/${id}`,
+    `http://localhost:4000/api/orders/order/${id}`,
     { status },
     { withCredentials: true }
   );
   return response.data;
 };
 const getOrderById = async ({ id }) => {
-  return axios.get(`http://localhost:4000/api/products/order/${id}`, {
+  return axios.get(`http://localhost:4000/api/orders/order/${id}`, {
     withCredentials: true,
   });
 };
 
 const deleteOrder = async ({ id }) => {
-  return axios.delete(`http://localhost:4000/api/products/order/${id}`, {
+  return axios.delete(`http://localhost:4000/api/orders/order/${id}`, {
     withCredentials: true,
   });
 };
@@ -49,7 +61,7 @@ const createOrder = async ({
   productsQnty,
 }) => {
   const response = axios.post(
-    "http://localhost:4000/api/products/order",
+    "http://localhost:4000/api/orders/order",
     {
       isTakeAway,
       totalPrice,
@@ -106,25 +118,23 @@ const getCategoryByIdHelper = async ({ id, userId }) => {
 
 const getCategoriesBySellerHelper = async ({ id, user }) => {
   const response = await axios.get(
-    `http://localhost:4000/api/products/categories/seller`,
+    `http://localhost:4000/api/categories/categories/seller`,
     { withCredentials: true }
   );
-  console.log(response.data, "datajdnsajkfnjsk");
   return response.data;
 };
 
 const getCategoriesBySellerIdHelper = async (id) => {
   const response = await axios.get(
-    `http://localhost:4000/api/products/categories/${id}`
+    `http://localhost:4000/api/categories/categories/${id}`
   );
-  console.log(response.data, "datajdnsajkfnjsk");
   return response.data;
 };
 
 const addCategoriesHelper = async (category) => {
   console.log(category);
   const response = await axios.post(
-    "http://localhost:4000/api/products/add-categories",
+    "http://localhost:4000/api/categories/add-categories",
     category,
     { withCredentials: true }
   );
@@ -137,7 +147,7 @@ const addCategoriesHelper = async (category) => {
 const updateCategory = async ({ category, id }) => {
   console.log("categoryID", id);
   const response = await axios.put(
-    `http://localhost:4000/api/products/categories/${id}`,
+    `http://localhost:4000/api/categories/categories/${id}`,
     category,
     { withCredentials: true }
   );
@@ -196,7 +206,7 @@ const getOrderBySellerWithLimit = async ({ skip, limit, query }) => {
   console.log(query, "query helper");
   console.log(limit, "limit helper");
   const response = await axios.put(
-    `http://localhost:4000/api/products/order/seller/limit/${limit}/${skip}`,
+    `http://localhost:4000/api/orders/order/seller/limit/${limit}/${skip}`,
     { query },
     { withCredentials: true }
   );
@@ -205,7 +215,7 @@ const getOrderBySellerWithLimit = async ({ skip, limit, query }) => {
 
 const getCatsHelper = async () => {
   const response = await axios.get(
-    `http://localhost:4000/api/products/categories/seller`,
+    `http://localhost:4000/api/categories/categories/seller`,
     { withCredentials: true }
   );
   return response.data;
@@ -248,5 +258,6 @@ const productService = {
   getProductsBySellerWithLimit,
   getCategoriesBySellerIdHelper,
   getOrderBySellerWithLimit,
+  getAdminDashboardInf,
 };
 export default productService;

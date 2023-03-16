@@ -33,16 +33,12 @@ const style = {
 const UserOrderList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
 
-  const [selectedOrder, setSelectedOrder] = useState();
-  let { isSuccessP, isErrorP, isLoadingP, sellerCategories, products, orders } =
+  let { orders } =
     useSelector((state) => state.product);
   const handleDelete = (id) => {
     dispatch(deleteOrder({ id }));
@@ -51,10 +47,6 @@ const UserOrderList = () => {
   useEffect(() => {
     dispatch(getOrderBySeller());
   }, []);
-  useEffect(() => {
-    console.log(selectedOrder);
-  }, [selectedOrder]);
-
   return (
     <>
       <Col className="d-flex justify-content-center align-items-center mt-5">
