@@ -1,15 +1,13 @@
-import React, { useRef, useEffect } from "react";
-import { Formik, Form } from "formik";
+import React, { useEffect } from "react";
+import { Formik } from "formik";
 import * as Yup from "yup";
-import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addCategories, getCategoriesBySeller } from "../store/productSlices";
-import { ToastContainer, toast } from "react-toastify";
+import { addCategories } from "../store/productSlices";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddCategory = () => {
-  const token = Cookies.get("connect.sid");
   const validate = Yup.object({
     name: Yup.string().required("name is required"),
     description: Yup.string().required("description is required"),
@@ -17,12 +15,8 @@ const AddCategory = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const {  isSuccessP, isErrorP, isLoadingP, message, sellerCategories } = useSelector(
+  const {  isSuccessP, isErrorP, isLoadingP, message, } = useSelector(
     (state) => state.product
-  );
-
-  const { user } = useSelector(
-    (state) => state.auth
   );
   
   useEffect(() => {

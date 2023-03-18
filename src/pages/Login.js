@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState, CSSProperties } from "react";
 import Helmet from "../components/Helmet/Helmet";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
@@ -8,10 +8,9 @@ import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../store/authenticationSlices";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "../styles/login.css";
 
+import "../styles/login.css";
+import ButtonSpinner from "../components/UI/spinners/spinner";
 const Login = () => {
   const token = Cookies.get("connect.sid");
   const validate = Yup.object({
@@ -25,7 +24,6 @@ const Login = () => {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
-
   useEffect(() => {
     user && navigate("/");
   }, [user]);
@@ -94,8 +92,12 @@ const Login = () => {
                           Forget Password
                         </a>
                       </span>
-                      <button type="submit" className="login-button w-100">
-                        Login
+                      <button
+                        disabled={isLoading}
+                        type="submit"
+                        className="login-button w-100"
+                      >
+                        {isLoading ? <ButtonSpinner /> : <span>Login</span>}
                       </button>
                     </div>
                     <span className="login-create-acc">

@@ -10,6 +10,7 @@ import { RegisterUser } from "../store/authenticationSlices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/login.css";
+import ButtonSpinner from "../components/UI/spinners/spinner";
 
 const Register = () => {
   const validate = Yup.object({
@@ -106,13 +107,15 @@ const Register = () => {
                     </div>
 
                     <div className="d-flex flex-column align-items-center">
-                      <button type="submit" className="login-button w-100">
-                        Sign Up
+                      <button
+                        disabled={isLoading}
+                        type="submit"
+                        className="login-button w-100"
+                      >
+                        {isLoading ? <ButtonSpinner /> : <span>Sign Up</span>}
                       </button>
                       <span className="login-create-acc">
-                        <Link to="/login">
-                          Already have an account? Login{" "}
-                        </Link>
+                        <Link to="/login">Already have an account? Login </Link>
                       </span>
                     </div>
                   </form>

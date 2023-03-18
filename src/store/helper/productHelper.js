@@ -154,10 +154,14 @@ const updateCategory = async ({ category, id }) => {
   return response.data;
 };
 
-const addProduct = async (product) => {
+const addProduct = async ({ product, formData }) => {
+  for (var key of formData.entries()) {
+    console.log(JSON.stringify(key[0]) + ", " + JSON.stringify(key[1]));
+  }
+
   const response = await axios.post(
     "http://localhost:4000/api/products/",
-    product,
+    formData,
     { withCredentials: true }
   );
   return response.data;

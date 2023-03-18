@@ -14,12 +14,13 @@ import "../styles/product-details.css";
 import ProductCard from "../components/UI/product-card/ProductCard";
 import { getProduct } from "../store/productSlices";
 import { infoNotification } from "../services/notification";
+import PageSpinner from "../components/UI/spinners/pageSpinner";
 
 const FoodDetails = () => {
   const [tab, setTab] = useState("desc");
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { isLoading, isError, isSuccess, message, product } = useSelector(
+  const { isLoadingP, isError, isSuccess, message, product } = useSelector(
     (state) => state.product
   );
   const [name, setName] = useState();
@@ -86,15 +87,6 @@ const FoodDetails = () => {
       setPrice(variation.price);
     }
   };
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-  };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [product]);
-
   useEffect(() => {
     if (variations && variations.length > 0) {
       setPrice(variations[0].price);
@@ -103,69 +95,75 @@ const FoodDetails = () => {
   }, [variations]);
 
   return (
-    <Helmet title="Product-details">
-      <section>
-        <Container>
-          <Row>
-            <Col lg="4" md="4">
-              <div className="product__main-img">
-                <img src={image} alt="" className="w-100" />
-              </div>
-            </Col>
-
-            <Col lg="6" md="6">
-              <div className="single__product-content">
-                <h2 className="product__title mb-3">{name}</h2>
-                <span>{`seller: ${user?.name}`}</span>
-                <p className="product__price">
-                  <i class="fa-solid fa-turkish-lira-sign"></i>
-                  <span>{price}</span>
-                </p>
-                <p className="category mb-5">Category: Food</p>
-                {Array.isArray(variations) &&
-                variations &&
-                variations.length > 1 ? (
-                  <div>
-                    <span className="size-span">Size: </span>
-                    <select
-                      id="select-size"
-                      className="select"
-                      onChange={handleChange}
-                    >
-                      {variations.map((item) => {
-                        return (
-                          <option key={item.id} value={item._id}>
-                            {item.size}
-                          </option>
-                        );
-                      })}
-                    </select>
+    <>
+      {isLoadingP ? (
+        <PageSpinner />
+      ) : (
+        <Helmet title="Product-details">
+          <section>
+            <Container>
+              <Row>
+                <Col lg="4" md="4">
+                  <div className="product__main-img">
+                    <img src={image} alt="" className="w-100" />
                   </div>
-                ) : null}
-                <button onClick={addItem} className="addTOCart__btn btn">
-                  Add to Cart
-                </button>
-              </div>
-            </Col>
-            <Col lg="12">
-              <div className="tabs d-flex align-items-center gap-5 py-3">
-                <h6
-                  className={` ${tab === "desc" ? "tab__active" : ""}`}
-                  onClick={() => setTab("desc")}
-                >
-                  Description
-                </h6>
-              </div>
-              {tab === "desc" && (
-                <div className="tab__content">
-                  <p>{description}</p>
-                </div>
-              )}
-            </Col>
-          </Row>
-        </Container>
-      </section>
-    </Helmet>
+                </Col>
+
+                <Col lg="6" md="6">
+                  <div className="single__product-content">
+                    <h2 className="product__title mb-3">{name}</h2>
+                    <span>{`seller: ${user?.name}`}</span>
+                    <p className="product__price">
+                      <i class="fa-solid fa-turkish-lira-sign"></i>
+                      <span>{price}</span>
+                    </p>
+                    <p className="category mb-5">Category: Food</p>
+                    {Array.isArray(variations) &&
+                    variations &&
+                    variations.length > 1 ? (
+                      <div>
+                        <span className="size-span">Size: </span>
+                        <select
+                          id="select-size"
+                          className="select"
+                          onChange={handleChange}
+                        >
+                          {variations.map((item) => {
+                            return (
+                              <option key={item.id} value={item._id}>
+                                {item.size}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                    ) : null}
+                    <button onClick={addItem} className="addTOCart__btn btn">
+                      Add to Cart
+                    </button>
+                  </div>
+                </Col>
+                <Col lg="12">
+                  <div className="tabs d-flex align-items-center gap-5 py-3">
+                    <h6
+                      className={` ${tab === "desc" ? "tab__active" : ""}`}
+                      onClick={() => setTab("desc")}
+                    >
+                      Description
+                    </h6>
+                  </div>
+                  {tab === "desc" && (
+                    <div className="tab__content">
+                      <p>{description}</p>
+                    </div>
+                  )}
+                </Col>
+              </Row>
+            </Container>
+          </section>
+        </Helmet>
+      )}
+    </>
   );
 };
 

@@ -1,6 +1,5 @@
 import React from "react";
 
-import CommonSection from "../components/UI/common-section/CommonSection";
 import Helmet from "../components/Helmet/Helmet";
 import "../styles/cart-page.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,11 +8,6 @@ import { Link } from "react-router-dom";
 import { cartActions } from "../store/shopping-cart/cartSlice";
 import { infoNotification } from "../services/notification";
 const Cart = () => {
-  const dispatch = useDispatch();
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
-
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   return (

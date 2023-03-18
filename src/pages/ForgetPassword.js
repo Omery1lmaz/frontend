@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ResetPasswordLink } from "../store/authenticationSlices";
+import ButtonSpinner from "../components/UI/spinners/spinner";
 const ForgetPassword = () => {
   const validate = Yup.object({
     email: Yup.string().email("Email is invalid").required("Email is required"),
@@ -27,8 +28,8 @@ const ForgetPassword = () => {
       toast.success("Emailinizi Onaylayınız");
     }
     if (isError) {
-        toast.error("Hata oluştu");
-      }
+      toast.error("Hata oluştu");
+    }
   }, [isSuccess, isError]);
 
   return (
@@ -66,8 +67,12 @@ const ForgetPassword = () => {
                         <div class="error">* {formik.errors.email}</div>
                       ) : null}
                     </div>
-                    <button type="submit" className="addTOCart__btn">
-                      Get Link
+                    <button
+                      disabled={isLoading}
+                      type="submit"
+                      className="addTOCart__btn"
+                    >
+                      {isLoading ? <ButtonSpinner /> : <span>Get Link</span>}
                     </button>
                   </form>
                 </Col>

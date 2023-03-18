@@ -14,6 +14,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import PageSpinner from "../components/UI/spinners/pageSpinner";
 
 const style = {
   position: "absolute",
@@ -75,145 +76,149 @@ const ProductList = () => {
 
   return (
     <>
-      <Container style={{ margin: "30px auto" }}>
-        <Row>
-          <Col className="d-flex justify-content-center align-items-center flex-column">
-            <h4>Products</h4>
-            <Button className="my-3" onClick={() => navigate("/add-product")}>
-              <i className="fas fa-plus"></i> Create Product
-            </Button>
-          </Col>
-          <Col
-            lg="12"
-            className="d-flex justify-content-center align-items-center"
+      {isLoadingP ? (
+        <PageSpinner />
+      ) : (
+        <Container style={{ margin: "30px auto" }}>
+          <Row>
+            <Col className="d-flex justify-content-center align-items-center flex-column">
+              <h4>Products</h4>
+              <Button className="my-3" onClick={() => navigate("/add-product")}>
+                <i className="fas fa-plus"></i> Create Product
+              </Button>
+            </Col>
+            <Col
+              lg="12"
+              className="d-flex justify-content-center align-items-center"
+            >
+              {Array.isArray(sellerProducts.products) &&
+              sellerProducts.products.length === 0 ? (
+                <h5 className="text-center">No Product</h5>
+              ) : (
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th className="text-center">Variation</th>
+                      <th className="text-center">Price</th>
+                      <th className="text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sellerProducts.products &&
+                      sellerProducts.products.map((item) => (
+                        <tr>
+                          <td className="text-center cart__img-box">
+                            <img src={item.image} alt="" />
+                            <span>{item.name}</span>
+                          </td>
+                          <td className="text-center">
+                            {item.variations.length == 0 ? (
+                              <span> No Variation</span>
+                            ) : (
+                              <select
+                                id="select-size"
+                                className="select variation"
+                              >
+                                {item.variations.map((item) => {
+                                  return (
+                                    <option key={item.id} value={item._id}>
+                                      {item.size + " " + item.price + "₺"}
+                                      {/* <i className="fa-solid fa-turkish-lira-sign"></i> */}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                            )}
+                          </td>
+                          <td className="text-center">
+                            <span>${item.defaultPrice}</span>
+                          </td>
+                          <td className="text-center cart__item-del">
+                            <i
+                              class="fa-solid fa-xmark"
+                              onClick={(e) => {
+                                setDeleteProductId(item._id);
+                                handleOpen();
+                              }}
+                            ></i>
+                            <i
+                              class="fa-regular fa-pen-to-square madeleteProduct(item._id)rgin-left"
+                              onClick={(e) =>
+                                navigate(`/edit-product/${item._id}`)
+                              }
+                            ></i>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              )}
+            </Col>
+          </Row>
+          <Row className="align-items-center">
+            <Col className="d-flex justify-content-center align-items-center">
+              <button
+                onClick={() => {
+                  activePage >= 2 && setActivePage(activePage - 1);
+                }}
+              >
+                Önceki Sayfa
+              </button>
+              <button
+                onClick={() => {
+                  setActivePage(activePage + 1);
+                }}
+              >
+                Sonraki Sayfa
+              </button>
+            </Col>
+          </Row>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
           >
-            {Array.isArray(sellerProducts.products) &&
-            sellerProducts.products.length === 0 ? (
-              <h5 className="text-center">No Product</h5>
-            ) : (
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Product</th>
-                    <th className="text-center">Variation</th>
-                    <th className="text-center">Price</th>
-                    <th className="text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sellerProducts.products &&
-                    sellerProducts.products.map((item) => (
-                      <tr>
-                        <td className="text-center cart__img-box">
-                          <img src={item.image} alt="" />
-                          <span>{item.name}</span>
-                        </td>
-                        <td className="text-center">
-                          {item.variations.length == 0 ? (
-                            <span> No Variation</span>
-                          ) : (
-                            <select
-                              id="select-size"
-                              className="select variation"
-                            >
-                              {item.variations.map((item) => {
-                                return (
-                                  <option key={item.id} value={item._id}>
-                                    {item.size + " " + item.price + "₺"}
-                                    {/* <i className="fa-solid fa-turkish-lira-sign"></i> */}
-                                  </option>
-                                );
-                              })}
-                            </select>
-                          )}
-                        </td>
-                        <td className="text-center">
-                          <span>${item.defaultPrice}</span>
-                        </td>
-                        <td className="text-center cart__item-del">
-                          <i
-                            class="fa-solid fa-xmark"
-                            onClick={(e) => {
-                              setDeleteProductId(item._id);
-                              handleOpen();
-                            }}
-                          ></i>
-                          <i
-                            class="fa-regular fa-pen-to-square madeleteProduct(item._id)rgin-left"
-                            onClick={(e) =>
-                              navigate(`/edit-product/${item._id}`)
-                            }
-                          ></i>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            )}
-          </Col>
-        </Row>
-        <Row className="align-items-center">
-          <Col className="d-flex justify-content-center align-items-center">
-            <button
-              onClick={() => {
-                activePage >= 2 && setActivePage(activePage - 1);
-              }}
-            >
-              Önceki Sayfa
-            </button>
-            <button
-              onClick={() => {
-                setActivePage(activePage + 1);
-              }}
-            >
-              Sonraki Sayfa
-            </button>
-          </Col>
-        </Row>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Are u sure to delete product
-            </Typography>
-            <Typography
-              id="modal-modal-description"
-              className="d-flex"
-              sx={{ mt: 2 }}
-            >
-              <button
-                className="w-50"
-                onClick={() => {
-                  deleteProduct(deleteProductId);
-                  handleClose();
-                }}
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Are u sure to delete product
+              </Typography>
+              <Typography
+                id="modal-modal-description"
+                className="d-flex"
+                sx={{ mt: 2 }}
               >
-                Yes
-              </button>
-              <button
-                className="w-50 ml-2"
+                <button
+                  className="w-50"
+                  onClick={() => {
+                    deleteProduct(deleteProductId);
+                    handleClose();
+                  }}
+                >
+                  Yes
+                </button>
+                <button
+                  className="w-50 ml-2"
+                  onClick={() => {
+                    handleClose();
+                  }}
+                >
+                  No
+                </button>
+              </Typography>
+              <Button
                 onClick={() => {
                   handleClose();
+                  setDeal(true);
                 }}
               >
-                No
-              </button>
-            </Typography>
-            <Button
-              onClick={() => {
-                handleClose();
-                setDeal(true);
-              }}
-            >
-              Okudum, Onaylıyorum
-            </Button>
-          </Box>
-        </Modal>
-      </Container>
+                Okudum, Onaylıyorum
+              </Button>
+            </Box>
+          </Modal>
+        </Container>
+      )}
     </>
   );
 };

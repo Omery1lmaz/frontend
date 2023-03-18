@@ -1,7 +1,7 @@
 .admin-card {
-  width: 29%;
-  min-width: 200px;
-  max-width: 280px;
+  width: 29% !important;
+  min-width: 200px !important;
+  max-width: 280px !important;
   border-radius: 15px;
   height: 125px;
   background-color: black;
@@ -21,5 +21,18 @@
   color: white;
   font-size: 1.7rem;
   font-weight: 700;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}
+.cards-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+.secondary-card {
+  background-color: var(--primary-color);
+  color: white;
 }

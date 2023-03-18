@@ -21,7 +21,6 @@ const style = {
 };
 
 const AdminDashboard = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [filterOpen, setFilterOpen] = useState(false);
   const [filter, setFilter] = useState({});
@@ -50,20 +49,15 @@ const AdminDashboard = () => {
 
       <Container>
         <Row>
-          <div className="admin-card">
-            <h5 className="title">Total Revenue</h5>
-            <p className="price">₺5700</p>
-          </div>
-          <div
-            className="admin-card"
-            style={{ backgroundColor: "white", color: "black" }}
-          >
-            <h5 style={{ color: "black" }} className="title">
-              Total Order
-            </h5>
-            <p style={{ color: "black" }} className="price">
-              1500
-            </p>
+          <div className="cards-wrapper">
+            <div className="admin-card">
+              <h5 className="title">Total Revenue</h5>
+              <p className="price">₺5700</p>
+            </div>
+            <div className="admin-card secondary-card">
+              <h5 className="title">Total Order</h5>
+              <p className="price">1500</p>
+            </div>
           </div>
         </Row>
       </Container>

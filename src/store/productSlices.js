@@ -28,9 +28,9 @@ export const getCategories = createAsyncThunk(
 
 export const getAdminDashBoardInf = createAsyncThunk(
   "/getAdminDashBoardInf",
-  async ({query},thunkAPI) => {
+  async ({ query }, thunkAPI) => {
     try {
-      return await productService.getAdminDashboardInf({query});
+      return await productService.getAdminDashboardInf({ query });
     } catch (error) {
       const message =
         (error.response &&
@@ -421,9 +421,13 @@ export const getOrderBySellerWithLimit = createAsyncThunk(
 
 export const addProduct = createAsyncThunk(
   "/addProduct",
-  async (product, thunkAPI) => {
+  async ({ product, formData }, thunkAPI) => {
     try {
-      return await productService.addProduct(product);
+      for (var key of formData.entries()) {
+        console.log(JSON.stringify(key[0]) + ", " + JSON.stringify(key[1]));
+      }
+
+      return await productService.addProduct({ product, formData });
     } catch (error) {
       const message =
         (error.response &&

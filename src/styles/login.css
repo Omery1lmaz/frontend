@@ -22,6 +22,10 @@
   font-size: 0.9rem !important;
 }
 
+.login-button:disabled {
+  opacity: 0.8;
+}
+
 .login-create-acc {
   font-size: 13px;
   margin-top: 15px;

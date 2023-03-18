@@ -13,6 +13,7 @@ import {
   updateOrderStatus,
 } from "../store/productSlices";
 import "../styles/order-list.css";
+import PageSpinner from "../components/UI/spinners/pageSpinner";
 const style = {
   position: "absolute",
   top: "50%",
@@ -60,7 +61,7 @@ const OrderList = () => {
   };
 
   const [selectedOrder, setSelectedOrder] = useState();
-  let { orders } = useSelector((state) => state.product);
+  let { orders, isLoadingP } = useSelector((state) => state.product);
   const getOrders = () => {
     dispatch(
       getOrderBySellerWithLimit({
@@ -100,257 +101,266 @@ const OrderList = () => {
 
   return (
     <>
-      <Col className="d-flex justify-content-center align-items-center mt-5">
-        <h4>Orders</h4>
-      </Col>
-      <Container style={{ margin: "30px auto" }}>
-        <Col className="d-flex align-items-baseline">
-          <div>
-            <span>Limit: </span>
-            <select
-              id="select-size"
-              className="select"
-              onChange={pageLimitHandlechange}
-            >
-              {pageLimitOptions.map((item) => {
-                return (
-                  <option key={item.value} value={item.value}>
-                    {item.label}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <button onClick={() => handleOpenFilter()}>Filter</button>
-        </Col>
-        <Row>
-          <Col
-            lg="8"
-            className="d-flex justify-content-center align-items-center  order-table"
-          >
-            {orders.length === 0 ? (
-              <h5 className="text-center">No Order</h5>
-            ) : (
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th
-                      style={{ width: "200px" }}
-                      onClick={() => handleOpenFilter}
-                    >
-                      Name
-                    </th>
-                    <th className="text-center">Table</th>
-                    <th className="text-center" style={{ width: "100px" }}>
-                      Price
-                    </th>
-                    <th className="text-center">Date</th>
-                    <th className="text-center">Status</th>
-                    <th className="text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orders &&
-                    Array.isArray(orders) &&
-                    orders.map((item) => {
-                      // const date = new Date(item.date)
-                      return (
-                        <tr onClick={() => setSelectedOrder(item)}>
-                          <td className="text-center cart__img-box">
-                            <span>{item.name}</span>
-                          </td>
-                          <td className="text-center">
-                            <span>{item.shippingAddress.table}</span>
-                          </td>
-                          <td className="text-center">
-                            <span>${item.totalPrice}</span>
-                          </td>
-                          <td className="text-center">
-                            <span>{moment(item.date).fromNow()}</span>
-                          </td>
-                          <td className="text-center">
-                            <span>{item.isReady}</span>
-                          </td>
-                          <td className="text-center">
-                            <button
-                              className="m-0 border-0 status-btn text-center"
-                              onClick={() => {
-                                handleOpen();
-                              }}
-                            >
-                              <i class="ri-shopping-basket-line m-0"></i>
-                              <span className="ml-2">Change Status</span>
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                </tbody>
-              </table>
-            )}
+      {isLoadingP ? (
+        <PageSpinner />
+      ) : (
+        <>
+          <Col className="d-flex justify-content-center align-items-center mt-5">
+            <h4>Orders</h4>
           </Col>
-          <Col lg="3" className="d-flex ml-5">
-            {selectedOrder && (
-              <div className="order-right-side">
-                <p>
-                  <strong>Order Owner :</strong> {selectedOrder.name}
-                </p>
-                <p>
-                  <strong>Order Table : </strong>
-                  {selectedOrder.shippingAddress.table}
-                </p>
-                <p>
-                  <strong>Order cost :</strong> {selectedOrder.totalPrice}
-                </p>
-                <p>
-                  <strong>Order message :</strong>{" "}
-                  {selectedOrder.orderMessage
-                    ? selectedOrder.orderMessage
-                    : "No message"}
-                </p>
-                <div className="order-right-side-products d-flex flex-column">
-                  <p className="products-title">Products</p>
-                  {selectedOrder.items.map((product) => {
+          <Container style={{ margin: "30px auto" }}>
+            <Col className="d-flex align-items-baseline">
+              <div>
+                <span>Limit: </span>
+                <select
+                  id="select-size"
+                  className="select"
+                  onChange={pageLimitHandlechange}
+                >
+                  {pageLimitOptions.map((item) => {
                     return (
-                      <div className="product ">
-                        <span
-                          style={{
-                            display: "block",
-                            marginBottom: "15px !important",
-                          }}
-                        >
-                          <strong>Name : </strong> {product.name}
-                        </span>
-                        <span>
-                          <strong>Quantity :</strong> {product.qty}
-                        </span>
-                        {product.variation && (
-                          <span
-                            className="d-block"
-                            style={{ marginBottom: "15px !important" }}
-                          >
-                            <strong>Size :</strong> {product.variation}
-                          </span>
-                        )}
-                      </div>
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
                     );
                   })}
-                </div>
+                </select>
               </div>
-            )}
-          </Col>
-        </Row>
-        <Row className="align-items-center">
-          <Col className="d-flex justify-content-center align-items-center">
-            <button
-              onClick={() => {
-                activePage >= 2 && setActivePage(activePage - 1);
-              }}
-              disabled={page == 1}
-            >
-              Önceki Sayfa
-            </button>
-            <button
-              onClick={() => {
-                setActivePage(activePage + 1);
-              }}
-            >
-              Sonraki Sayfa
-            </button>
-          </Col>
-        </Row>
-      </Container>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Set Status
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            className="w-100 d-flex justify-content-around"
-            sx={{ mt: 2 }}
+              <button onClick={() => handleOpenFilter()}>Filter</button>
+            </Col>
+            <Row>
+              <Col
+                lg="8"
+                className="d-flex justify-content-center align-items-center  order-table"
+              >
+                {orders.length === 0 ? (
+                  <h5 className="text-center">No Order</h5>
+                ) : (
+                  <table className="table">
+                    <thead>
+                      <tr>
+                        <th
+                          style={{ width: "200px" }}
+                          onClick={() => handleOpenFilter}
+                        >
+                          Name
+                        </th>
+                        <th className="text-center">Table</th>
+                        <th className="text-center" style={{ width: "100px" }}>
+                          Price
+                        </th>
+                        <th className="text-center">Date</th>
+                        <th className="text-center">Status</th>
+                        <th className="text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {orders &&
+                        Array.isArray(orders) &&
+                        orders.map((item) => {
+                          // const date = new Date(item.date)
+                          return (
+                            <tr onClick={() => setSelectedOrder(item)}>
+                              <td className="text-center cart__img-box">
+                                <span>{item.name}</span>
+                              </td>
+                              <td className="text-center">
+                                <span>{item.shippingAddress.table}</span>
+                              </td>
+                              <td className="text-center">
+                                <span>${item.totalPrice}</span>
+                              </td>
+                              <td className="text-center">
+                                <span>{moment(item.date).fromNow()}</span>
+                              </td>
+                              <td className="text-center">
+                                <span>{item.isReady}</span>
+                              </td>
+                              <td className="text-center">
+                                <button
+                                  className="m-0 border-0 status-btn text-center"
+                                  onClick={() => {
+                                    handleOpen();
+                                  }}
+                                >
+                                  <i class="ri-shopping-basket-line m-0"></i>
+                                  <span className="ml-2">Change Status</span>
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                )}
+              </Col>
+              <Col lg="3" className="d-flex ml-5">
+                {selectedOrder && (
+                  <div className="order-right-side">
+                    <p>
+                      <strong>Order Owner :</strong> {selectedOrder.name}
+                    </p>
+                    <p>
+                      <strong>Order Table : </strong>
+                      {selectedOrder.shippingAddress.table}
+                    </p>
+                    <p>
+                      <strong>Order cost :</strong> {selectedOrder.totalPrice}
+                    </p>
+                    <p>
+                      <strong>Order message :</strong>{" "}
+                      {selectedOrder.orderMessage
+                        ? selectedOrder.orderMessage
+                        : "No message"}
+                    </p>
+                    <div className="order-right-side-products d-flex flex-column">
+                      <p className="products-title">Products</p>
+                      {selectedOrder.items.map((product) => {
+                        return (
+                          <div className="product ">
+                            <span
+                              style={{
+                                display: "block",
+                                marginBottom: "15px !important",
+                              }}
+                            >
+                              <strong>Name : </strong> {product.name}
+                            </span>
+                            <span>
+                              <strong>Quantity :</strong> {product.qty}
+                            </span>
+                            {product.variation && (
+                              <span
+                                className="d-block"
+                                style={{ marginBottom: "15px !important" }}
+                              >
+                                <strong>Size :</strong> {product.variation}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </Col>
+            </Row>
+            <Row className="align-items-center">
+              <Col className="d-flex justify-content-center align-items-center">
+                <button
+                  onClick={() => {
+                    activePage >= 2 && setActivePage(activePage - 1);
+                  }}
+                  disabled={page == 1}
+                >
+                  Önceki Sayfa
+                </button>
+                <button
+                  onClick={() => {
+                    setActivePage(activePage + 1);
+                  }}
+                >
+                  Sonraki Sayfa
+                </button>
+              </Col>
+            </Row>
+          </Container>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
           >
-            <button
-              className="m-0 border-0 status-btn text-center"
-              onClick={() => {
-                dispatch(
-                  updateOrderStatus({
-                    id: selectedOrder._id,
-                    status: "Not Started",
-                  })
-                );
-              }}
-            >
-              <i class="ri-shopping-basket-line m-0"></i>
-              <span className="ml-2">Not Started</span>
-            </button>
-            <button
-              className="m-0 border-0 status-btn text-center"
-              onClick={() => {
-                dispatch(
-                  updateOrderStatus({
-                    id: selectedOrder._id,
-                    status: "InProgress",
-                  })
-                );
-              }}
-            >
-              <i class="ri-shopping-basket-line m-0"></i>
-              <span className="ml-2">InProgress</span>
-            </button>
-            <button
-              className="m-0 border-0 status-btn text-center"
-              onClick={() => {
-                dispatch(
-                  updateOrderStatus({ id: selectedOrder._id, status: "Ready" })
-                );
-              }}
-            >
-              <i class="ri-shopping-basket-line m-0"></i>
-              <span className="ml-2">Ready</span>
-            </button>
-          </Typography>
-        </Box>
-      </Modal>
-      <Modal
-        open={filterOpen}
-        onClose={handleCloseFilter}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Filter
-          </Typography>
-          <Typography
-            id="modal-modal-description"
-            className="w-100 d-flex flex-column justify-content-around"
-            sx={{ mt: 2 }}
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Set Status
+              </Typography>
+              <Typography
+                id="modal-modal-description"
+                className="w-100 d-flex justify-content-around"
+                sx={{ mt: 2 }}
+              >
+                <button
+                  className="m-0 border-0 status-btn text-center"
+                  onClick={() => {
+                    dispatch(
+                      updateOrderStatus({
+                        id: selectedOrder._id,
+                        status: "Not Started",
+                      })
+                    );
+                  }}
+                >
+                  <i class="ri-shopping-basket-line m-0"></i>
+                  <span className="ml-2">Not Started</span>
+                </button>
+                <button
+                  className="m-0 border-0 status-btn text-center"
+                  onClick={() => {
+                    dispatch(
+                      updateOrderStatus({
+                        id: selectedOrder._id,
+                        status: "InProgress",
+                      })
+                    );
+                  }}
+                >
+                  <i class="ri-shopping-basket-line m-0"></i>
+                  <span className="ml-2">InProgress</span>
+                </button>
+                <button
+                  className="m-0 border-0 status-btn text-center"
+                  onClick={() => {
+                    dispatch(
+                      updateOrderStatus({
+                        id: selectedOrder._id,
+                        status: "Ready",
+                      })
+                    );
+                  }}
+                >
+                  <i class="ri-shopping-basket-line m-0"></i>
+                  <span className="ml-2">Ready</span>
+                </button>
+              </Typography>
+            </Box>
+          </Modal>
+          <Modal
+            open={filterOpen}
+            onClose={handleCloseFilter}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
           >
-            <h5>Status Filter</h5>
-            <select
-              id="select-size"
-              className="select"
-              onChange={filterStatusHandle}
-            >
-              {statues.map((item) => {
-                return (
-                  <option key={item.value} value={item.value}>
-                    {item.label}
-                  </option>
-                );
-              })}
-            </select>
-            <input type="date" onChange={filterDateHandle}></input>
-            <button onClick={() => getOrders()}>Search</button>
-          </Typography>
-        </Box>
-      </Modal>
+            <Box sx={style}>
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Filter
+              </Typography>
+              <Typography
+                id="modal-modal-description"
+                className="w-100 d-flex flex-column justify-content-around"
+                sx={{ mt: 2 }}
+              >
+                <h5>Status Filter</h5>
+                <select
+                  id="select-size"
+                  className="select"
+                  onChange={filterStatusHandle}
+                >
+                  {statues.map((item) => {
+                    return (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    );
+                  })}
+                </select>
+                <input type="date" onChange={filterDateHandle}></input>
+                <button onClick={() => getOrders()}>Search</button>
+              </Typography>
+            </Box>
+          </Modal>
+        </>
+      )}
     </>
   );
 };

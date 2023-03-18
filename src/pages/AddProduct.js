@@ -1,34 +1,15 @@
 import React, { useState, useEffect } from "react";
-import Helmet from "../components/Helmet/Helmet";
-import CommonSection from "../components/UI/common-section/CommonSection";
-import { Container, Row, Col } from "reactstrap";
-import { Link } from "react-router-dom";
-import { Formik, Field, Form } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
-import Cookies from "js-cookie";
 import { useSelector, useDispatch } from "react-redux";
-import { loginUser } from "../store/authenticationSlices";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import {
-  addCategories,
-  addProduct,
-  getCategoriesBySeller,
-  getCatsBySeller,
-} from "../store/productSlices";
+import { addProduct, getCatsBySeller } from "../store/productSlices";
 import Multiselect from "multiselect-react-dropdown";
 
 const AddProduct = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
-  const { isSuccessP, isErrorP, isLoadingP, sellerCategories } = useSelector(
-    (state) => state.product
-  );
+  const { sellerCategories } = useSelector((state) => state.product);
   useEffect(() => {
     dispatch(getCatsBySeller());
   }, []);
@@ -51,7 +32,7 @@ const AddProduct = () => {
   const handleaddclick = () => {
     setinputList([...inputList, { size: "", price: 0 }]);
   };
-
+  const [image, setImage] = useState();
   const validate = Yup.object({
     Name: Yup.string().required("Name is required"),
     Brand: Yup.string().required("Brand is required"),
@@ -61,20 +42,25 @@ const AddProduct = () => {
       .positive()
       .integer()
       .required("Price is required"),
-    Category: Yup.array()
-      // .oneOf(
-      //   [sellerCategories.map((category) => category._id)],
-      //   "Lütfen kategori Seçiniz"
-      // )
-      .required("Required"),
+    Category: Yup.array().required("Required"),
   });
 
   const ButtonHandleSubmit = (e) => {
     e.preventDefault();
   };
+  const formData = new FormData();
+
   useEffect(() => {
     console.log(inputList, "inputlist");
   }, [inputList]);
+  useEffect(() => {
+    console.log(image, "image");
+    console.log("type image", typeof image);
+    formData.append("Image", image);
+    for (var key of formData.entries()) {
+      console.log(JSON.stringify(key[0]) + ", " + JSON.stringify(key[1]));
+    }
+  }, [image]);
 
   return (
     <>
@@ -88,8 +74,16 @@ const AddProduct = () => {
         }}
         validationSchema={validate}
         onSubmit={(values, { resetForm }) => {
-          console.log(values);
           const { Name, Brand, Description, Price, Category } = values;
+          formData.append("Name", Name);
+          formData.append("Brand", Brand);
+          formData.append("Description", Description);
+          formData.append("Category", JSON.stringify(Category));
+          formData.append("Price", Price);
+          formData.append("variations", JSON.stringify(inputList));
+          for (var key of formData.entries()) {
+            console.log(JSON.stringify(key[0]) + ", " + JSON.stringify(key[1]));
+          }
           const product = {
             Name,
             Brand,
@@ -97,8 +91,9 @@ const AddProduct = () => {
             Price,
             Category,
             variations: inputList,
+            formData,
           };
-          dispatch(addProduct(product));
+          dispatch(addProduct({ product, formData }));
           resetForm({ values: "" });
           setinputList([]);
         }}
@@ -270,7 +265,7 @@ const AddProduct = () => {
                               <div class="error">* {formik.errors.Brand}</div>
                             ) : null}
                             <div class="form-group mb-3 col-xs-12 col-sm-6">
-                              <label for="Brand">Image</label>
+                              <label for="Image">Image</label>
                               <input
                                 id="Image"
                                 name="Image"
@@ -278,12 +273,7 @@ const AddProduct = () => {
                                 accept=".png, .jpg, .jpeg"
                                 class="form-control validate"
                                 required
-                                onChange={(e) =>
-                                  console.log(
-                                    e.target.files,
-                                    "e target value image"
-                                  )
-                                }
+                                onChange={(e) => setImage(e.target.files[0])}
                               />
                             </div>
                           </div>
