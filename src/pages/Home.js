@@ -101,7 +101,7 @@ const Home = () => {
                 <h1 className="mb-4 hero__title">
                   <span>Bi tıkla Sipariş</span>te <br /> sipariş vermek hiç bu
                   kadar kolay olmamıştı
-                  {/* <span>Bi tıkla Sipariş</span> ile <br /> artık siparişler bi' tık uzağınızda */}
+                  {/* <span>Bi tıkla Sipariş</span> ile <br /> artık siparişler bi' tık uzağınızdaHistory */}
                   <p>
                     Artık Qr kod ile menüye istediğiniz yerden ulaşabilir ve bir
                     tıkla siparişinizi vererek garson ya da kasa da sıra

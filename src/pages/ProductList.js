@@ -110,7 +110,9 @@ const ProductList = () => {
                         <tr>
                           <td className="text-center cart__img-box">
                             <img src={item.image} alt="" />
-                            <span>{item.name}</span>
+                            <span className="max-w-200 text-overflow">
+                              {item.name}
+                            </span>
                           </td>
                           <td className="text-center">
                             {item.variations.length == 0 ? (
@@ -124,7 +126,6 @@ const ProductList = () => {
                                   return (
                                     <option key={item.id} value={item._id}>
                                       {item.size + " " + item.price + "₺"}
-                                      {/* <i className="fa-solid fa-turkish-lira-sign"></i> */}
                                     </option>
                                   );
                                 })}

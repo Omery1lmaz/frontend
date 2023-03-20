@@ -7,8 +7,7 @@ import {
 } from "../services/notification";
 import authService from "./helper/authHelper";
 import productService from "./helper/productHelper";
-import { useDispatch, useSelector } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
 export const getCategories = createAsyncThunk(
   "/getCategories",
   async (thunkAPI) => {
@@ -168,10 +167,9 @@ export const getOrderById = createAsyncThunk(
 
 export const getCategoryById = createAsyncThunk(
   "/getCategoryById",
-  async ({ id, userId }, thunkAPI) => {
+  async ({ id }, thunkAPI) => {
     try {
-      console.log("id", id, userId);
-      return await productService.getCategoryByIdHelper({ id, userId });
+      return await productService.getCategoryByIdHelper({ id });
     } catch (error) {
       const message =
         (error.response &&
@@ -316,9 +314,9 @@ export const updateCategory = createAsyncThunk(
   "/updateCategory",
   async ({ category, id }, thunkAPI) => {
     try {
-      console.log(id);
-      console.log(category);
-      return await productService.updateCategory({ category, id });
+      const res = await productService.updateCategory({ category, id });
+      successNotification("Categori Güncellendi");
+      return res;
     } catch (error) {
       const message =
         (error.response &&
@@ -471,7 +469,7 @@ const initialState = {
   order: {},
   product: {},
   sellerProducts: [],
-  getAdminDashBoardInf: {},
+  adminDashBoard: {},
 };
 
 // Then, handle actions in your reducers:
@@ -498,7 +496,7 @@ const productSlice = createSlice({
       })
       .addCase(getAdminDashBoardInf.fulfilled, (state, action) => {
         state.isLoadingP = false;
-        state.getAdminDashBoardInf = action.payload;
+        state.adminDashBoard = action.payload;
       })
       .addCase(getAdminDashBoardInf.rejected, (state, action) => {
         state.isErrorP = true;
@@ -678,6 +676,7 @@ const productSlice = createSlice({
       })
       .addCase(getCategoryById.pending, (state, action) => {
         state.isLoadingP = true;
+        state.isSuccessP = true;
       })
 
       .addCase(getCategoriesBySeller.fulfilled, (state, action) => {
@@ -711,7 +710,8 @@ const productSlice = createSlice({
       .addCase(updateCategory.fulfilled, (state, action) => {
         state.isLoadingP = false;
         state.isSuccessP = true;
-        state.messageP = action.payload;
+        state.category = action.payload;
+        console.log(action.payload, "action payload");
       })
       .addCase(updateCategory.rejected, (state, action) => {
         state.isErrorP = true;

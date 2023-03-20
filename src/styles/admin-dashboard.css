@@ -4,8 +4,7 @@
   max-width: 280px !important;
   border-radius: 15px;
   height: 125px;
-  background-color: black;
-  color: white;
+  border: 1px solid var(--primary-color);
   padding: 25px;
   display: flex;
   flex-direction: column;
@@ -13,12 +12,12 @@
   align-content: space-between;
 }
 .title {
-  color: white;
+  color: var(--primary-color);
   text-transform: capitalize;
   font-weight: 500;
 }
 .price {
-  color: white;
+  color: var(--secondary-color);
   font-size: 1.7rem;
   font-weight: 700;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
@@ -33,6 +32,41 @@
   flex-wrap: wrap;
 }
 .secondary-card {
-  background-color: var(--primary-color);
-  color: white;
+  color: var(--primary-color);
+}
+.admin-table-container {
+  width: 29% !important;
+  min-width: 280px !important;
+  max-width: 400px !important;
+  padding: 15px;
+}
+
+.table-title {
+  font-size: 1.2rem;
+  color: black;
+  font-weight: 500;
+}
+.table-link {
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: lighter;
+  color: gray;
+}
+
+.admin-table-tr {
+  border: none !important;
+  color: black;
+  font-weight: 500;
+  height: 40px;
+}
+.admin-table-head {
+  color: gray;
+}
+.test {
+  height: 100vh;
+}
+.table-wrapper {
+  max-height: 457px;
+  height: 75%;
+  min-height: 300px;
 }

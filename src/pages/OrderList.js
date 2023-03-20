@@ -162,7 +162,9 @@ const OrderList = () => {
                           return (
                             <tr onClick={() => setSelectedOrder(item)}>
                               <td className="text-center cart__img-box">
-                                <span>{item.name}</span>
+                                <span className="text-overflow max-w-200">
+                                  {item.name}
+                                </span>
                               </td>
                               <td className="text-center">
                                 <span>{item.shippingAddress.table}</span>
