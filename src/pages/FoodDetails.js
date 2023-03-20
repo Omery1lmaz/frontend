@@ -117,7 +117,6 @@ const FoodDetails = () => {
                       <i class="fa-solid fa-turkish-lira-sign"></i>
                       <span>{price}</span>
                     </p>
-                    <p className="category mb-5">Category: Food</p>
                     {Array.isArray(variations) &&
                     variations &&
                     variations.length > 1 ? (

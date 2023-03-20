@@ -104,13 +104,10 @@ const getProduct = async ({ id }) => {
   return response.data;
 };
 
-const getCategoryByIdHelper = async ({ id, userId }) => {
-  console.log("İD Get ", id);
-  console.log("User İD Get Helper  ", userId);
-
-  const response = await axios.post(
-    `http://localhost:4000/api/products/category/${id}`,
-    userId
+const getCategoryByIdHelper = async ({ id }) => {
+  const response = await axios.get(
+    `http://localhost:4000/api/categories/${id}`,
+    { withCredentials: true }
   );
 
   return response.data;
@@ -145,7 +142,6 @@ const addCategoriesHelper = async (category) => {
 // @Update Product
 // @Private
 const updateCategory = async ({ category, id }) => {
-  console.log("categoryID", id);
   const response = await axios.put(
     `http://localhost:4000/api/categories/categories/${id}`,
     category,

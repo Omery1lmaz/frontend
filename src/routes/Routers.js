@@ -28,6 +28,8 @@ import OrderList from "../pages/OrderList";
 import UserOrderList from "../pages/UserOrderList";
 import OrderDetail from "../pages/OrderDetail";
 import AdminDashboard from "../pages/AdminDashboard";
+import ProductCosts from "../pages/ProductCosts";
+import CategoryCost from "../pages/CategoryCost";
 const Routers = () => {
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -51,7 +53,8 @@ const Routers = () => {
       <Route path="/order" element={<UserOrderList />} /> {/*OK*/}
       <Route path="/order-detail/:id" element={<OrderDetail />} /> {/*OK*/}
       <Route path="/foods" element={<AllFoods />} /> {/*Dont*/}
-      <Route path="/home" element={<SellerOrders />} /> {/*Dont*/}
+      <Route path="/product-cost" element={<ProductCosts />} /> {/*Dont*/}
+      <Route path="/category-cost" element={<CategoryCost />} /> {/*Dont*/}
       <Route path="/foods/:id" element={<FoodDetails />} /> {/*OK*/}
       <Route path="/cart" element={<Cart />} /> {/*OK*/}
       <Route path="/checkout" element={<Checkout />} /> {/*OK*/}

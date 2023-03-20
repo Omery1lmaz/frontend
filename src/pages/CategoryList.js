@@ -47,8 +47,10 @@ const CategoryList = () => {
               sellerCategories.map((category) => (
                 <tr key={category._id}>
                   <td>{category._id}</td>
-                  <td>{category.name}</td>
-                  <td>{category.description}</td>
+                  <td className="text-overflow max-w-100">{category.name}</td>
+                  <td className="text-overflow max-w-200">
+                    {category.description}
+                  </td>
                   <td>
                     <Button
                       variant="light"
