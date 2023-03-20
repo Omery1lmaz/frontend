@@ -37,6 +37,10 @@
   border-radius: 5px !important;
   font-size: 0.9rem !important;
 }
+.addTOCart__btn:disabled {
+  opacity: 0.8;
+  cursor: no-drop;
+}
 
 @media only screen and (max-width: 992px) {
   .product__content h5 a {

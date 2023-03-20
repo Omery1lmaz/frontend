@@ -30,7 +30,7 @@ th {
   border-color: var(--primary-color) !important;
 }
 .cart__img-box img {
-  width: 80px;
+  width: 40px;
 }
 
 .cart__item-del i {

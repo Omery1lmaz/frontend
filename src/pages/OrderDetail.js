@@ -40,6 +40,45 @@ const OrderDetail = () => {
   useEffect(() => {
     dispatch(getOrderById({ id }));
   }, []);
+  let count = 0;
+  const gunler = [
+    "Pazar",
+    "Pazartesi",
+    "Salı",
+    "Çarşamba",
+    "Perşembe",
+    "Cuma",
+    "Cumartesi",
+  ];
+  const aylar = [
+    "Ocak",
+    "Şubat",
+    "Mart",
+    "Nisan",
+    "Mayıs",
+    "Haziran",
+    "Temmuz",
+    "Ağustos",
+    "Eylül",
+    "Ekim",
+    "Kasım",
+    "Aralık",
+  ];
+  const [day, setDay] = useState();
+  const [month, setMonth] = useState();
+  const [year, setYear] = useState();
+  const [hour, setHour] = useState();
+  useEffect(() => {
+    if (order && count === 0) {
+      const tarih = new Date(order.date);
+      count++;
+      setDay(gunler[new Date(order.date).getDay()]);
+      setMonth(aylar[tarih.getMonth()]);
+      setYear(tarih.getFullYear());
+      setHour(tarih.getHours());
+    }
+  }, [order]);
+
   return (
     <>
       <Container style={{ marginTop: "30px" }}>
@@ -47,7 +86,11 @@ const OrderDetail = () => {
           <>
             <div className="order-detail d-flex flex-column">
               <p className="order-detail-title">Sipariş Detayı</p>
-              <span>Sipariş Tarihi: 22 Ekim 2022</span>
+              {
+                <span>
+                  Sipariş Tarihi: {day}/{month}/{year}
+                </span>
+              }
               <span>Sipariş Durumu: {order.isReady}</span>
               <span>Sipariş Adresi: {order.shippingAddress.table}</span>
               <span>Satıcı: {order.seller.name}</span>

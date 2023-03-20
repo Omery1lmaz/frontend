@@ -72,139 +72,191 @@ const Checkout = () => {
       variation: item.variation ? item.variation : null,
     };
   });
-  const submitHandler = (e) => {
-    e.preventDefault();
-  };
+  const buttonDisabled = totalAmount > 0 ? false : true;
+
   return (
     <Helmet title="Checkout">
       <section>
         <Container>
           <Row>
             <Col lg="8" md="6">
-              <h6 className="mb-4">Shipping Address</h6>
-              <Formik
-                initialValues={{
-                  Name: "",
-                  Table: "",
-                  orderMessage: "",
-                  Deal: false,
-                  isTakeAway: false,
-                }}
-                validationSchema={validate}
-                onSubmit={(values, { resetForm }) => {
-                  console.log(values);
-                  const { Name, Table, orderMessage, isTakeAway } = values;
-                  console.log(
-                    cartTotalAmount,
-                    "cart total amount before dispacth"
-                  );
-                  dispatch(
-                    createOrder({
-                      name: Name,
-                      products,
-                      orderMessage,
-                      user: user._id,
-                      seller: cartItems[0].seller.id,
-                      shippingAddress: { table: Table },
-                      productsQnty: cartItems.totalQuantity,
-                      totalPrice: cartTotalAmount,
-                      isTakeAway,
-                    })
-                  );
-                  resetForm({ values: "" });
-                }}
-              >
-                {(formik) => (
-                  <form
-                    className="checkout__form"
-                    onSubmit={formik.handleSubmit}
+              {cartTotalAmount > 0 ? (
+                <>
+                  <h6 className="mb-4">Shipping Address</h6>
+                  <Formik
+                    initialValues={{
+                      Name: "",
+                      Table: "",
+                      orderMessage: "",
+                      Deal: false,
+                      isTakeAway: false,
+                    }}
+                    validationSchema={validate}
+                    onSubmit={(values, { resetForm }) => {
+                      console.log(values);
+                      const { Name, Table, orderMessage, isTakeAway } = values;
+                      console.log(
+                        cartTotalAmount,
+                        "cart total amount before dispacth"
+                      );
+                      dispatch(
+                        createOrder({
+                          name: Name,
+                          products,
+                          orderMessage,
+                          user: user._id,
+                          seller: cartItems[0].seller.id,
+                          shippingAddress: { table: Table },
+                          productsQnty: cartItems.totalQuantity,
+                          totalPrice: cartTotalAmount,
+                          isTakeAway,
+                        })
+                      );
+                      resetForm({ values: "" });
+                    }}
                   >
-                    <div className="form__group">
-                      <input
-                        type="text"
-                        placeholder="Enter your name"
-                        required
-                        id="Name"
-                        name="Name"
-                        value={formik.values.Name}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                    </div>
-                    {formik.errors.Name && formik.touched.Name ? (
-                      <div class="error">* {formik.errors.Name}</div>
-                    ) : null}
-                    <div className="form__group">
-                      <input
-                        type="number"
-                        id="Table"
-                        name="Table"
-                        placeholder="Enter your table"
-                        required
-                        value={formik.values.Table}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                      />
-                    </div>
-                    {formik.errors.Table && formik.touched.Table ? (
-                      <div class="error">* {formik.errors.Table}</div>
-                    ) : null}
-                    <div className="form__group">
-                      <input
-                        type="area"
-                        placeholder="Enter your message"
-                        id="orderMessage"
-                        name="orderMessage"
-                        value={formik.values.orderMessage}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        style={{ height: "80px" }}
-                      />
-                    </div>
-                    {formik.errors.orderMessage &&
-                    formik.touched.orderMessage ? (
-                      <div class="error">* {formik.errors.orderMessage}</div>
-                    ) : null}
-                    <div className="form__group d-flex mb-1">
-                      <input
-                        type="checkbox"
-                        placeholder="idea"
-                        id="Deal"
-                        name="Deal"
-                        style={{ width: "max-content", marginRight: "5px" }}
-                        onClick={() => handleOpen()}
-                        onChange={formik.handleChange}
-                        value={formik.values.Deal}
-                      />
-                      <span>Lorem ipsum</span>
-                    </div>
-                    {formik.errors.Deal && formik.touched.Deal ? (
-                      <div class="error">* {formik.errors.Deal}</div>
-                    ) : null}
-                    {Array.isArray(cartItems) &&
-                      cartItems.length >= 1 &&
-                      cartItems[0].seller.isTakeAway && (
+                    {(formik) => (
+                      <form
+                        className="checkout__form"
+                        onSubmit={formik.handleSubmit}
+                      >
+                        <div className="form__group">
+                          <input
+                            type="text"
+                            placeholder="Enter your name"
+                            required
+                            id="Name"
+                            name="Name"
+                            value={formik.values.Name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                        {formik.errors.Name && formik.touched.Name ? (
+                          <div class="error">* {formik.errors.Name}</div>
+                        ) : null}
+                        <div className="form__group">
+                          <input
+                            type="number"
+                            id="Table"
+                            name="Table"
+                            placeholder="Enter your table"
+                            required
+                            value={formik.values.Table}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                        {formik.errors.Table && formik.touched.Table ? (
+                          <div class="error">* {formik.errors.Table}</div>
+                        ) : null}
+                        <div className="form__group">
+                          <input
+                            type="area"
+                            placeholder="Enter your message"
+                            id="orderMessage"
+                            name="orderMessage"
+                            value={formik.values.orderMessage}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            style={{ height: "80px" }}
+                          />
+                        </div>
+                        {formik.errors.orderMessage &&
+                        formik.touched.orderMessage ? (
+                          <div class="error">
+                            * {formik.errors.orderMessage}
+                          </div>
+                        ) : null}
                         <div className="form__group d-flex mb-1">
                           <input
                             type="checkbox"
-                            placeholder="isTakeAway"
-                            id="isTakeAway"
-                            name="isTakeAway"
+                            placeholder="idea"
+                            id="Deal"
+                            name="Deal"
                             style={{ width: "max-content", marginRight: "5px" }}
-                            onClick={() => handleOpen()}
                             onChange={formik.handleChange}
-                            value={formik.values.isTakeAway}
+                            value={formik.values.Deal}
+                            checked={formik.values.Deal}
                           />
-                          <span>Take Away</span>
+                          <span onClick={() => handleOpen()}>Lorem ipsum</span>
                         </div>
-                      )}
-
-                    <button type="submit" className="addTOCart__btn">
-                      Payment
-                    </button>
-                  </form>
-                )}
-              </Formik>
+                        {formik.errors.Deal && formik.touched.Deal ? (
+                          <div class="error">* {formik.errors.Deal}</div>
+                        ) : null}
+                        {Array.isArray(cartItems) &&
+                          cartItems.length >= 1 &&
+                          cartItems[0].seller.isTakeAway && (
+                            <div className="form__group d-flex mb-1">
+                              <input
+                                type="checkbox"
+                                placeholder="isTakeAway"
+                                id="isTakeAway"
+                                name="isTakeAway"
+                                style={{
+                                  width: "max-content",
+                                  marginRight: "5px",
+                                }}
+                              />
+                              <span>Take Away</span>
+                            </div>
+                          )}
+                        <Modal
+                          open={open}
+                          onClose={handleClose}
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description"
+                        >
+                          <Box sx={style}>
+                            <Typography
+                              id="modal-modal-title"
+                              variant="h6"
+                              component="h2"
+                            >
+                              Text in a modal
+                            </Typography>
+                            <Typography
+                              id="modal-modal-description"
+                              sx={{ mt: 2 }}
+                            >
+                              Duis mollis, est non commodo luctus, nisi erat
+                              porttitor ligula.
+                            </Typography>
+                            <Button
+                              onClick={() => {
+                                handleClose();
+                                formik.values.Deal = true;
+                                console.log(formik.values.Deal);
+                              }}
+                            >
+                              Okudum, Onaylıyorum
+                            </Button>
+                          </Box>
+                        </Modal>
+                        <button
+                          // disabled={buttonDisabled}
+                          type="submit"
+                          className="addTOCart__btn"
+                        >
+                          Payment
+                        </button>
+                      </form>
+                    )}
+                  </Formik>
+                </>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
+                    fontSize: "24",
+                  }}
+                >
+                  <h5>Sepet Boş</h5>
+                </div>
+              )}
             </Col>
             <Col lg="4" md="6">
               <div className="checkout__bill">
@@ -231,29 +283,6 @@ const Checkout = () => {
             </Col>
           </Row>
         </Container>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Text in a modal
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
-            <Button
-              onClick={() => {
-                handleClose();
-                setDeal(true);
-              }}
-            >
-              Okudum, Onaylıyorum
-            </Button>
-          </Box>
-        </Modal>
       </section>
     </Helmet>
   );

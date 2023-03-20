@@ -10,6 +10,8 @@ import { infoNotification } from "../services/notification";
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
+
+  const buttonDisabled = cartItems.length === 0 ? true : false;
   return (
     <Helmet title="Cart">
       <Container style={{ margin: "30px auto" }}>
@@ -57,7 +59,9 @@ const Cart = () => {
               </div>
               <p>Taxes and shipping will calculate at checkout</p>
               <Link to="/checkout">
-                <button className="addTOCart__btn">Proceed to checkout</button>
+                <button disabled={buttonDisabled} className="addTOCart__btn">
+                  Proceed to checkout
+                </button>
               </Link>
             </div>
           </Col>
