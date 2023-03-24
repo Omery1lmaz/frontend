@@ -49,7 +49,7 @@ const Routers = () => {
     <Routes>
       <Route path="/" element={user?.isAdmin ? <AdminDashboard /> : <Home />} />
       {/* <Route path="/" element={<Navigate to="/home/6335f47dd765bd4893812492" />} /> */}
-      <Route path="/home/:id" element={<SellerPage />} /> {/*OK*/}
+      <Route path="/seller/:id" element={<SellerPage />} /> {/*OK*/}
       <Route path="/order" element={<UserOrderList />} /> {/*OK*/}
       <Route path="/order-detail/:id" element={<OrderDetail />} /> {/*OK*/}
       <Route path="/foods" element={<AllFoods />} /> {/*Dont*/}

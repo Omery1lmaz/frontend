@@ -258,6 +258,7 @@ const OrderList = () => {
                   Önceki Sayfa
                 </button>
                 <button
+                  disabled={orders.length < 9}
                   onClick={() => {
                     setActivePage(activePage + 1);
                   }}

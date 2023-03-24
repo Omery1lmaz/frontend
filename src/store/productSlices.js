@@ -199,6 +199,29 @@ export const getProduct = createAsyncThunk(
     }
   }
 );
+export const updateProductsImage = createAsyncThunk(
+  "/updateProductsImage",
+  async ({ id, formData }, thunkAPI) => {
+    try {
+      console.log("id", id);
+      const response = await productService.updateProductsImage({
+        id,
+        formData,
+      });
+      successNotification("İmage Güncellendi");
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification("İmage Güncellenemedi");
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 export const deleteCategoryById = createAsyncThunk(
   "/deleteCategoryById",
@@ -441,9 +464,12 @@ export const addProduct = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
   "/updateProduct",
   async ({ product, productId }, { thunkAPI }) => {
-    console.log("updateProduct", product, productId);
     try {
-      return await productService.updateProduct({ product, productId });
+      const response = await productService.updateProduct({
+        product,
+        productId,
+      });
+      successNotification("Product successfully updated");
     } catch (error) {
       const message =
         (error.response &&
@@ -451,6 +477,7 @@ export const updateProduct = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      errorNotification("Product Güncellenemedi");
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -481,6 +508,18 @@ const productSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      .addCase(updateProductsImage.fulfilled, (state, action) => {
+        state.isLoadingP = false;
+      })
+      .addCase(updateProductsImage.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(updateProductsImage.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
       .addCase(getOrderBySellerWithLimit.fulfilled, (state, action) => {
         state.isLoadingP = false;
         state.orders = action.payload;

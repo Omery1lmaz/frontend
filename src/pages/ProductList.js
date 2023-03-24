@@ -146,7 +146,7 @@ const ProductList = () => {
                             <i
                               class="fa-regular fa-pen-to-square madeleteProduct(item._id)rgin-left"
                               onClick={(e) =>
-                                navigate(`/edit-product/${item._id}`)
+                                navigate(`/foods/${item._id}`)
                               }
                             ></i>
                           </td>
@@ -167,6 +167,7 @@ const ProductList = () => {
                 Önceki Sayfa
               </button>
               <button
+                disabled={sellerProducts.products?.length < 9}
                 onClick={() => {
                   setActivePage(activePage + 1);
                 }}

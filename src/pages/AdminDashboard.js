@@ -84,7 +84,7 @@ const AdminDashboard = () => {
               </div>
             </Row>
             <Row>
-              <div className="cards-wrapper">
+              <div className="cards-wrapper mt-5">
                 <div className="admin-table-container">
                   <div className="d-flex justify-content-between mb-2">
                     <h2 className="table-title">Products Cost</h2>

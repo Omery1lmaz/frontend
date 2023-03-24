@@ -85,7 +85,7 @@ const deleteCategoryById = async ({ id, user }) => {
   console.log("User İD Get Helper  ", user);
 
   const response = await axios.delete(
-    `http://localhost:4000/api/products/category/${id}`,
+    `http://localhost:4000/api/categories/${id}`,
     {
       data: {
         user: user,
@@ -107,6 +107,20 @@ const getProduct = async ({ id }) => {
 const getCategoryByIdHelper = async ({ id }) => {
   const response = await axios.get(
     `http://localhost:4000/api/categories/${id}`,
+    { withCredentials: true }
+  );
+
+  return response.data;
+};
+const updateProductsImage = async ({ id, formData }) => {
+  console.log(id);
+  for (var key of formData.entries()) {
+    console.log(JSON.stringify(key[0]) + ", " + JSON.stringify(key[1]));
+  }
+
+  const response = await axios.post(
+    `http://localhost:4000/api/products/image/${id}`,
+    formData,
     { withCredentials: true }
   );
 
@@ -253,6 +267,7 @@ const productService = {
   getOrderBySeller,
   getProduct,
   createOrder,
+  updateProductsImage,
   deleteOrder,
   UpdateOrderStatus,
   getProductsBySellerWithLimit,

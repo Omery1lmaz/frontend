@@ -16,7 +16,6 @@ const totalQuantity =
     : 0;
 
 const setItemFunc = (item, totalAmount, totalQuantity) => {
-  console.log(totalQuantity, "totalquantity");
   localStorage.setItem("cartItems", JSON.stringify(item));
   localStorage.setItem("totalAmount", JSON.stringify(totalAmount));
   localStorage.setItem("totalQuantity", totalQuantity);
@@ -36,7 +35,6 @@ const cartSlice = createSlice({
     // =========== add item ============
     addItem(state, action) {
       const newItem = action.payload;
-      console.log(newItem, "new item test");
       const existingItem = state.cartItems.find((item) => {
         return item.id === newItem.id;
       });
@@ -46,7 +44,11 @@ const cartSlice = createSlice({
         }
         state.totalQuantity = 0;
 
-        return item.id === newItem.id && item.variation == newItem.variation;
+        return (
+          item.id === newItem.id &&
+          item.variation == newItem.variation &&
+          item.title == newItem.title
+        );
       });
       if (!deneme) {
         // ===== note: if you use just redux you should not mute state array instead of clone the state array, but if you use redux toolkit that will not a problem because redux toolkit clone the array behind the scene
@@ -73,7 +75,6 @@ const cartSlice = createSlice({
       );
       let quantity = 0;
       state.cartItems.map((item) => (quantity += item.quantity));
-      console.log(quantity);
       state.totalQuantity = quantity;
       setItemFunc(
         state.cartItems.map((item) => item),
@@ -91,18 +92,15 @@ const cartSlice = createSlice({
 
     removeItem(state, action) {
       const product = action.payload;
-      console.log(product, "remove item");
       const existingItem = state.cartItems.find((item) => {
-        console.log(product.variation, "product variation remove item");
-        console.log(
-          item.id === product.id && product.variation == item.variation
-        );
         if (product.variation) {
-          console.log("product has a variation");
-          return item.id == product.id && item.variation == product.variation;
+          return (
+            item.id === product.id &&
+            item.variation === product.variation &&
+            item.title === product.title
+          );
         } else {
-          console.log("Product no variation remove action");
-          return item.id == product.id;
+          return item.id === product.id;
         }
       });
 
@@ -113,23 +111,18 @@ const cartSlice = createSlice({
       ) {
         state.cartItems = state.cartItems.filter((item) => {
           if (product.variation) {
+            console.log("Remove Item");
             console.log(
-              item.id == product.id && item.variation !== product.variation,
-              "filterr"
-            );
-            console.log(
-              item.variation !== product.variation &&
-                item.title !== product.title &&
-                item.id !== product.id
+              item.variation !== product.variation ||
+                item.title !== product.title
             );
             return (
-              item.variation !== product.variation &&
-              item.title !== product.title 
+              item.variation !== product.variation ||
+              item.title !== product.title
             );
           } else return item.id !== product.id;
         });
       } else {
-        console.log(existingItem, "existing item");
         existingItem.quantity--;
         existingItem.totalPrice =
           Number(existingItem.totalPrice) - Number(existingItem.price);
@@ -141,7 +134,6 @@ const cartSlice = createSlice({
       );
       let quantity = 0;
       state.cartItems.map((item) => (quantity += item.quantity));
-      console.log(quantity);
       state.totalQuantity = quantity;
 
       setItemFunc(
@@ -158,14 +150,20 @@ const cartSlice = createSlice({
       if (state.cartItems.length == 1) state.cartItems = [];
       const existingItem = state.cartItems.find((item) => {
         if (product.variation && state.cartItems.length > 1) {
-          return item.id == product.id && item.variation == product.variation;
+          return (
+            item.id == product.id &&
+            item.variation == product.variation &&
+            item.title == product.title
+          );
         } else return item.id !== product.id;
       });
-
       if (existingItem) {
         state.cartItems = state.cartItems.filter((item) => {
           if (product.variation) {
-            return item.id == product.id && item.variation != product.variation;
+            return (
+              item.variation !== product.variation ||
+              item.title !== product.title
+            );
           } else return item.id !== product.id;
         });
         state.totalQuantity = state.totalQuantity - existingItem.quantity;
@@ -177,7 +175,6 @@ const cartSlice = createSlice({
       );
       let quantity = 0;
       state.cartItems.map((item) => (quantity += item.quantity));
-      console.log(quantity);
       state.totalQuantity = quantity;
       setItemFunc(
         state.cartItems.map((item) => item),

@@ -36,7 +36,9 @@
 }
 .admin-table-container {
   width: 29% !important;
+  background-color: rgb(255, 238, 227);
   min-width: 280px !important;
+  border-radius: 15px;
   max-width: 400px !important;
   padding: 15px;
 }

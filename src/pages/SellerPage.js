@@ -5,9 +5,11 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import productSlices, {
   getProductsBySeller,
   getCategoriesBySellerId,
+  getCatsBySeller,
 } from "../store/productSlices";
 import { cartActions } from "../store/shopping-cart/cartSlice";
 import { infoNotification } from "../services/notification";
+import PageSpinner from "../components/UI/spinners/pageSpinner";
 const SellerPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,14 +23,14 @@ const SellerPage = () => {
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
 
-  const { isSuccessP, isErrorP, is, LoadingP, categories, products } =
+  const { isSuccessP, isErrorP, is, isLoadingP, categories, products } =
     useSelector((state) => state.product);
   useEffect(() => {
     dispatch(getProductsBySeller(id));
   }, []);
 
   useEffect(() => {
-    dispatch(getCategoriesBySellerId(id));
+    dispatch(getCatsBySeller());
   }, []);
 
   const addItem = ({
@@ -68,7 +70,12 @@ const SellerPage = () => {
 
   return (
     <>
-      {products ? (
+      {isLoadingP &&
+      isLoading &&
+      !Array.isArray(products) &&
+      !products.length >= 1 ? (
+        <PageSpinner />
+      ) : (
         <div>
           <img
             src="https://images.deliveryhero.io/image/fd-tr/LH/xpdi-hero.jpg?width=1600&height=400&quality=45%201600w"
@@ -124,99 +131,98 @@ const SellerPage = () => {
               setFilteredProducts(x);
             }}
           />
-          {categories.map((category) => {
-            return (
-              <>
-                <div
-                  id={category._id}
-                  className={`${styles.container} ${styles.test1}`}
-                >
-                  <p className={styles.title}>{category.name}</p>
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    marginBottom: "30px",
-                  }}
-                >
-                  <div className={styles.container}>
-                    {filteredProducts &&
-                      Array.isArray(filteredProducts) &&
-                      filteredProducts.map((product) => {
-                        const a = product.categories.map((cat) => {
-                          if (cat == category._id) {
-                            return (
-                              <div key={product._id} className={styles.card}>
-                                <div className={styles.card_div}>
-                                  <p className={styles.productTitle}>
-                                    {product.name}
-                                  </p>
-                                  <img
-                                    src={product.image}
-                                    className={styles.productImg}
-                                    alt="ks"
-                                  ></img>
-                                </div>
-                                <p>
-                                  {Array.isArray(product.variations) &&
-                                  product.variations &&
-                                  product.variations.length > 1
-                                    ? product.variations[0].price
-                                    : product.defaultPrice}
-                                  ₺
-                                </p>
-                                <div className={styles.card_div}>
-                                  {Array.isArray(product.variations) &&
-                                    product.variations &&
-                                    product.variations.length > 1 && (
-                                      <>
-                                        <span>
-                                          Variaion: {product.variations[0].size}
-                                        </span>
-                                      </>
-                                    )}
-                                  <i
-                                    className={`fa fa-plus ${styles.icon}`}
-                                    aria-hidden="true"
-                                    onClick={() =>
-                                      addItem({
-                                        id: product._id,
-                                        title: product.name,
-                                        price:
-                                          Array.isArray(product.variations) &&
-                                          product.variations &&
-                                          product.variations.length >= 1
-                                            ? product.variations[0].price
-                                            : product.defaultPrice,
-                                        image01: product.image,
-                                        variation:
-                                          Array.isArray(product.variations) &&
-                                          product.variations &&
-                                          product.variations.length >= 1
-                                            ? product.variations[0].size
-                                            : null,
-                                        sellerId: product.user._id,
-                                        sellerName: product.user.name,
-                                      })
-                                    }
-                                  ></i>
-                                </div>
-                              </div>
-                            );
-                          }
-                        });
-                        return a;
-                      })}
+          {Array.isArray(categories) &&
+            categories.map((category) => {
+              return (
+                <>
+                  <div
+                    id={category._id}
+                    className={`${styles.container} ${styles.test1}`}
+                  >
+                    <p className={styles.title}>{category.name}</p>
                   </div>
-                </div>
-              </>
-            );
-          })}
+
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginBottom: "30px",
+                    }}
+                  >
+                    <div className={styles.container}>
+                      {filteredProducts &&
+                        Array.isArray(filteredProducts) &&
+                        filteredProducts.map((product) => {
+                          const a = product.categories.map((cat) => {
+                            if (cat == category._id) {
+                              return (
+                                <div key={product._id} className={styles.card}>
+                                  <div className={styles.card_div}>
+                                    <p className={styles.productTitle}>
+                                      {product.name}
+                                    </p>
+                                    <img
+                                      src={product.image}
+                                      className={styles.productImg}
+                                      alt="ks"
+                                    ></img>
+                                  </div>
+                                  <p>
+                                    {Array.isArray(product.variations) &&
+                                    product.variations &&
+                                    product.variations.length > 1
+                                      ? product.variations[0].price
+                                      : product.defaultPrice}
+                                    ₺
+                                  </p>
+                                  <div className={styles.card_div}>
+                                    {Array.isArray(product.variations) &&
+                                      product.variations &&
+                                      product.variations.length > 1 && (
+                                        <>
+                                          <span>
+                                            Variaion:{" "}
+                                            {product.variations[0].size}
+                                          </span>
+                                        </>
+                                      )}
+                                    <i
+                                      className={`fa fa-plus ${styles.icon}`}
+                                      aria-hidden="true"
+                                      onClick={() =>
+                                        addItem({
+                                          id: product._id,
+                                          title: product.name,
+                                          price:
+                                            Array.isArray(product.variations) &&
+                                            product.variations &&
+                                            product.variations.length >= 1
+                                              ? product.variations[0].price
+                                              : product.defaultPrice,
+                                          image01: product.image,
+                                          variation:
+                                            Array.isArray(product.variations) &&
+                                            product.variations &&
+                                            product.variations.length >= 1
+                                              ? product.variations[0].size
+                                              : null,
+                                          sellerId: product.user._id,
+                                          sellerName: product.user.name,
+                                        })
+                                      }
+                                    ></i>
+                                  </div>
+                                </div>
+                              );
+                            }
+                          });
+                        })}
+                    </div>
+                  </div>
+                </>
+              );
+            })}
         </div>
-      ) : (
-        ""
       )}
     </>
   );
