@@ -8,24 +8,26 @@ import Footer from "../Footer/Footer.js";
 import Routes from "../../routes/Routers";
 import Carts from "../UI/cart/Carts.js";
 import { ToastContainer } from "react-toastify";
+import AdminTest from "../../pages/AdminTest.js";
 
 const Layout = () => {
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
+  const isAdmin = user?.isAdmin;
   const showCart = useSelector((state) => state.cartUi.cartIsVisible);
   return (
-    <div>
+    <div style={{ display: isAdmin && "flex" }}>
       <ToastContainer />
-      <Header />
+      {isAdmin ? <AdminTest /> : <Header />}
 
       {showCart && <Carts />}
 
       <div>
         <Routes />
       </div>
-      <Footer />
+      {!isAdmin && <Footer />}
     </div>
   );
 };

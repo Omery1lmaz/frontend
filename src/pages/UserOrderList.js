@@ -68,7 +68,12 @@ const UserOrderList = () => {
                 return (
                   <div className="order d-flex flex-column">
                     <div className="order-properties d-flex flex-column">
-                      <span>{timesyntax}</span>
+                      <span>
+                        Tarih:{" "}
+                        {item.isReady === "Ready"
+                          ? timesyntax
+                          : moment(item.date).fromNow()}
+                      </span>
                       <div className="d-flex justify-content-between">
                         <span>Toplam: {item.totalPrice}₺</span>
                         <div

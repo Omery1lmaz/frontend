@@ -37,16 +37,16 @@ const Routers = () => {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
-  // let sayac = 0;
-  // useEffect(async () => {
-  //   const token = Cookies.get("connect.sid");
-  //   if (token) {
-  //     if (!user && sayac === 0) {
-  //       dispatch(GetUserDetails());
-  //       sayac++;
-  //     }
-  //   }
-  // }, []);
+  let sayac = 0;
+  useEffect(async () => {
+    const token = Cookies.get("connect.sid");
+    if (token) {
+      if (!user && sayac === 0) {
+        dispatch(GetUserDetails());
+        sayac++;
+      }
+    }
+  }, []);
   return (
     <Routes>
       <Route path="/" element={user?.isAdmin ? <AdminDashboard /> : <Home />} />
