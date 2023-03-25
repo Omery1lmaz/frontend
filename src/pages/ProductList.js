@@ -27,6 +27,12 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+const pageLimitOptions = [
+  { label: 10, value: 10 },
+  { label: 25, value: 25 },
+  { label: 50, value: 50 },
+  { label: 100, value: 100 },
+];
 
 const ProductList = () => {
   const navigate = useNavigate();
@@ -35,31 +41,32 @@ const ProductList = () => {
   const [deal, setDeal] = useState(false);
   const [activePage, setActivePage] = useState(1);
   const [deleteProductId, setDeleteProductId] = useState();
+  const [limit, setLimit] = useState(10);
   const { page } = useParams();
   console.log(page, "page");
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
-  const {
-    isSuccessP,
-    isErrorP,
-    isLoadingP,
-    sellerCategories,
-    products,
-    sellerProducts,
-  } = useSelector((state) => state.product);
+  const { user } = useSelector((state) => state.auth);
+  const { isLoadingP, sellerProducts } = useSelector((state) => state.product);
   const deleteProduct = (id) => {
     console.log(id, "id deneme test s<jfjsak");
     dispatch(deleteProductById({ id, user }));
   };
   const getProducts = () => {
+    const intActivePAge = parseInt(activePage - 1);
     dispatch(
-      getProductsBySellerLimit({ id: user._id, skip: parseInt(activePage) })
+      getProductsBySellerLimit({
+        id: user._id,
+        skip: intActivePAge * limit,
+        limit,
+      })
     );
   };
+  useEffect(() => {
+    getProducts();
+  }, [limit]);
+
   useEffect(() => {
     page && setActivePage(parseInt(page));
     page == activePage ? getProducts() : setActivePage(parseInt(page));
@@ -73,6 +80,9 @@ const ProductList = () => {
     getProducts();
     navigate(`/product-list/${activePage}`);
   }, [activePage]);
+  const pageLimitHandlechange = (e) => {
+    setLimit(e.target.value);
+  };
 
   return (
     <>
@@ -81,6 +91,25 @@ const ProductList = () => {
       ) : (
         <Container style={{ margin: "30px auto" }}>
           <Row>
+            <Col className="d-flex align-items-baseline">
+              <div>
+                <span>Limit: </span>
+                <select
+                  id="select-size"
+                  className="select"
+                  onChange={pageLimitHandlechange}
+                  value={limit}
+                >
+                  {pageLimitOptions.map((item) => {
+                    return (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            </Col>
             <Col className="d-flex justify-content-center align-items-center flex-column">
               <h4>Products</h4>
               <Button className="my-3" onClick={() => navigate("/add-product")}>
@@ -145,9 +174,7 @@ const ProductList = () => {
                             ></i>
                             <i
                               class="fa-regular fa-pen-to-square madeleteProduct(item._id)rgin-left"
-                              onClick={(e) =>
-                                navigate(`/foods/${item._id}`)
-                              }
+                              onClick={(e) => navigate(`/edit-product/${item._id}`)}
                             ></i>
                           </td>
                         </tr>
@@ -167,7 +194,7 @@ const ProductList = () => {
                 Önceki Sayfa
               </button>
               <button
-                disabled={sellerProducts.products?.length < 9}
+                disabled={sellerProducts.products?.length < limit}
                 onClick={() => {
                   setActivePage(activePage + 1);
                 }}

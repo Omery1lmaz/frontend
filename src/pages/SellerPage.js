@@ -23,8 +23,15 @@ const SellerPage = () => {
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
 
-  const { isSuccessP, isErrorP, is, isLoadingP, categories, products } =
-    useSelector((state) => state.product);
+  const {
+    isSuccessP,
+    isErrorP,
+    is,
+    isLoadingP,
+    categories,
+    products,
+    sellerCategories,
+  } = useSelector((state) => state.product);
   useEffect(() => {
     dispatch(getProductsBySeller(id));
   }, []);
@@ -60,13 +67,18 @@ const SellerPage = () => {
   }, [searchName]);
 
   useEffect(() => {
-    console.log(filteredProducts, "filteredProducts");
-    if (searchName.trim() === "") {
-      console.log("trim boş");
-      setFilteredProducts(products);
-    }
-    console.log("trim", searchName.trim());
-  }, [filteredProducts]);
+    const searchedProduct = products?.filter((item) => {
+      if (searchName?.trim() === "") {
+        return item;
+      }
+      if (item.name.toLowerCase().includes(searchName.toLowerCase())) {
+        return item;
+      }
+    });
+    setFilteredProducts(searchedProduct);
+    // console.log(searchedProduct);
+    console.log(filteredProducts);
+  }, [searchName, products]);
 
   return (
     <>
@@ -102,9 +114,9 @@ const SellerPage = () => {
           <div style={{ display: "flex", justifyContent: "center" }}>
             <div className={`${styles.wrapper} ${styles.container2}`}>
               <ul className={styles.ul} style={{ overflowX: "auto" }}>
-                {categories &&
-                  categories.length >= 1 &&
-                  categories.map((category) => {
+                {sellerCategories &&
+                  sellerCategories.length >= 1 &&
+                  sellerCategories.map((category) => {
                     return (
                       <li className={styles.li}>
                         <a
@@ -131,8 +143,8 @@ const SellerPage = () => {
               setFilteredProducts(x);
             }}
           />
-          {Array.isArray(categories) &&
-            categories.map((category) => {
+          {Array.isArray(sellerCategories) &&
+            sellerCategories.map((category) => {
               return (
                 <>
                   <div
@@ -153,12 +165,14 @@ const SellerPage = () => {
                       {filteredProducts &&
                         Array.isArray(filteredProducts) &&
                         filteredProducts.map((product) => {
-                          const a = product.categories.map((cat) => {
+                          return product.categories.map((cat) => {
                             if (cat == category._id) {
                               return (
                                 <div key={product._id} className={styles.card}>
                                   <div className={styles.card_div}>
-                                    <p className={styles.productTitle}>
+                                    <p
+                                      className={`${styles.productTitle} max-w-200 text-overflow`}
+                                    >
                                       {product.name}
                                     </p>
                                     <img

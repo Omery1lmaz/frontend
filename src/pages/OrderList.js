@@ -44,6 +44,7 @@ const OrderList = () => {
   const dispatch = useDispatch();
   const { page } = useParams();
   const [open, setOpen] = useState(false);
+  const [vOrders, setVOrders] = useState();
   const [filterOpen, setFilterOpen] = useState(false);
   const [filter, setFilter] = useState({});
   const [limit, setLimit] = useState(10);
@@ -63,9 +64,11 @@ const OrderList = () => {
   const [selectedOrder, setSelectedOrder] = useState();
   let { orders, isLoadingP } = useSelector((state) => state.product);
   const getOrders = () => {
+    const intActivePAge = parseInt(activePage - 1);
+    console.log(intActivePAge * limit, "skip");
     dispatch(
       getOrderBySellerWithLimit({
-        skip: parseInt(activePage),
+        skip: intActivePAge * limit,
         limit,
         query: filter,
       })
@@ -98,6 +101,27 @@ const OrderList = () => {
     getOrders();
     console.log(limit, "limit active");
   }, [limit]);
+  const handleupdateStatusOrder = (status) => {
+    const index = orders.findIndex(
+      (item, index) => item._id === selectedOrder._id
+    );
+    let copyOrders = [...orders];
+    let copyV = orders[index];
+    copyV = { ...copyV, isReady: status };
+    console.log(copyV, "order v");
+
+    // copyOrders[index] = copyV;
+    console.log((copyOrders[index] = copyV), "copyOrders[index]");
+    orders = [...copyOrders];
+    console.log(orders[index], "real orders index");
+    setOrders();
+  };
+  const setOrders = () => {
+    setVOrders(orders);
+  };
+  useEffect(() => {
+    setOrders();
+  }, [orders]);
 
   return (
     <>
@@ -116,6 +140,7 @@ const OrderList = () => {
                   id="select-size"
                   className="select"
                   onChange={pageLimitHandlechange}
+                  value={limit}
                 >
                   {pageLimitOptions.map((item) => {
                     return (
@@ -139,6 +164,7 @@ const OrderList = () => {
                   <table className="table">
                     <thead>
                       <tr>
+                        <th className="text-center">Date</th>
                         <th
                           style={{ width: "200px" }}
                           onClick={() => handleOpenFilter}
@@ -155,12 +181,36 @@ const OrderList = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {orders &&
-                        Array.isArray(orders) &&
-                        orders.map((item) => {
+                      {vOrders &&
+                        Array.isArray(vOrders) &&
+                        vOrders.map((item) => {
                           // const date = new Date(item.date)
+                          let date = new Date(item.date);
+
+                          let day = date.getDate(); // gün
+                          let month = date.getMonth() + 1; // ay (0-11 arası olduğu için 1 ekliyoruz)
+                          let year = date.getFullYear(); // yıl
+                          let hour = date.getHours(); // saat
+                          let minute = date.getMinutes(); // dakika
+                          let second = date.getSeconds(); // saniye
+                          const time =
+                            day +
+                            "." +
+                            month +
+                            "." +
+                            year +
+                            " " +
+                            hour +
+                            ":" +
+                            minute +
+                            ":" +
+                            second;
+
                           return (
                             <tr onClick={() => setSelectedOrder(item)}>
+                              <td>
+                                <span>{time}</span>
+                              </td>
                               <td className="text-center cart__img-box">
                                 <span className="text-overflow max-w-200">
                                   {item.name}
@@ -258,7 +308,7 @@ const OrderList = () => {
                   Önceki Sayfa
                 </button>
                 <button
-                  disabled={orders.length < 9}
+                  disabled={orders.length < limit}
                   onClick={() => {
                     setActivePage(activePage + 1);
                   }}
@@ -292,6 +342,7 @@ const OrderList = () => {
                         status: "Not Started",
                       })
                     );
+                    handleupdateStatusOrder("Not Started");
                   }}
                 >
                   <i class="ri-shopping-basket-line m-0"></i>
@@ -306,6 +357,7 @@ const OrderList = () => {
                         status: "InProgress",
                       })
                     );
+                    handleupdateStatusOrder("InProgress");
                   }}
                 >
                   <i class="ri-shopping-basket-line m-0"></i>
@@ -320,6 +372,7 @@ const OrderList = () => {
                         status: "Ready",
                       })
                     );
+                    handleupdateStatusOrder("Ready");
                   }}
                 >
                   <i class="ri-shopping-basket-line m-0"></i>

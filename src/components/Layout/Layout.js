@@ -6,7 +6,6 @@ import { useSelector, useDispatch } from "react-redux";
 import Header from "../Header/Header.js";
 import Footer from "../Footer/Footer.js";
 import Routes from "../../routes/Routers";
-
 import Carts from "../UI/cart/Carts.js";
 import { ToastContainer } from "react-toastify";
 

@@ -207,9 +207,8 @@ const getProductsBySeller = async (id) => {
   return response.data;
 };
 
-const getProductsBySellerWithLimit = async ({ id, skip }) => {
+const getProductsBySellerWithLimit = async ({ id, skip, limit }) => {
   console.log(skip, "skip 1");
-  const limit = 10;
   const response = await axios.get(
     `http://localhost:4000/api/products/seller/limit/${id}/${limit}/${skip}`
   );

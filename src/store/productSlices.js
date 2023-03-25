@@ -393,13 +393,14 @@ export const getProductsBySeller = createAsyncThunk(
 
 export const getProductsBySellerLimit = createAsyncThunk(
   "/getProductsBySellerLimit",
-  async ({ id, skip }, thunkAPI) => {
+  async ({ id, skip, limit }, thunkAPI) => {
     console.log(skip, "skip");
     const v = skip == 1 ? 0 : skip * 10 - 10;
     try {
       const res = await productService.getProductsBySellerWithLimit({
         id,
-        skip: v,
+        skip,
+        limit,
       });
       return res;
     } catch (error) {
@@ -422,7 +423,7 @@ export const getOrderBySellerWithLimit = createAsyncThunk(
     const v = skip === 1 ? 0 : skip * 10 - 10;
     try {
       const res = await productService.getOrderBySellerWithLimit({
-        skip: v,
+        skip,
         limit,
         query,
       });

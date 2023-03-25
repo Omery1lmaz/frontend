@@ -44,7 +44,7 @@ const EditProduct = () => {
   const handleaddclick = () => {
     setinputList([...inputList, { size: "", price: 0 }]);
   };
-  const [modalStatus, setModalStatus] = useState(true);
+  const [modalStatus, setModalStatus] = useState(false);
   const handleModalStatusOpen = () => setModalStatus(true);
   const handleModalStatusClose = () => setModalStatus(false);
 
@@ -333,7 +333,8 @@ const EditProduct = () => {
                                   </div>
                                 </div>
                                 <div>
-                                  <span
+                                  <button
+                                    type="button"
                                     style={{
                                       borderRadius: "5px",
                                       background: "var(--primary-color)",
@@ -344,7 +345,7 @@ const EditProduct = () => {
                                     onClick={handleModalStatusOpen}
                                   >
                                     Resmini güncelle
-                                  </span>
+                                  </button>
                                 </div>
                                 <div class="col-12">
                                   <button

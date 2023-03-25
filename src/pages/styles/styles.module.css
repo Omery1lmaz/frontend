@@ -57,7 +57,7 @@ img {
   font-size: 1.8rem;
   font-weight: 700;
 }
-.productTitle{
+.productTitle {
   padding-top: 7px;
 }
 .review {
@@ -131,7 +131,8 @@ img {
 }
 
 .productImg {
-  border-radius: 50%;
+  object-fit: cover;
+  border-radius: 2px;
   width: 50px;
   margin-top: 5px;
   height: auto;

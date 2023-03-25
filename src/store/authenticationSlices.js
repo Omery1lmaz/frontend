@@ -182,7 +182,6 @@ const authSlice = createSlice({
         state.isSuccess = false;
         state.isLoading = false;
         state.message = action.payload;
-        state.user = null;
       })
       .addCase(GetUserDetails.pending, (state, action) => {
         state.isLoading = true;

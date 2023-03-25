@@ -30,21 +30,23 @@ import OrderDetail from "../pages/OrderDetail";
 import AdminDashboard from "../pages/AdminDashboard";
 import ProductCosts from "../pages/ProductCosts";
 import CategoryCost from "../pages/CategoryCost";
+import GuardedRoute from "../services/authenticationGuard";
+
 const Routers = () => {
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
-  let sayac = 0;
-  useEffect(async () => {
-    const token = Cookies.get("connect.sid");
-    if (token) {
-      if (!user && sayac === 0) {
-        dispatch(GetUserDetails());
-        sayac++;
-      }
-    }
-  }, []);
+  // let sayac = 0;
+  // useEffect(async () => {
+  //   const token = Cookies.get("connect.sid");
+  //   if (token) {
+  //     if (!user && sayac === 0) {
+  //       dispatch(GetUserDetails());
+  //       sayac++;
+  //     }
+  //   }
+  // }, []);
   return (
     <Routes>
       <Route path="/" element={user?.isAdmin ? <AdminDashboard /> : <Home />} />
@@ -59,7 +61,7 @@ const Routers = () => {
       <Route path="/cart" element={<Cart />} /> {/*OK*/}
       <Route path="/checkout" element={<Checkout />} /> {/*OK*/}
       <Route path="/login" element={<Login />} /> {/*OK*/}
-      <Route path="/register" element={<Register />} /> {/*OK*/}
+      {/*OK*/}
       <Route path="/contact" element={<Contact />} /> {/*Dont*/}
       <Route path="/add-product" element={<AddProduct />} /> {/*Dont*/}
       <Route path="/edit-product/:id" element={<EditProduct />} /> {/*Dont*/}
@@ -71,6 +73,8 @@ const Routers = () => {
         <Route path="/edit-category/:id" element={<EditCategory />} />
       )}{" "}
       {/*Dont*/}
+      {/* <GuardedRoute path='/register' component={Register} /> */}
+      <Route path="/register" element={<GuardedRoute component={Register} />} />
       {user && <Route path="/category-list" element={<CategoryList />} />}{" "}
       {/*Dont*/}
       {user && (
