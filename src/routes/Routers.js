@@ -31,6 +31,12 @@ import AdminDashboard from "../pages/AdminDashboard";
 import ProductCosts from "../pages/ProductCosts";
 import CategoryCost from "../pages/CategoryCost";
 import GuardedRoute from "../services/authenticationGuard";
+import SellerProfile from "../pages/SellerProfile";
+import AddPromotion from "../pages/AddPromotion";
+import Promotions from "../pages/Promotions";
+import AddWaiter from "../pages/AddWaiter";
+import EditWaiter from "../pages/EditWaiter";
+import WaiterList from "../pages/WaiterList";
 
 const Routers = () => {
   const dispatch = useDispatch();
@@ -39,19 +45,20 @@ const Routers = () => {
   );
   let sayac = 0;
   useEffect(async () => {
+    console.log("şsalmfklasm");
     const token = Cookies.get("connect.sid");
-    if (token) {
-      if (!user && sayac === 0) {
-        dispatch(GetUserDetails());
-        sayac++;
-      }
+    if (user) {
+      dispatch(GetUserDetails());
     }
   }, []);
   return (
     <Routes>
       <Route path="/" element={user?.isAdmin ? <AdminDashboard /> : <Home />} />
+      {/* <Route path="/" element={user?.isAdmin ? <AdminDashboard /> : <Home />} /> */}
       {/* <Route path="/" element={<Navigate to="/home/6335f47dd765bd4893812492" />} /> */}
       <Route path="/seller/:id" element={<SellerPage />} /> {/*OK*/}
+      <Route path="/promotions" element={<Promotions />} /> {/*OK*/}
+      <Route path="/seller/profile" element={<SellerProfile />} /> {/*OK*/}
       <Route path="/order" element={<UserOrderList />} /> {/*OK*/}
       <Route path="/order-detail/:id" element={<OrderDetail />} /> {/*OK*/}
       <Route path="/foods" element={<AllFoods />} /> {/*Dont*/}
@@ -60,10 +67,14 @@ const Routers = () => {
       <Route path="/foods/:id" element={<FoodDetails />} /> {/*OK*/}
       <Route path="/cart" element={<Cart />} /> {/*OK*/}
       <Route path="/checkout" element={<Checkout />} /> {/*OK*/}
+      <Route path="/add-waiter" element={<AddWaiter />} /> {/*OK*/}
+      <Route path="/edit-waiter/:id" element={<EditWaiter />} /> {/*OK*/}
+      <Route path="/waiter-list" element={<WaiterList />} /> {/*OK*/}
       <Route path="/login" element={<Login />} /> {/*OK*/}
       {/*OK*/}
       <Route path="/contact" element={<Contact />} /> {/*Dont*/}
       <Route path="/add-product" element={<AddProduct />} /> {/*Dont*/}
+      <Route path="/add-promotion" element={<AddPromotion />} /> {/*Dont*/}
       <Route path="/edit-product/:id" element={<EditProduct />} /> {/*Dont*/}
       {user && <Route path="/add-category" element={<AddCategory />} />}{" "}
       {/*Dont*/}

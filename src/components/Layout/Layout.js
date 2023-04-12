@@ -18,14 +18,19 @@ const Layout = () => {
   const isAdmin = user?.isAdmin;
   const showCart = useSelector((state) => state.cartUi.cartIsVisible);
   return (
-    <div style={{ display: isAdmin && "flex" }}>
+    <div>
       <ToastContainer />
-      {isAdmin ? <AdminTest /> : <Header />}
 
       {showCart && <Carts />}
 
       <div>
-        <Routes />
+        <div style={{ display: isAdmin && "flex" }}>
+          {isAdmin ? <AdminTest /> : <Header />}
+          {/* {<Header />} */}
+          <div style={{ width: isAdmin && "calc(100% - 280px)" }}>
+            <Routes />
+          </div>
+        </div>
       </div>
       {!isAdmin && <Footer />}
     </div>

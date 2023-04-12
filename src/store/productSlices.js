@@ -297,6 +297,23 @@ export const getCategoriesBySeller = createAsyncThunk(
   }
 );
 
+export const getPromotionsBySeller = createAsyncThunk(
+  "/getPromotionsBySeller",
+  async (thunkAPI) => {
+    try {
+      const response = await productService.getPromotionsBySeller();
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+    }
+  }
+);
+
 export const getCategoriesBySellerId = createAsyncThunk(
   "/getCategoriesBySellerId",
   async (id, thunkAPI) => {
@@ -314,7 +331,6 @@ export const getCategoriesBySellerId = createAsyncThunk(
     }
   }
 );
-
 export const addCategories = createAsyncThunk(
   "/addCategories",
   async (category, thunkAPI) => {
@@ -498,6 +514,7 @@ const initialState = {
   product: {},
   sellerProducts: [],
   adminDashBoard: {},
+  promotions: [],
 };
 
 // Then, handle actions in your reducers:
@@ -509,6 +526,19 @@ const productSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      .addCase(getPromotionsBySeller.fulfilled, (state, action) => {
+        state.isLoadingP = false;
+        state.promotions = action.payload;
+      })
+      .addCase(getPromotionsBySeller.rejected, (state, action) => {
+        state.isErrorP = true;
+        state.isSuccessP = false;
+        state.isLoadingP = false;
+        state.messageP = action.payload;
+      })
+      .addCase(getPromotionsBySeller.pending, (state, action) => {
+        state.isLoadingP = true;
+      })
       .addCase(updateProductsImage.fulfilled, (state, action) => {
         state.isLoadingP = false;
       })
@@ -548,8 +578,9 @@ const productSlice = createSlice({
         state.isLoadingP = true;
       })
       .addCase(getCategoriesBySellerId.fulfilled, (state, action) => {
+        console.log(action.payload, "seller categories");
         state.isLoadingP = false;
-        state.categories = action.payload;
+        state.sellerCategories = action.payload;
       })
       .addCase(getCategoriesBySellerId.rejected, (state, action) => {
         state.isErrorP = true;

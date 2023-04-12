@@ -11,10 +11,10 @@ import {
 import Multiselect from "multiselect-react-dropdown";
 import PageSpinner from "../components/UI/spinners/pageSpinner";
 
-const AddProduct = () => {
+const AddPromotion = () => {
   const dispatch = useDispatch();
 
-  const { sellerCategories, isLoadingP, promotions } = useSelector(
+  const { sellerCategories, isLoadingP } = useSelector(
     (state) => state.product
   );
   useEffect(() => {
@@ -51,7 +51,6 @@ const AddProduct = () => {
       .integer()
       .required("Price is required"),
     Category: Yup.array().required("Required"),
-    Promotions: Yup.array().required("Required"),
   });
 
   const ButtonHandleSubmit = (e) => {
@@ -71,17 +70,14 @@ const AddProduct = () => {
             Description: "",
             Price: 1,
             Category: "",
-            Promotions: "",
           }}
           validationSchema={validate}
           onSubmit={(values, { resetForm }) => {
-            const { Name, Brand, Description, Price, Category, Promotions } =
-              values;
+            const { Name, Brand, Description, Price, Category } = values;
             formData.append("Name", Name);
             formData.append("Brand", Brand);
             formData.append("Description", Description);
             formData.append("Category", JSON.stringify(Category));
-            formData.append("Promotions", JSON.stringify(Promotions));
             formData.append("Price", Price);
             formData.append("variations", JSON.stringify(inputList));
             formData.append("Image", image);
@@ -96,7 +92,6 @@ const AddProduct = () => {
               Description,
               Price,
               Category,
-              Promotions,
               variations: inputList,
               formData,
             };
@@ -157,7 +152,7 @@ const AddProduct = () => {
                     <div class="row">
                       <div class="col-12">
                         <h2 class="tm-block-title d-inline-block">
-                          Add Product
+                          Add Promotion
                         </h2>
                       </div>
                     </div>
@@ -169,7 +164,7 @@ const AddProduct = () => {
                           onSubmit={formik.handleSubmit}
                         >
                           <div class="form-group mb-3">
-                            <label for="Name">Product Name</label>
+                            <label for="Name">Promotion Name</label>
                             <input
                               id="Name"
                               name="Name"
@@ -238,54 +233,14 @@ const AddProduct = () => {
                               }} // Function will trigger on remove event
                               displayValue="name" // Property name to display in the dropdown options
                             />
+
                             {formik.errors.Category &&
                             formik.touched.Category ? (
                               <div class="error">
                                 * {formik.errors.Category}
                               </div>
                             ) : null}
-                            {/* Promotions */}
-                            <label for="Category">Promotions</label>
-                            <Multiselect
-                              id="Promotions"
-                              name="Promotions"
-                              options={
-                                Array.isArray(promotions) &&
-                                promotions.length >= 1
-                                  ? promotions.map((promotion) => {
-                                      return {
-                                        name: promotion.name,
-                                        _id: promotion._id,
-                                      };
-                                    })
-                                  : []
-                              } // Options to display in the dropdown
-                              selectedValues={
-                                formik.values.Promotions
-                                  ? formik.values.Promotions
-                                  : []
-                              }
-                              placeholder="Select Promotion"
-                              // Preselected value to persist in dropdown
-                              onSelect={(selectedList, selectedItem) => {
-                                formik.values.Promotions = selectedList;
-                                console.log(
-                                  formik.values.Promotions,
-                                  "promotions"
-                                );
-                              }} // Function will trigger on select event
-                              onRemove={(selectedList, selectedItem) => {
-                                formik.values.Promotions = selectedList;
-                                console.log(formik.values.Category);
-                              }} // Function will trigger on remove event
-                              displayValue="name" // Property name to display in the dropdown options
-                            />
-                            {formik.errors.Promotions &&
-                            formik.touched.Promotions ? (
-                              <div class="error">
-                                * {formik.errors.Promotions}
-                              </div>
-                            ) : null}
+
                             <div class="row">
                               <div class="form-group mb-3 col-xs-12 col-sm-6">
                                 <label for="Price">Price</label>
@@ -359,4 +314,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default AddPromotion;

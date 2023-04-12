@@ -14,6 +14,45 @@ const login = async (user) => {
   return response.data;
 };
 
+const getInfoHelper = async () => {
+  const response = await axios.get("http://localhost:4000/api/users/info", {
+    withCredentials: true,
+  });
+  return response.data;
+};
+const getSellerInfoHelper = async (id) => {
+  const response = await axios.get(
+    `http://localhost:4000/api/users/info/${id}`
+  );
+  return response.data;
+};
+
+const updateUserProfileHelper = async (profile) => {
+  const response = await axios.post(
+    "http://localhost:4000/api/users/profile",
+    { profile: profile },
+    { withCredentials: true }
+  );
+
+  if (response.data) {
+    console.log(response.data + "data");
+  }
+  return response.data;
+};
+
+const updateUserImageHelper = async ({ formData }) => {
+  const response = await axios.post(
+    "http://localhost:4000/api/users/image",
+    formData,
+    { withCredentials: true }
+  );
+
+  if (response.data) {
+    console.log(response.data + "data");
+  }
+  return response.data;
+};
+
 const register = async (user) => {
   const response = await axios.post(
     "http://localhost:4000/api/users/register",
@@ -89,5 +128,9 @@ const authService = {
   resetPasswordVerify,
   VerifyUser,
   GetSellers,
+  getInfoHelper,
+  updateUserProfileHelper,
+  updateUserImageHelper,
+  getSellerInfoHelper,
 };
 export default authService;

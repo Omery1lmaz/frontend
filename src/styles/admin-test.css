@@ -1,8 +1,11 @@
 .navbar {
   width: 280px;
-  height: 100vh;
+  height: 100%;
   background-color: rgb(240, 231, 231);
   border-right: 1px solid gray;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start !important;
 }
 .admin-logo {
   width: 90%;

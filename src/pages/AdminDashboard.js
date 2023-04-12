@@ -40,23 +40,23 @@ const AdminDashboard = () => {
       date: { ...filter.date, $lte: new Date(e.target.value) },
     });
   };
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+  useEffect(() => {
+    getData();
+  }, []);
 
   let counter = 0;
   const [products, setProducts] = useState([]);
-  // useEffect(() => {
-  //   counter++;
-  //   if (adminDashBoard.products && counter == 0)
-  //     for (let index = 0; index < 2; index++) {
-  //       setProducts([...products, adminDashBoard.products[index]]);
-  //     }
-  // }, [adminDashBoard]);
+  useEffect(() => {
+    counter++;
+    if (adminDashBoard.products && counter == 0)
+      for (let index = 0; index < 2; index++) {
+        setProducts([...products, adminDashBoard.products[index]]);
+      }
+  }, [adminDashBoard]);
 
-  // const getData = () => {
-  //   dispatch(getAdminDashBoardInf({ query: filter }));
-  // };
+  const getData = () => {
+    dispatch(getAdminDashBoardInf({ query: filter }));
+  };
 
   return (
     <div>
@@ -81,8 +81,8 @@ const AdminDashboard = () => {
             </Row>
             <Row>
               <div className="cards-wrapper mt-5">
-                {/* <div className="admin-table-container"> */}
-                  {/* <div className="d-flex justify-content-between mb-2">
+                <div className="admin-table-container">
+                  <div className="d-flex justify-content-between mb-2">
                     <h2 className="table-title">Products Cost</h2>
                     <span
                       className="table-link"
@@ -117,8 +117,8 @@ const AdminDashboard = () => {
                       </tbody>
                     </table>
                   </div>
-                </div> */}
-                {/* <div className="admin-table-container">
+                </div>
+                <div className="admin-table-container">
                   <div className="d-flex justify-content-between mb-2">
                     <h2 className="table-title">Categories Cost</h2>
                     <span
@@ -127,8 +127,8 @@ const AdminDashboard = () => {
                     >
                       View All
                     </span>
-                  </div> */}
-                  {/* <div>
+                  </div>
+                  <div>
                     <table className="border-0 w-100">
                       <thead>
                         <tr className="admin-table-head border-0">
@@ -153,8 +153,8 @@ const AdminDashboard = () => {
                         })}
                       </tbody>
                     </table>
-                  </div> */}
-                {/* </div> */}
+                  </div>
+                </div>
               </div>
             </Row>
           </Container>
@@ -188,7 +188,7 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
-                {/* <button onClick={getData}>Search</button> */}
+                <button onClick={getData}>Search</button>
               </Typography>
             </Box>
           </Modal>

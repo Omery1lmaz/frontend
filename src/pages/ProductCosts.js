@@ -60,9 +60,6 @@ const ProductCosts = () => {
   const getData = () => {
     dispatch(getAdminDashBoardInf({ query: filter }));
   };
-  useEffect(() => {
-    console.log(searchTerm);
-  }, [searchTerm]);
 
   return (
     <div className="test">

@@ -10,6 +10,8 @@ import productSlices, {
 import { cartActions } from "../store/shopping-cart/cartSlice";
 import { infoNotification } from "../services/notification";
 import PageSpinner from "../components/UI/spinners/pageSpinner";
+import { getSellerInfoById } from "../store/authenticationSlices";
+
 const SellerPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -17,6 +19,7 @@ const SellerPage = () => {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.product
   );
+  const { sellerDetails } = useSelector((state) => state.auth);
   const [selectedSize, setSelectedSize] = useState();
   const [filteredProducts, setFilteredProducts] = useState();
   const [searchName, setSearchName] = useState("");
@@ -34,12 +37,9 @@ const SellerPage = () => {
   } = useSelector((state) => state.product);
   useEffect(() => {
     dispatch(getProductsBySeller(id));
+    dispatch(getCategoriesBySellerId(id));
+    dispatch(getSellerInfoById(id));
   }, []);
-
-  useEffect(() => {
-    dispatch(getCatsBySeller());
-  }, []);
-
   const addItem = ({
     id,
     title,
@@ -82,32 +82,21 @@ const SellerPage = () => {
 
   return (
     <>
-      {isLoadingP &&
-      isLoading &&
-      !Array.isArray(products) &&
-      !products.length >= 1 ? (
+      {isLoadingP ||
+      isLoading ||
+      (!Array.isArray(products) && !products.length >= 1) ? (
         <PageSpinner />
       ) : (
         <div>
           <img
-            src="https://images.deliveryhero.io/image/fd-tr/LH/xpdi-hero.jpg?width=1600&height=400&quality=45%201600w"
+            src={sellerDetails.imageUrl}
             className={styles.img}
             alt="seller"
           ></img>
           <div className={styles.container3}>
-            <h3 className={styles.seller_name}>Seller</h3>
+            <h3 className={styles.seller_name}>{sellerDetails.name}</h3>
             <div className={styles.seller}>
-              <span
-                class="fa fa-star"
-                style={{ color: "orange", marginLeft: "1rem" }}
-              ></span>
-              <span class="fa fa-star" style={{ color: "orange" }}></span>
-              <span class="fa fa-star" style={{ color: "orange" }}></span>
-              <span class="fa fa-star" style={{ color: "orange" }}></span>
-              <span class="fa fa-star" style={{ color: "orange" }}></span>
-              <div className={styles.review}>
-                4.7 <p style={{ marginLeft: "3px" }}>(500+)</p>
-              </div>
+              Adress: <span>{sellerDetails.address}</span>
             </div>
           </div>
 
@@ -168,7 +157,13 @@ const SellerPage = () => {
                           return product.categories.map((cat) => {
                             if (cat == category._id) {
                               return (
-                                <div key={product._id} className={styles.card}>
+                                <div
+                                  key={product._id}
+                                  className={styles.card}
+                                  onClick={() =>
+                                    navigate(`/foods/${product._id}`)
+                                  }
+                                >
                                   <div className={styles.card_div}>
                                     <p
                                       className={`${styles.productTitle} max-w-200 text-overflow`}

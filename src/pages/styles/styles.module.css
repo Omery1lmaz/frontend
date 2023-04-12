@@ -46,7 +46,12 @@
 }
 img {
   width: 100%;
-  height: 100%;
+  object-fit: cover;
+}
+.header_logo {
+  width: 100%;
+  height: 45px;
+  object-fit: contain;
 }
 .checked {
   color: orange;

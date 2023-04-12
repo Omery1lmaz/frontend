@@ -113,11 +113,6 @@ const getCategoryByIdHelper = async ({ id }) => {
   return response.data;
 };
 const updateProductsImage = async ({ id, formData }) => {
-  console.log(id);
-  for (var key of formData.entries()) {
-    console.log(JSON.stringify(key[0]) + ", " + JSON.stringify(key[1]));
-  }
-
   const response = await axios.post(
     `http://localhost:4000/api/products/image/${id}`,
     formData,
@@ -139,6 +134,13 @@ const getCategoriesBySellerIdHelper = async (id) => {
   const response = await axios.get(
     `http://localhost:4000/api/categories/categories/${id}`
   );
+  return response.data;
+};
+
+const getPromotionsBySeller = async (id) => {
+  const response = await axios.get(`http://localhost:4000/api/promotions/`, {
+    withCredentials: true,
+  });
   return response.data;
 };
 
@@ -273,5 +275,6 @@ const productService = {
   getCategoriesBySellerIdHelper,
   getOrderBySellerWithLimit,
   getAdminDashboardInf,
+  getPromotionsBySeller,
 };
 export default productService;

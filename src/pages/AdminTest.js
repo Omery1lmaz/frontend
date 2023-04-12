@@ -1,6 +1,8 @@
 import React from "react";
 import "../styles/admin-test.css";
-import { NavLink } from "reactstrap";
+import { NavLink } from "react-router-dom";
+import Cookies from "js-cookie";
+
 const seller_nav__links = [
   {
     display: "Dashboard",
@@ -27,17 +29,42 @@ const seller_nav__links = [
     path: "/add-category",
     icon: "fa-solid fa-house text",
   },
+  {
+    display: "Get Promotion",
+    path: "/promotions",
+    icon: "fa-solid fa-house text",
+  },
+  {
+    display: "Add Promotion",
+    path: "/add-promotion",
+    icon: "fa-solid fa-house text",
+  },
+  {
+    display: "Waiter List",
+    path: "/waiter-list",
+    icon: "fa-solid fa-house text",
+  },
+  {
+    display: "Add Waiter",
+    path: "/add-waiter",
+    icon: "fa-solid fa-house text",
+  },
 ];
 
 const seller_nav__links1 = [
   {
     display: "Profile",
-    path: "/",
+    path: "/seller/profile",
     icon: "fa-solid fa-house text",
   },
 ];
 
 const AdminTest = () => {
+  const logout = () => {
+    Cookies.remove("connect.sid");
+    window.location.reload(false);
+  };
+
   return (
     <div>
       <div className="navbar">
@@ -69,6 +96,7 @@ const AdminTest = () => {
             return (
               <NavLink to={item.path} key={index}>
                 <li
+                  className="admin-li"
                   style={{
                     borderBottom:
                       index === seller_nav__links.length - 1 &&
@@ -83,6 +111,13 @@ const AdminTest = () => {
               </NavLink>
             );
           })}
+
+          <span className="user">
+            <i
+              class="fa-solid fa-arrow-right-from-bracket"
+              onClick={logout}
+            ></i>
+          </span>
         </ul>
       </div>
     </div>

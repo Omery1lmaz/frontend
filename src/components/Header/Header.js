@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react";
 
 import Cookies from "js-cookie";
 import { Container } from "reactstrap";
-import logo from "../../assets/images/res-logo.png";
+import logo from "../../assets/images/bi_tikla_siparis.png";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { cartUiActions } from "../../store/shopping-cart/cartUiSlice";
@@ -71,30 +71,13 @@ const Header = () => {
   const toggleCart = () => {
     dispatch(cartUiActions.toggle());
   };
-
-  // useEffect(() => {
-  //   window.addEventListener("scroll", () => {
-  //     if (
-  //       document.body.scrollTop > 80 ||
-  //       document.documentElement.scrollTop > 80
-  //     ) {
-  //       headerRef.current.classList.add("header__shrink");
-  //     } else {
-  //       headerRef.current.classList.remove("header__shrink");
-  //     }
-  //   });
-
-  //   return () => window.removeEventListener("scroll");
-  // }, []);
-
   return (
     <header className="header" ref={headerRef}>
       <Container>
         <div className="nav__wrapper d-flex align-items-center justify-content-between ">
           <div className="logo">
-            <img src={logo} alt="logo" onClick={() => navigate("/")} />
+            <img className="header_logo" src={logo} alt="logo" onClick={() => navigate("/")} />
           </div>
-
           {/* ======= menu ======= */}
           <div className="navigation" ref={menuRef} onClick={toggleMenu}>
             <div className="menu d-flex align-items-center gap-5">

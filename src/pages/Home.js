@@ -60,6 +60,26 @@ const Home = () => {
     const slicePizza = filteredPizza.slice(0, 4);
     setHotPizza(slicePizza);
   }, []);
+  const [deneme, setDeneme] = useState();
+
+  let textArray = [];
+  const text =
+    "Next, you’ll want to change the value of a square from empty to “X” when the user clicks on the square. With how you’ve built the board so far you would need to copy-paste the code that updates the square nine times (once for each square you have)! Instead of copy-pasting, React’s component architecture allows you to create a reusable component to avoid messy, duplicated code. First, you are going to copy the line defining unlike   ";
+
+  const handleArray = () => {
+    const words = text.split(" ");
+    const uniqueWords = new Set(words);
+    const uniqueWordsArray = Array.from(uniqueWords);
+    setDeneme([...uniqueWords]);
+  };
+
+  useEffect(() => {
+    handleArray();
+  }, []);
+
+  useEffect(() => {
+    console.log("deneme", deneme);
+  }, [deneme]);
 
   useEffect(() => {
     if (category === "ALL") {
@@ -90,6 +110,61 @@ const Home = () => {
       setAllProducts(filteredProducts);
     }
   }, [category]);
+  const obne = [
+    "corner",
+    "open",
+    "new",
+    "tab",
+    "using",
+    "website",
+    "CodeSandbox.",
+    "CodeSandbox",
+    "lets",
+    "write",
+    "your",
+    "browser",
+    "preview",
+    "how",
+    "users",
+    "will",
+    "see",
+    "app",
+    "created.",
+    "The",
+    "should",
+    "display",
+    "an",
+    "empty",
+    "square",
+    "starter",
+    "for",
+    "tutorial",
+    "Unzip",
+    "terminal",
+    "prompts",
+    "stuck",
+    "Inspecting",
+    "Files",
+    "section",
+    "files",
+    "like",
+    "App.js,",
+    "index.js,",
+    "styles.css",
+    "folder",
+    "called",
+    "public",
+    "where",
+    "source",
+    "selected",
+    "file",
+    "written",
+    "be",
+    "displayed",
+    "App.js",
+    "section.",
+    "contents",
+  ];
 
   return (
     <Helmet title="Home">
@@ -171,158 +246,15 @@ const Home = () => {
           </Row>
         </Container>
       </section>
-
-      {/* <section>
-        <Container>
-          <Row>
-            <Col lg="12" className="text-center">
-              <h2>Popular Foods</h2>
-            </Col>
-
-            <Col lg="12">
-              <div className="food__category d-flex align-items-center justify-content-center gap-4">
-                <button
-                  className={`all__btn  ${
-                    category === "ALL" ? "foodBtnActive" : ""
-                  } `}
-                  onClick={() => setCategory("ALL")}
-                >
-                  All
-                </button>
-                <button
-                  className={`d-flex align-items-center gap-2 ${
-                    category === "BURGER" ? "foodBtnActive" : ""
-                  } `}
-                  onClick={() => setCategory("BURGER")}
-                >
-                  <img src={foodCategoryImg01} alt="" />
-                  Burger
-                </button>
-
-                <button
-                  className={`d-flex align-items-center gap-2 ${
-                    category === "PIZZA" ? "foodBtnActive" : ""
-                  } `}
-                  onClick={() => setCategory("PIZZA")}
-                >
-                  <img src={foodCategoryImg02} alt="" />
-                  Pizza
-                </button>
-
-                <button
-                  className={`d-flex align-items-center gap-2 ${
-                    category === "BREAD" ? "foodBtnActive" : ""
-                  } `}
-                  onClick={() => setCategory("BREAD")}
-                >
-                  <img src={foodCategoryImg03} alt="" />
-                  Bread
-                </button>
-              </div>
-            </Col>
-
-            {allProducts.map((item) => (
-              <Col lg="3" md="4" sm="6" xs="6" key={item.id} className="mt-5">
-                <ProductCard item={item} />
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </section> */}
-
-      {/* <section className="why__choose-us">
-        <Container>
-          <Row>
-            <Col lg="6" md="6">
-              <img src={whyImg} alt="why-tasty-treat" className="w-100" />
-            </Col>
-
-            <Col lg="6" md="6">
-              <div className="why__tasty-treat">
-                <h2 className="tasty__treat-title mb-4">
-                  Neden <span>Biz </span>
-                </h2>
-                <ListGroup className="mt-4">
-                  <ListGroupItem className="border-0 ps-0">
-                    <p className=" choose__us-title d-flex align-items-center gap-2 ">
-                      <i class="ri-checkbox-circle-line"></i> Hızlı Sipariş
-                    </p>
-                    <p className="choose__us-desc">
-                      Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                      Quia, voluptatibus.
-                    </p>
-                  </ListGroupItem>
-
-                  <ListGroupItem className="border-0 ps-0">
-                    <p className="choose__us-title d-flex align-items-center gap-2 ">
-                      <i class="ri-checkbox-circle-line"></i> Quality support
-                    </p>
-                    <p className="choose__us-desc">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Qui, earum.
-                    </p>
-                  </ListGroupItem>
-
-                  <ListGroupItem className="border-0 ps-0">
-                    <p className="choose__us-title d-flex align-items-center gap-2 ">
-                      <i class="ri-checkbox-circle-line"></i>Order from any
-                      location{" "}
-                    </p>
-                    <p className="choose__us-desc">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Qui, earum.
-                    </p>
-                  </ListGroupItem>
-                </ListGroup>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section> */}
-
-      {/* <section className="pt-0">
-        <Container>
-          <Row>
-            <Col lg="12" className="text-center mb-5 ">
-              <h2>Hot Pizza</h2>
-            </Col>
-
-            {hotPizza.map((item) => (
-              <Col lg="3" md="4" sm="6" xs="6" key={item.id}>
-                <ProductCard item={item} />
-              </Col>
-            ))}
-          </Row>
-        </Container>
-      </section> */}
-
-      {/* <section>
-        <Container>
-          <Row>
-            <Col lg="6" md="6">
-              <div className="testimonial ">
-                <h5 className="testimonial__subtitle mb-4">Testimonial</h5>
-                <h2 className="testimonial__title mb-4">
-                  What our <span>customers</span> are saying
-                </h2>
-                <p className="testimonial__desc">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Distinctio quasi qui minus quos sit perspiciatis inventore
-                  quis provident placeat fugiat!
-                </p>
-
-                <TestimonialSlider />
-              </div>
-            </Col>
-
-            <Col lg="6" md="6">
-              <img src={networkImg} alt="testimonial-img" className="w-100" />
-            </Col>
-          </Row>
-        </Container>
-      </section> */}
     </Helmet>
   );
 };
 
 export default Home;
+
+// <>
+//   {Array.isArray(deneme) && deneme.length >= 1 && (
+//     <div style={{ width: "100vw" }}>{JSON.stringify(deneme)}</div>
+//     // <div>{obne.length}</div>
+//   )}
+// </>

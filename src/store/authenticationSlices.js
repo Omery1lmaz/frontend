@@ -9,7 +9,10 @@ import {
 } from "../services/notification";
 import authService from "./helper/authHelper";
 
-const user = null;
+const user =
+  localStorage.getItem("user") !== null
+    ? JSON.parse(localStorage.getItem("user"))
+    : null;
 
 // Login User
 export const loginUser = createAsyncThunk(
@@ -18,7 +21,16 @@ export const loginUser = createAsyncThunk(
     console.log("user", user);
     try {
       const response = await authService.login(user);
-      console.log(response);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: response.name,
+          email: response.email,
+          _id: response._id,
+          isAdmin: response.isAdmin,
+        })
+      );
+      console.log(response, "reesponse");
       successNotification("Giriş başarılı");
       browserHistory.push("/home");
       return response;
@@ -32,6 +44,85 @@ export const loginUser = createAsyncThunk(
       browserHistory.push("/home");
       errorNotification(error.response.data);
       return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getsellerInfo = createAsyncThunk(
+  "sellerInfo",
+  async (thunkAPI) => {
+    console.log("user", user);
+    try {
+      const response = await authService.getInfoHelper();
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification(message);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const getSellerInfoById = createAsyncThunk(
+  "/getSellerInfoById",
+  async (id, thunkAPI) => {
+    console.log(id, "id getsellerinfo");
+    try {
+      const response = await authService.getSellerInfoHelper(id);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+    }
+  }
+);
+
+export const updateSellerProfile = createAsyncThunk(
+  "/updateSellerProfile",
+  async (profile, thunkAPI) => {
+    try {
+      const response = await authService.updateUserProfileHelper(profile);
+      successNotification("Profile updated successfully");
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification(message);
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+export const updateSellerImage = createAsyncThunk(
+  "/updateSellerImage",
+  async ({ formData }, thunkAPI) => {
+    try {
+      const response = await authService.updateUserImageHelper({
+        formData,
+      });
+      successNotification("İmage Güncellendi");
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification("İmage Güncellenemedi");
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -150,6 +241,8 @@ const initialState = {
   isLoading: false,
   message: "",
   sellers: null,
+  sellerInfo: {},
+  sellerDetails: {},
 };
 
 // Then, handle actions in your reducers:
@@ -173,6 +266,33 @@ const authSlice = createSlice({
       .addCase(loginUser.pending, (state, action) => {
         state.isLoading = true;
       })
+      .addCase(getSellerInfoById.fulfilled, (state, action) => {
+        state.sellerDetails = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getSellerInfoById.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.isLoading = false;
+        state.message = action.payload;
+        state.user = null;
+      })
+      .addCase(getSellerInfoById.pending, (state, action) => {
+        state.isLoading = true;
+      })
+      .addCase(getsellerInfo.fulfilled, (state, action) => {
+        state.sellerInfo = action.payload;
+        state.isLoading = false;
+      })
+      .addCase(getsellerInfo.rejected, (state, action) => {
+        state.isError = true;
+        state.isSuccess = false;
+        state.isLoading = false;
+        state.message = action.payload;
+      })
+      .addCase(getsellerInfo.pending, (state, action) => {
+        state.isLoading = true;
+      })
       .addCase(GetUserDetails.fulfilled, (state, action) => {
         state.user = action.payload;
         state.isLoading = false;
@@ -180,6 +300,7 @@ const authSlice = createSlice({
       .addCase(GetUserDetails.rejected, (state, action) => {
         state.isError = true;
         state.isSuccess = false;
+        state.user = null;
         state.isLoading = false;
         state.message = action.payload;
       })

@@ -141,6 +141,9 @@ const FoodDetails = () => {
                       Add to Cart
                     </button>
                   </div>
+                  <div>
+                    
+                  </div>
                 </Col>
                 <Col lg="12">
                   <div className="tabs d-flex align-items-center gap-5 py-3">
