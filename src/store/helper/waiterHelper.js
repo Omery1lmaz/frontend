@@ -15,6 +15,16 @@ const getWaitersHelper = async () => {
   });
   return data;
 };
+
+
+// GET WAITERS BY SELLER HELPER
+const getWaitersBySellerIdHelper = async (id) => {
+  const { data } = await axios.get(`http://localhost:4000/api/waiters/seller/${id}`, {
+    withCredentials: true,
+  });
+  return data;
+};
+
 // ADD WAITER HELPER
 const addWaiterHelper = async (waiter) => {
   console.log(waiter);
@@ -59,5 +69,6 @@ const waiterService = {
   addWaiterHelper,
   getWaiter,
   updateWaiterHelper,
+  getWaitersBySellerIdHelper
 };
 export default waiterService;

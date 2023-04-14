@@ -38,6 +38,22 @@ export const getWaiters = createAsyncThunk("/getWaiters", async (thunkAPI) => {
   }
 });
 
+// GET WAITERS BY SELLER ID
+export const getWaitersBySellerId = createAsyncThunk("/getWaitersBySellerId", async ({ id }, thunkAPI) => {
+  try {
+    return await waiterService.getWaitersBySellerIdHelper(id);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    // return thunkAPI.rejectWithValue(message);
+    errorNotification("Error");
+    console.log(error);
+  }
+});
+
+
 // ADD WAITER
 export const addWaiter = createAsyncThunk(
   "/addWaiter",
@@ -118,7 +134,7 @@ const waiterSlice = createSlice({
   name: "users",
   initialState,
   reducers: {},
-
+  
   extraReducers: (builder) => {
     builder
       // Get Waiter By ID
@@ -145,6 +161,20 @@ const waiterSlice = createSlice({
         state.isLoadingW = false;
       })
       .addCase(getWaiters.pending, (state, action) => {
+        state.isLoadingW = true;
+      })
+      // GET WAITERS BY SELLER ID
+      .addCase(getWaitersBySellerId.fulfilled, (state, action) => {
+        state.isLoadingW = false;
+        console.log(action.payload, "waiters action payload");
+        state.waiters = action.payload;
+      })
+      .addCase(getWaitersBySellerId.rejected, (state, action) => {
+        state.isErrorW = true;
+        state.isSuccessW = false;
+        state.isLoadingW = false;
+      })
+      .addCase(getWaitersBySellerId.pending, (state, action) => {
         state.isLoadingW = true;
       })
       // Add Waiter

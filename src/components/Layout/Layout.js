@@ -24,10 +24,13 @@ const Layout = () => {
       {showCart && <Carts />}
 
       <div>
-        <div style={{ display: isAdmin && "flex" }}>
-          {isAdmin ? <AdminTest /> : <Header />}
+        {/* <div style={{ display: isAdmin && "flex" }}> */}
+        <div>
+          {/* {isAdmin ? <AdminTest /> : <Header />} */}
+          {<Header />}
           {/* {<Header />} */}
-          <div style={{ width: isAdmin && "calc(100% - 280px)" }}>
+          {/* <div style={{ width: isAdmin && "calc(100% - 280px)" }}> */}
+          <div>
             <Routes />
           </div>
         </div>

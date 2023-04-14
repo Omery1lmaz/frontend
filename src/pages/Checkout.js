@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Container, Row, Col } from "reactstrap";
 import Helmet from "../components/Helmet/Helmet";
 import * as Yup from "yup";
+import Multiselect from "multiselect-react-dropdown";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -13,6 +14,7 @@ import "../styles/checkout.css";
 import { createOrder } from "../store/productSlices";
 import { Formik } from "formik";
 import { cartActions } from "../store/shopping-cart/cartSlice";
+import { getWaitersBySellerId } from "../store/waiterSlice";
 
 const style = {
   position: "absolute",
@@ -62,6 +64,7 @@ const Checkout = () => {
   }, [orders]);
 
   const { user } = useSelector((state) => state.auth);
+  const { waiters } = useSelector((state) => state.waiter);
   const products = cartItems.map((item) => {
     return {
       product: item.id,
@@ -74,6 +77,10 @@ const Checkout = () => {
   });
   const buttonDisabled = totalAmount > 0 ? false : true;
 
+  useEffect(() => {
+    dispatch(getWaitersBySellerId({id: cartItems[0].seller.id}))
+  }, [])
+  
   return (
     <Helmet title="Checkout">
       <section>
@@ -90,6 +97,7 @@ const Checkout = () => {
                       orderMessage: "",
                       Deal: false,
                       isTakeAway: false,
+                      tip: []
                     }}
                     validationSchema={validate}
                     onSubmit={(values, { resetForm }) => {
@@ -168,6 +176,40 @@ const Checkout = () => {
                             * {formik.errors.orderMessage}
                           </div>
                         ) : null}
+                        <div>
+                        {/* <Multiselect
+                              id="Category"
+                              name="Category"
+                              options={
+                                Array.isArray(sellerCategories) &&
+                                sellerCategories.length >= 1
+                                  ? sellerCategories.map((cat) => {
+                                      return {
+                                        name: cat.name,
+                                        _id: cat._id,
+                                      };
+                                    })
+                                  : []
+                              } // Options to display in the dropdown
+                              selectedValues={
+                                formik.values.Category
+                                  ? formik.values.Category
+                                  : []
+                              }
+                              placeholder="Select Category"
+                              // Preselected value to persist in dropdown
+                              onSelect={(selectedList, selectedItem) => {
+                                formik.values.Category = selectedList;
+                                console.log(formik.values.Category);
+                              }} // Function will trigger on select event
+                              onRemove={(selectedList, selectedItem) => {
+                                formik.values.Category = selectedList;
+                                console.log(formik.values.Category);
+                              }} // Function will trigger on remove event
+                              displayValue="name" // Property name to display in the dropdown options
+                            /> */}
+
+                        </div>
                         <div className="form__group d-flex mb-1">
                           <input
                             type="checkbox"
