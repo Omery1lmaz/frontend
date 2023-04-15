@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Container, Row, Col } from "reactstrap";
 import Helmet from "../components/Helmet/Helmet";
@@ -42,6 +42,7 @@ const Checkout = () => {
   const totalAmount = cartTotalAmount + Number(shippingCost);
   const { cartItems } = useSelector((state) => state.cart);
   const { orders } = useSelector((state) => state.product);
+  const selectAllText = "Hepsi";
   const validate = Yup.object({
     Name: Yup.string()
       .required("Name is required")
@@ -54,6 +55,11 @@ const Checkout = () => {
       .max(100, "Table must be beetwen 0 and 100"),
     Deal: Yup.boolean().oneOf([true], "Lütfen sözleşmeyi onaylayınız"),
     isTakeAway: Yup.boolean(),
+    tipCost: Yup.number().min(
+      0,
+      "Bahşiş min 0 türk lirasından yüksek olmalıdır"
+    ),
+    waiters: Yup.array(),
   });
 
   useEffect(() => {
@@ -78,9 +84,27 @@ const Checkout = () => {
   const buttonDisabled = totalAmount > 0 ? false : true;
 
   useEffect(() => {
-    dispatch(getWaitersBySellerId({id: cartItems[0].seller.id}))
-  }, [])
-  
+    dispatch(getWaitersBySellerId({ id: cartItems[0].seller.id }));
+  }, []);
+
+  useEffect(() => {
+    handleWaiters();
+  }, [waiters]);
+  const [test22, setTest22] = useState([]);
+  const handleWaiters = () => {
+    const ss = waiters.map((waiter) => {
+      return {
+        name: waiter.name,
+        _id: waiter._id,
+      };
+    });
+    setTest22([
+      ...ss,
+      { name: selectAllText, _id: waiters.map((waiter) => waiter._id) },
+    ]);
+    return ss;
+  };
+
   return (
     <Helmet title="Checkout">
       <section>
@@ -97,7 +121,8 @@ const Checkout = () => {
                       orderMessage: "",
                       Deal: false,
                       isTakeAway: false,
-                      tip: []
+                      tipCost: 0,
+                      waiters: [],
                     }}
                     validationSchema={validate}
                     onSubmit={(values, { resetForm }) => {
@@ -118,6 +143,10 @@ const Checkout = () => {
                           productsQnty: cartItems.totalQuantity,
                           totalPrice: cartTotalAmount,
                           isTakeAway,
+                          tip: {
+                            cost: tipCost,
+                            waiter: waiters,
+                          },
                         })
                       );
                       resetForm({ values: "" });
@@ -177,38 +206,38 @@ const Checkout = () => {
                           </div>
                         ) : null}
                         <div>
-                        {/* <Multiselect
-                              id="Category"
-                              name="Category"
-                              options={
-                                Array.isArray(sellerCategories) &&
-                                sellerCategories.length >= 1
-                                  ? sellerCategories.map((cat) => {
-                                      return {
-                                        name: cat.name,
-                                        _id: cat._id,
-                                      };
-                                    })
-                                  : []
-                              } // Options to display in the dropdown
-                              selectedValues={
-                                formik.values.Category
-                                  ? formik.values.Category
-                                  : []
-                              }
-                              placeholder="Select Category"
-                              // Preselected value to persist in dropdown
-                              onSelect={(selectedList, selectedItem) => {
-                                formik.values.Category = selectedList;
-                                console.log(formik.values.Category);
-                              }} // Function will trigger on select event
-                              onRemove={(selectedList, selectedItem) => {
-                                formik.values.Category = selectedList;
-                                console.log(formik.values.Category);
-                              }} // Function will trigger on remove event
-                              displayValue="name" // Property name to display in the dropdown options
-                            /> */}
-
+                          <Multiselect
+                            id="waiters"
+                            name="waiters"
+                            options={
+                              Array.isArray(waiters) && waiters.length >= 1
+                                ? test22.map((waiter) => {
+                                    return {
+                                      name: waiter.name,
+                                      _id: waiter._id,
+                                    };
+                                  })
+                                : []
+                            } // Options to display in the dropdown
+                            selectedValues={
+                              formik.values.waiters ? formik.values.waiters : []
+                            }
+                            placeholder="Garson Seçiniz"
+                            // Preselected value to persist in dropdown
+                            onSelect={(selectedList, selectedItem) => {
+                              selectedItem.name == selectAllText
+                                ? (formik.values.waiters = handleWaiters())
+                                : (formik.values.waiters = selectedList);
+                              console.log(formik.values.waiters);
+                            }} // Function will trigger on select event
+                            onRemove={(selectedList, selectedItem) => {
+                              selectedItem.name == selectAllText
+                                ? (formik.values.waiters = [])
+                                : (formik.values.waiters = selectedList);
+                              console.log(formik.values.waiters);
+                            }} // Function will trigger on remove event
+                            displayValue="name" // Property name to display in the dropdown options
+                          />
                         </div>
                         <div className="form__group d-flex mb-1">
                           <input
