@@ -9,6 +9,7 @@ import Modal from "@mui/material/Modal";
 import { getAdminDashBoardInf } from "../store/productSlices";
 import "../styles/admin-dashboard.css";
 import PageSpinner from "../components/UI/spinners/pageSpinner";
+import { getWaiters } from "../store/waiterSlice";
 const style = {
   position: "absolute",
   top: "50%",
@@ -76,6 +77,10 @@ const AdminDashboard = () => {
                 <div className="admin-card ">
                   <h5 className="title">Total Order</h5>
                   <p className="price">{adminDashBoard.totalOrder}</p>
+                </div>
+                <div className="admin-card ">
+                  <h5 className="title">Total Tip</h5>
+                  <p className="price">{adminDashBoard.totalTipCost}</p>
                 </div>
               </div>
             </Row>

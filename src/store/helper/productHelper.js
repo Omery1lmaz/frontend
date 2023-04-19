@@ -59,24 +59,42 @@ const createOrder = async ({
   seller,
   shippingAddress,
   productsQnty,
+  tip,
 }) => {
+  const response = axios
+    .post(
+      "http://localhost:4000/api/orders/order",
+      {
+        isTakeAway,
+        totalPrice,
+        name,
+        products,
+        user,
+        seller,
+        shippingAddress,
+        productsQnty,
+        orderMessage,
+        tip,
+      },
+      { withCredentials: true }
+    )
+    .then((v) => {
+      console.log(v, "v");
+    });
+  console.log(response.data, "response dataw");
+
+  return response.data;
+};
+
+const createTip = async ({ tip, id, seller }) => {
   const response = axios.post(
-    "http://localhost:4000/api/orders/order",
+    `http://localhost:4000/api/orders/order/tip/${id}`,
     {
-      isTakeAway,
-      totalPrice,
-      name,
-      products,
-      user,
+      tip,
       seller,
-      shippingAddress,
-      productsQnty,
-      orderMessage,
     },
     { withCredentials: true }
   );
-  console.log(response.data, "response dataw");
-
   return response.data;
 };
 
@@ -276,5 +294,6 @@ const productService = {
   getOrderBySellerWithLimit,
   getAdminDashboardInf,
   getPromotionsBySeller,
+  createTip,
 };
 export default productService;

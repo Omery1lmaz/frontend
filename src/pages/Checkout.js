@@ -84,11 +84,12 @@ const Checkout = () => {
   const buttonDisabled = totalAmount > 0 ? false : true;
 
   useEffect(() => {
-    dispatch(getWaitersBySellerId({ id: cartItems[0].seller.id }));
+    cartItems.length >= 1 &&
+      dispatch(getWaitersBySellerId({ id: cartItems[0]?.seller.id }));
   }, []);
 
   useEffect(() => {
-    handleWaiters();
+    cartItems.length >= 1 && handleWaiters();
   }, [waiters]);
   const [test22, setTest22] = useState([]);
   const handleWaiters = () => {
@@ -121,17 +122,25 @@ const Checkout = () => {
                       orderMessage: "",
                       Deal: false,
                       isTakeAway: false,
-                      tipCost: 0,
+                      tipCost: "",
                       waiters: [],
                     }}
                     validationSchema={validate}
                     onSubmit={(values, { resetForm }) => {
                       console.log(values);
-                      const { Name, Table, orderMessage, isTakeAway } = values;
+                      const {
+                        Name,
+                        Table,
+                        orderMessage,
+                        isTakeAway,
+                        tipCost,
+                        waiters,
+                      } = values;
                       console.log(
                         cartTotalAmount,
                         "cart total amount before dispacth"
                       );
+
                       dispatch(
                         createOrder({
                           name: Name,
@@ -204,6 +213,20 @@ const Checkout = () => {
                           <div class="error">
                             * {formik.errors.orderMessage}
                           </div>
+                        ) : null}
+                        <div className="form__group">
+                          <input
+                            type="number"
+                            placeholder="Enter your message"
+                            id="tipCost"
+                            name="tipCost"
+                            value={formik.values.tipCost}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                          />
+                        </div>
+                        {formik.errors.tipCost && formik.touched.tipCost ? (
+                          <div class="error">* {formik.errors.tipCost}</div>
                         ) : null}
                         <div>
                           <Multiselect

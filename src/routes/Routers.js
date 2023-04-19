@@ -37,6 +37,7 @@ import Promotions from "../pages/Promotions";
 import AddWaiter from "../pages/AddWaiter";
 import EditWaiter from "../pages/EditWaiter";
 import WaiterList from "../pages/WaiterList";
+import Tip from "../pages/AddTip";
 
 const Routers = () => {
   const dispatch = useDispatch();
@@ -73,12 +74,13 @@ const Routers = () => {
       <Route path="/login" element={<Login />} /> {/*OK*/}
       {/*OK*/}
       <Route path="/contact" element={<Contact />} /> {/*Dont*/}
+      <Route path="/order/tip/:id" element={<Tip />} /> {/*Dont*/}
       <Route path="/add-product" element={<AddProduct />} /> {/*Dont*/}
       <Route path="/add-promotion" element={<AddPromotion />} /> {/*Dont*/}
       <Route path="/edit-product/:id" element={<EditProduct />} /> {/*Dont*/}
       {user && <Route path="/add-category" element={<AddCategory />} />}{" "}
       {/*Dont*/}
-      {user && <Route path="/orders/:page" element={<OrderList />} />}{" "}
+      {user && <Route path="/orders/:page" element={<OrderList />} />}
       {/*Dont*/}
       {user && (
         <Route path="/edit-category/:id" element={<EditCategory />} />

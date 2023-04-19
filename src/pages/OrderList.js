@@ -6,7 +6,7 @@ import moment from "moment";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-
+import { socket } from "../helper/socketHelper";
 import {
   getOrderBySeller,
   getOrderBySellerWithLimit,
@@ -65,7 +65,6 @@ const OrderList = () => {
   let { orders, isLoadingP } = useSelector((state) => state.product);
   const getOrders = () => {
     const intActivePAge = parseInt(activePage - 1);
-    console.log(intActivePAge * limit, "skip");
     dispatch(
       getOrderBySellerWithLimit({
         skip: intActivePAge * limit,
@@ -90,9 +89,7 @@ const OrderList = () => {
 
   useEffect(() => {
     dispatch(getOrderBySeller());
-    console.log(limit, "limit active");
   }, []);
-
   const pageLimitHandlechange = (e) => {
     setLimit(e.target.value);
   };
@@ -108,12 +105,8 @@ const OrderList = () => {
     let copyOrders = [...orders];
     let copyV = orders[index];
     copyV = { ...copyV, isReady: status };
-    console.log(copyV, "order v");
 
-    // copyOrders[index] = copyV;
-    console.log((copyOrders[index] = copyV), "copyOrders[index]");
     orders = [...copyOrders];
-    console.log(orders[index], "real orders index");
     setOrders();
   };
   const setOrders = () => {

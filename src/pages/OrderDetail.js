@@ -35,6 +35,7 @@ const style = {
 const OrderDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   let { order, isLoadingP } = useSelector((state) => state.product);
 
@@ -65,10 +66,17 @@ const OrderDetail = () => {
               </div>
               <div className="order-detail " style={{ marginTop: "30px" }}>
                 <p className="product-name">Order Actions</p>
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-between g1">
                   <button className="order-actions-btn">
                     <i className="fa-solid fa-xmark"></i>
                     <span className="ml-1"> Sipariş İptal</span>
+                  </button>
+                  <button
+                    onClick={() => navigate(`/order/tip/${id}`)}
+                    className="order-actions-btn"
+                  >
+                    <i className="fa-solid fa-xmark"></i>
+                    <span className="ml-1"> Tip Ekle</span>
                   </button>
                 </div>
               </div>

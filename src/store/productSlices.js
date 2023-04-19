@@ -74,6 +74,7 @@ export const createOrder = createAsyncThunk(
       shippingAddress,
       productsQnty,
       isTakeAway,
+      tip,
     },
     thunkAPI
   ) => {
@@ -88,6 +89,36 @@ export const createOrder = createAsyncThunk(
         productsQnty,
         totalPrice,
         isTakeAway,
+        tip,
+      });
+      console.log("test");
+      successNotification("Order Oluşturuldu");
+      console.log(response, "order data");
+      return {
+        response,
+        status: "200",
+      };
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification(error.response.data);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const createTip = createAsyncThunk(
+  "/asdasd",
+  async ({ tip, id, seller }, thunkAPI) => {
+    try {
+      const response = await productService.createTip({
+        tip,
+        id,
+        seller,
       });
       console.log("test");
       successNotification("Order Oluşturuldu");
@@ -670,7 +701,7 @@ const productSlice = createSlice({
       })
 
       .addCase(createOrder.fulfilled, (state, action) => {
-        state.orders = action.payload;
+        state.order = action.payload;
         state.isLoadingP = false;
       })
       .addCase(createOrder.rejected, (state, action) => {

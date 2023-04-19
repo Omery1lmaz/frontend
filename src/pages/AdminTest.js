@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../styles/admin-test.css";
 import { NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
+import { socket } from "../helper/socketHelper";
+import { successNotification } from "../services/notification";
+import { useSelector, useDispatch } from "react-redux";
 
 const seller_nav__links = [
   {
@@ -64,6 +67,23 @@ const AdminTest = () => {
     Cookies.remove("connect.sid");
     window.location.reload(false);
   };
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    socket.emit("joinRoom", user?._id);
+    socket.on("test", (order) => {
+      window.alert("Test");
+    });
+
+    socket.on("newOrder", (order) => {
+      console.log(order, "realtime api order");
+      successNotification("Bilader satış geldi siparişi hazırla");
+      window.alert("Bilader Sipariş geldi");
+    });
+    console.log("joinRoom");
+  }, [socket]);
 
   return (
     <div>
