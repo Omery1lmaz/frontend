@@ -8,6 +8,7 @@ import {
 import authService from "./helper/authHelper";
 import productService from "./helper/productHelper";
 import { useNavigate } from "react-router-dom";
+import { socket } from "../helper/socketHelper";
 export const getCategories = createAsyncThunk(
   "/getCategories",
   async (thunkAPI) => {
@@ -47,6 +48,8 @@ export const updateOrderStatus = createAsyncThunk(
     try {
       const response = await productService.UpdateOrderStatus({ id, status });
       successNotification(response);
+      socket.emit("newOrder", response);
+      console.log("response", response);
       return response;
     } catch (error) {
       const message =
