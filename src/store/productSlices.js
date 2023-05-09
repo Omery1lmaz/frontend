@@ -64,6 +64,26 @@ export const updateOrderStatus = createAsyncThunk(
   }
 );
 
+export const addVariation = createAsyncThunk(
+  "/addVariation",
+  async ({ variation }, thunkAPI) => {
+    try {
+      const response = await productService.addVariation({ variation });
+      successNotification(response);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      errorNotification(error.response.data);
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const createOrder = createAsyncThunk(
   "/createOrder",
   async (
@@ -94,9 +114,6 @@ export const createOrder = createAsyncThunk(
         isTakeAway,
         tip,
       });
-      console.log("test");
-      successNotification("Order Oluşturuldu");
-      console.log(response, "order data");
       return {
         response,
         status: "200",

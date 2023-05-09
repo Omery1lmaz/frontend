@@ -127,7 +127,6 @@ const Checkout = () => {
                     }}
                     validationSchema={validate}
                     onSubmit={(values, { resetForm }) => {
-                      console.log(values);
                       const {
                         Name,
                         Table,
@@ -136,11 +135,6 @@ const Checkout = () => {
                         tipCost,
                         waiters,
                       } = values;
-                      console.log(
-                        cartTotalAmount,
-                        "cart total amount before dispacth"
-                      );
-
                       dispatch(
                         createOrder({
                           name: Name,

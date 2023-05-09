@@ -72,11 +72,11 @@ const AdminTest = () => {
   );
 
   useEffect(() => {
-    console.log(user?._id)
+    console.log(user?._id);
     socket.emit("joinRoom", user?._id);
-    socket.on("siparisBildirimi", (order) => (
-      successNotification("order socket")
-    ))
+    socket.on("orderNotification", (order) =>
+      successNotification("Yeni sipariş id: " + order._id)
+    );
     console.log("joinRoom");
   }, [socket]);
 

@@ -72,7 +72,6 @@ const Routers = () => {
       <Route path="/edit-waiter/:id" element={<EditWaiter />} /> {/*OK*/}
       <Route path="/waiter-list" element={<WaiterList />} /> {/*OK*/}
       <Route path="/login" element={<Login />} /> {/*OK*/}
-      {/*OK*/}
       <Route path="/contact" element={<Contact />} /> {/*Dont*/}
       <Route path="/order/tip/:id" element={<Tip />} /> {/*Dont*/}
       <Route path="/add-product" element={<AddProduct />} /> {/*Dont*/}

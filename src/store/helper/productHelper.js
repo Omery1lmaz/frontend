@@ -1,4 +1,5 @@
 import axios from "axios";
+import { socket } from "../../helper/socketHelper";
 
 const getCategoriesHelper = async () => {
   const response = await axios.get(
@@ -37,6 +38,15 @@ const UpdateOrderStatus = async ({ id, status }) => {
   );
   return response.data;
 };
+const addVariation = async ({ variation }) => {
+  const response = await axios.post(
+    `http://localhost:4000/api/variations/`,
+    { variation },
+    { withCredentials: true }
+  );
+  return response.data;
+};
+
 const getOrderById = async ({ id }) => {
   return axios.get(`http://localhost:4000/api/orders/order/${id}`, {
     withCredentials: true,
@@ -61,7 +71,7 @@ const createOrder = async ({
   productsQnty,
   tip,
 }) => {
-  const response = axios
+  axios
     .post(
       "http://localhost:4000/api/orders/order",
       {
@@ -79,7 +89,11 @@ const createOrder = async ({
       { withCredentials: true }
     )
     .then((v) => {
-      console.log(v, "v");
+      socket.emit("newOrder", v.data);
+      return v.data;
+    })
+    .catch((err) => {
+      return v.data;
     });
   console.log(response.data, "response dataw");
 
@@ -230,14 +244,13 @@ const getProductsBySeller = async (id) => {
 const getProductsBySellerWithLimit = async ({ id, skip, limit }) => {
   console.log(skip, "skip 1");
   const response = await axios.get(
-    `http://localhost:4000/api/products/seller/limit/${id}/${limit}/${skip}`
+    `http://localhost:4000/api/products/seller/limit/${limit}/${skip}`,
+    { withCredentials: true }
   );
   return response.data;
 };
 
 const getOrderBySellerWithLimit = async ({ skip, limit, query }) => {
-  console.log(query, "query helper");
-  console.log(limit, "limit helper");
   const response = await axios.put(
     `http://localhost:4000/api/orders/order/seller/limit/${limit}/${skip}`,
     { query },
@@ -279,6 +292,7 @@ const productService = {
   getProductsByIdHelper,
   updateProduct,
   getCategoryByIdHelper,
+  addVariation,
   updateCategory,
   getCategoriesBySellerHelper,
   deleteCategoryById,

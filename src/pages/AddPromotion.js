@@ -5,31 +5,55 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   addProduct,
+  addVariation,
   getCatsBySeller,
   getPromotionsBySeller,
 } from "../store/productSlices";
 import Multiselect from "multiselect-react-dropdown";
 import PageSpinner from "../components/UI/spinners/pageSpinner";
 
-const AddPromotion = () => {
+const AddProduct = () => {
   const dispatch = useDispatch();
 
-  const { sellerCategories, isLoadingP } = useSelector(
+  const { sellerCategories, isLoadingP, promotions } = useSelector(
     (state) => state.product
   );
   useEffect(() => {
     dispatch(getCatsBySeller());
     dispatch(getPromotionsBySeller());
   }, []);
-
+  const [maxValue, setMaxValue] = useState(1);
+  const [errorMessage, setErrorMessage] = useState();
   const [inputList, setinputList] = useState([]);
 
   const handleinputchange = (e, index) => {
     const { name, value } = e.target;
-    const list = [...inputList];
-    list[index][name] = value;
-    setinputList(list);
+    if (name === "isSelected") {
+      console.log("isSelected");
+      console.log(typeof value, "value");
+      let counter = 0;
+      inputList.map((a) => {
+        value == "true" && counter++;
+        console.log(value == "true", "isselected true", value);
+      });
+      if (counter > maxValue) {
+        setErrorMessage(
+          "Productlar daki selected ürünler max valuedan fazla olamaz"
+        );
+      } else {
+        const list = [...inputList];
+        list[index][name] = value;
+        setinputList(list);
+      }
+    } else {
+      const list = [...inputList];
+      list[index][name] = value;
+      setinputList(list);
+    }
   };
+  useEffect(() => {
+    console.log(errorMessage);
+  }, [errorMessage]);
 
   const handleremove = (index) => {
     const list = [...inputList];
@@ -38,25 +62,23 @@ const AddPromotion = () => {
   };
 
   const handleaddclick = () => {
-    setinputList([...inputList, { size: "", price: 0 }]);
+    setinputList([...inputList, { name: "", price: 0, isSelected: false }]);
   };
-  const [image, setImage] = useState();
+
   const validate = Yup.object({
     Name: Yup.string().required("Name is required"),
-    Brand: Yup.string().required("Brand is required"),
-    Description: Yup.string().required("Description is required"),
-    Price: Yup.number("Ürün fiyatı harf içermemelidir")
-      .min(1, "Fiyat 1 ya da daha yüksek olmalıdır")
+    Multiple: Yup.boolean().required("Multiple is required"),
+    Zorunlu: Yup.boolean().required("Zorunlu is required"),
+    MaxValue: Yup.number("Max Value harf içermemelidir")
+      .min(1, "Max Value 1 ya da daha yüksek olmalıdır")
       .positive()
       .integer()
-      .required("Price is required"),
-    Category: Yup.array().required("Required"),
+      .required("Max Value is required"),
   });
 
   const ButtonHandleSubmit = (e) => {
     e.preventDefault();
   };
-  const formData = new FormData();
 
   return (
     <>
@@ -66,36 +88,20 @@ const AddPromotion = () => {
         <Formik
           initialValues={{
             Name: "",
-            Brand: "",
-            Description: "",
-            Price: 1,
-            Category: "",
+            Multiple: false,
+            Zorunlu: false,
+            MaxValue: 1,
           }}
           validationSchema={validate}
           onSubmit={(values, { resetForm }) => {
-            const { Name, Brand, Description, Price, Category } = values;
-            formData.append("Name", Name);
-            formData.append("Brand", Brand);
-            formData.append("Description", Description);
-            formData.append("Category", JSON.stringify(Category));
-            formData.append("Price", Price);
-            formData.append("variations", JSON.stringify(inputList));
-            formData.append("Image", image);
-            for (var key of formData.entries()) {
-              console.log(
-                JSON.stringify(key[0]) + ", " + JSON.stringify(key[1])
-              );
-            }
-            const product = {
-              Name,
-              Brand,
-              Description,
-              Price,
-              Category,
-              variations: inputList,
-              formData,
+            const { Name, Multiple, Zorunlu, MaxValue } = values;
+            const variation = {
+              name: Name,
+              iscompulsory: Zorunlu,
+              maxValue: MaxValue,
+              products: inputList,
             };
-            dispatch(addProduct({ product, formData }));
+            dispatch(addVariation({ variation }));
             resetForm({ values: "" });
             setinputList([]);
           }}
@@ -112,7 +118,7 @@ const AddPromotion = () => {
                             <label>Size</label>
                             <input
                               type="text"
-                              name="size"
+                              name="name"
                               class="form-control"
                               placeholder="Enter First Name"
                               onChange={(e) => handleinputchange(e, i)}
@@ -127,6 +133,17 @@ const AddPromotion = () => {
                               placeholder="Enter Last Name"
                               onChange={(e) => handleinputchange(e, i)}
                             />
+                          </div>
+                          <div class="form-group col-md-4">
+                            <label>Selected</label>
+                            <select
+                              name="isSelected"
+                              onChange={(e) => handleinputchange(e, i)}
+                              value={inputList[i]["isSelected"]}
+                            >
+                              <option value={false}>Seçili Değil</option>
+                              <option value={true}>Seçili</option>
+                            </select>
                           </div>
                           <div class="form-group col-md-2 mt-4">
                             <button
@@ -152,7 +169,7 @@ const AddPromotion = () => {
                     <div class="row">
                       <div class="col-12">
                         <h2 class="tm-block-title d-inline-block">
-                          Add Promotion
+                          Add Product
                         </h2>
                       </div>
                     </div>
@@ -164,7 +181,7 @@ const AddPromotion = () => {
                           onSubmit={formik.handleSubmit}
                         >
                           <div class="form-group mb-3">
-                            <label for="Name">Promotion Name</label>
+                            <label for="Name">Product Name</label>
                             <input
                               id="Name"
                               name="Name"
@@ -179,117 +196,40 @@ const AddPromotion = () => {
                           {formik.errors.Name && formik.touched.Name ? (
                             <div class="error">* {formik.errors.Name}</div>
                           ) : null}
-
                           <div class="form-group mb-3">
-                            <label for="Description">Description</label>
-                            <textarea
-                              id="Description"
-                              name="Description"
+                            <label for="Name">Max Value</label>
+                            <input
+                              id="MaxValue"
+                              name="MaxValue"
+                              type="number"
                               class="form-control validate"
-                              rows="3"
                               required
-                              value={formik.values.Description}
-                              onChange={formik.handleChange}
+                              value={formik.values.MaxValue}
+                              onChange={(e) => {
+                                formik.handleChange(e);
+                                setMaxValue(e.target.value);
+                              }}
                               onBlur={formik.handleBlur}
-                            ></textarea>
+                            />
                           </div>
-                          {formik.errors.Description &&
-                          formik.touched.Description ? (
-                            <div class="error">
-                              * {formik.errors.Description}
-                            </div>
+                          {formik.errors.Name && formik.touched.Name ? (
+                            <div class="error">* {formik.errors.Name}</div>
                           ) : null}
                           <div class="form-group mb-3">
-                            {/* CATEGORY */}
-                            <label for="Category">Category</label>
-                            <Multiselect
-                              id="Category"
-                              name="Category"
-                              options={
-                                Array.isArray(sellerCategories) &&
-                                sellerCategories.length >= 1
-                                  ? sellerCategories.map((cat) => {
-                                      return {
-                                        name: cat.name,
-                                        _id: cat._id,
-                                      };
-                                    })
-                                  : []
-                              } // Options to display in the dropdown
-                              selectedValues={
-                                formik.values.Category
-                                  ? formik.values.Category
-                                  : []
-                              }
-                              placeholder="Select Category"
-                              // Preselected value to persist in dropdown
-                              onSelect={(selectedList, selectedItem) => {
-                                formik.values.Category = selectedList;
-                                console.log(formik.values.Category);
-                              }} // Function will trigger on select event
-                              onRemove={(selectedList, selectedItem) => {
-                                formik.values.Category = selectedList;
-                                console.log(formik.values.Category);
-                              }} // Function will trigger on remove event
-                              displayValue="name" // Property name to display in the dropdown options
+                            <label for="Name">Zorunlu</label>
+                            <input
+                              id="Zorunlu"
+                              name="Zorunlu"
+                              type="checkbox"
+                              value={formik.values.Zorunlu}
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
                             />
-
-                            {formik.errors.Category &&
-                            formik.touched.Category ? (
-                              <div class="error">
-                                * {formik.errors.Category}
-                              </div>
-                            ) : null}
-
-                            <div class="row">
-                              <div class="form-group mb-3 col-xs-12 col-sm-6">
-                                <label for="Price">Price</label>
-                                <input
-                                  id="Price"
-                                  name="Price"
-                                  type="text"
-                                  class="form-control validate"
-                                  data-large-mode="true"
-                                  value={formik.values.Price}
-                                  onChange={formik.handleChange}
-                                  onBlur={formik.handleBlur}
-                                />
-                              </div>
-                              {formik.errors.Price && formik.touched.Price ? (
-                                <div class="error">* {formik.errors.Price}</div>
-                              ) : null}
-
-                              <div class="form-group mb-3 col-xs-12 col-sm-6">
-                                <label for="Brand">Brand</label>
-                                <input
-                                  id="Brand"
-                                  name="Brand"
-                                  type="text"
-                                  class="form-control validate"
-                                  required
-                                  value={formik.values.Brand}
-                                  onChange={formik.handleChange}
-                                  onBlur={formik.handleBlur}
-                                />
-                              </div>
-
-                              {formik.errors.Brand && formik.touched.Brand ? (
-                                <div class="error">* {formik.errors.Brand}</div>
-                              ) : null}
-                              <div class="form-group mb-3 col-xs-12 col-sm-6">
-                                <label for="Image">Image</label>
-                                <input
-                                  id="Image"
-                                  name="Image"
-                                  type="file"
-                                  accept=".png, .jpg, .jpeg"
-                                  class="form-control validate"
-                                  required
-                                  onChange={(e) => setImage(e.target.files[0])}
-                                />
-                              </div>
-                            </div>
                           </div>
+                          {formik.errors.Name && formik.touched.Name ? (
+                            <div class="error">* {formik.errors.Name}</div>
+                          ) : null}
+
                           <div class="col-12">
                             <button
                               style={{ width: "250px" }}
@@ -314,4 +254,4 @@ const AddPromotion = () => {
   );
 };
 
-export default AddPromotion;
+export default AddProduct;

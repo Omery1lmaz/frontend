@@ -44,7 +44,7 @@ const OrderList = () => {
   const dispatch = useDispatch();
   const { page } = useParams();
   const [open, setOpen] = useState(false);
-  const [vOrders, setVOrders] = useState();
+  const [vOrders, setVOrders] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const [filter, setFilter] = useState({});
   const [limit, setLimit] = useState(10);
@@ -87,16 +87,12 @@ const OrderList = () => {
     navigate(`/orders/${activePage}`);
   }, [activePage]);
 
-  useEffect(() => {
-    dispatch(getOrderBySeller());
-  }, []);
   const pageLimitHandlechange = (e) => {
     setLimit(e.target.value);
   };
 
   useEffect(() => {
     getOrders();
-    console.log(limit, "limit active");
   }, [limit]);
   const handleupdateStatusOrder = (status) => {
     const index = orders.findIndex(
@@ -115,6 +111,17 @@ const OrderList = () => {
   useEffect(() => {
     setOrders();
   }, [orders]);
+
+  useEffect(() => {
+    socket.on("orderNotification", (order) => {
+      let copyOrders = [order, ...orders];
+
+      console.log(vOrders, "old orders.length");
+      setVOrders(copyOrders);
+      console.log(order, "order list set  orders ");
+      console.log(vOrders, "new orders.length");
+    });
+  }, [socket]);
 
   return (
     <>
