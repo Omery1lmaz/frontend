@@ -27,6 +27,69 @@ const checkboxValues = [
 ];
 const maxSelection = 3;
 
+const ProductPromotions = ({
+  product,
+  handlePromotionChange,
+  maxSelection,
+}) => {
+  const { promotions } = product;
+  const [selectedCount, setSelectedCount] = useState(0);
+
+  const handleCheckboxChange = (promotionId, productId) => {
+    const selectedPromotions = promotions.filter((promotion) => {
+      return promotion.variation.products.some((product) => product.isSelected);
+    });
+    const totalSelected = selectedPromotions.length;
+
+    if (
+      totalSelected >= maxSelection &&
+      !promotions
+        .find((promotion) => promotion._id === promotionId)
+        .variation.products.find((product) => product._id === productId)
+        .isSelected
+    ) {
+      // Maksimum seçim sayısına ulaşıldı ve bu checkbox seçilmek isteniyor
+      return;
+    }
+
+    handlePromotionChange(promotionId, productId);
+
+    setSelectedCount((prevCount) =>
+      promotions
+        .find((promotion) => promotion._id === promotionId)
+        .variation.products.find((product) => product._id === productId)
+        .isSelected
+        ? prevCount + 1
+        : prevCount - 1
+    );
+  };
+
+  return (
+    <div>
+      {promotions.map((promotion) => (
+        <div key={promotion._id}>
+          <h3>{promotion.variation.name}</h3>
+          {promotion.variation.products.map((product) => (
+            <label key={product._id}>
+              <input
+                type="checkbox"
+                name={`promotion-${promotion._id}`}
+                value={product._id}
+                // checked={product.isSelected}
+                onChange={() =>
+                  handleCheckboxChange(promotion._id, product._id)
+                }
+                disabled={!product.isSelected && selectedCount >= maxSelection}
+              />
+              {product.name}
+            </label>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const validationSchema = Yup.object().shape({
   selectedItems: Yup.array()
     .min(1, "Select at least one item")
@@ -146,69 +209,84 @@ const FoodDetails = () => {
           (value) => !formik.values.selectedItems.includes(value)
         )
       : [];
-
+  const handlePromotionChange = (promotionId, productId) => {
+    // Promotion ve product ID'lerini kullanarak gerekli işlemleri yapabilirsiniz
+    console.log(`Promotion ID: ${promotionId}, Product ID: ${productId}`);
+  };
   return (
     <>
-      {isLoadingP ? (
-        <PageSpinner />
-      ) : (
-        <Helmet title="Product-details">
-          <section>
-            <Container>
-              <Row>
-                <Col lg="4" md="4">
-                  <div className="product__main-img">
-                    <img src={image} alt="" className="w-100" />
-                  </div>
-                  <div></div>
-                </Col>
+      <div>
+        <h1>{product.name}</h1>
+        {/* Diğer ürün özelliklerini göstermek */}
+        {Array.isArray(product.promotions) && product.promotions.length > 0 && (
+          <ProductPromotions
+            product={product}
+            handlePromotionChange={handlePromotionChange}
+            maxSelection={2}
+          />
+        )}
+      </div>
 
-                <Col lg="6" md="6">
-                  <div className="single__product-content">
-                    <h2 className="product__title mb-3">{name}</h2>
-                    <span>{`seller: ${user?.name}`}</span>
-                    <p className="product__price">
-                      <i class="fa-solid fa-turkish-lira-sign"></i>
-                      <span>{price}</span>
-                    </p>
-                    {
-                      <div>
-                        <form onSubmit={formik.handleSubmit}>
-                          {Array.isArray(product.promotions) &&
-                            product.promotions.length > 0 &&
-                            product.promotions.map((promotion) => {
-                              if (promotion.variation.maxValue >= 1) {
-                                return (
-                                  <div>
-                                    {promotion.variation.products.map(
-                                      (product) => {
-                                        return (
-                                          <label key={product.name}>
-                                            <input
-                                              type="checkbox"
-                                              name="selectedItems"
-                                              value={product.name}
-                                              checked={formik.values.selectedItems.includes(
-                                                product.name
-                                              )}
-                                              onChange={handleCheckboxChange}
-                                              disabled={disabledItems.includes(
-                                                product.name
-                                              )}
-                                            />
-                                            {product.name}
-                                          </label>
-                                        );
-                                      }
-                                    )}
-                                  </div>
-                                );
-                              }
-                            })}
-                        </form>
-                      </div>
-                    }
-                    {/* <form onSubmit={formik.handleSubmit}>
+      {/* /*{isLoadingP ? (
+        <PageSpinner />
+      ) : ( */}
+      <Helmet title="Product-details">
+        <section>
+          <Container>
+            <Row>
+              <Col lg="4" md="4">
+                <div className="product__main-img">
+                  <img src={image} alt="" className="w-100" />
+                </div>
+                <div></div>
+              </Col>
+
+              <Col lg="6" md="6">
+                <div className="single__product-content">
+                  <h2 className="product__title mb-3">{name}</h2>
+                  <span>{`seller: ${user?.name}`}</span>
+                  <p className="product__price">
+                    <i class="fa-solid fa-turkish-lira-sign"></i>
+                    <span>{price}</span>
+                  </p>
+                  {
+                    <div>
+                      <form onSubmit={formik.handleSubmit}>
+                        {Array.isArray(product.promotions) &&
+                          product.promotions.length > 0 &&
+                          product.promotions.map((promotion) => {
+                            if (promotion.variation.maxValue >= 1) {
+                              return (
+                                <div>
+                                  {promotion.variation.products.map(
+                                    (product) => {
+                                      return (
+                                        <label key={product.name}>
+                                          <input
+                                            type="checkbox"
+                                            name="selectedItems"
+                                            value={product.name}
+                                            checked={formik.values.selectedItems.includes(
+                                              product.name
+                                            )}
+                                            onChange={handleCheckboxChange}
+                                            disabled={disabledItems.includes(
+                                              product.name
+                                            )}
+                                          />
+                                          {product.name}
+                                        </label>
+                                      );
+                                    }
+                                  )}
+                                </div>
+                              );
+                            }
+                          })}
+                      </form>
+                    </div>
+                  }
+                  {/* <form onSubmit={formik.handleSubmit}>
                       {product.promotions.map((promotion) => (
                         <label key={value}>
                           <input
@@ -231,53 +309,53 @@ const FoodDetails = () => {
                       <button type="submit">Submit</button>
                     </form>
  */}
-                    {Array.isArray(variations) &&
-                    variations &&
-                    variations.length > 1 ? (
-                      <div>
-                        <span className="size-span">Size: </span>
-                        <select
-                          id="select-size"
-                          className="select"
-                          onChange={handleChange}
-                        >
-                          {variations.map((item) => {
-                            return (
-                              <option key={item.id} value={item._id}>
-                                {item.size}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    ) : null}
-                    <button onClick={addItem} className="addTOCart__btn btn">
-                      Add to Cart
-                    </button>
-                  </div>
-                  <div></div>
-                </Col>
-
-                <Col lg="12">
-                  <div className="tabs d-flex align-items-center gap-5 py-3">
-                    <h6
-                      className={` ${tab === "desc" ? "tab__active" : ""}`}
-                      onClick={() => setTab("desc")}
-                    >
-                      Description
-                    </h6>
-                  </div>
-                  {tab === "desc" && (
-                    <div className="tab__content">
-                      <p>{description}</p>
+                  {Array.isArray(variations) &&
+                  variations &&
+                  variations.length > 1 ? (
+                    <div>
+                      <span className="size-span">Size: </span>
+                      <select
+                        id="select-size"
+                        className="select"
+                        onChange={handleChange}
+                      >
+                        {variations.map((item) => {
+                          return (
+                            <option key={item.id} value={item._id}>
+                              {item.size}
+                            </option>
+                          );
+                        })}
+                      </select>
                     </div>
-                  )}
-                </Col>
-              </Row>
-            </Container>
-          </section>
-        </Helmet>
-      )}
+                  ) : null}
+                  <button onClick={addItem} className="addTOCart__btn btn">
+                    Add to Cart
+                  </button>
+                </div>
+                <div></div>
+              </Col>
+
+              <Col lg="12">
+                <div className="tabs d-flex align-items-center gap-5 py-3">
+                  <h6
+                    className={` ${tab === "desc" ? "tab__active" : ""}`}
+                    onClick={() => setTab("desc")}
+                  >
+                    Description
+                  </h6>
+                </div>
+                {tab === "desc" && (
+                  <div className="tab__content">
+                    <p>{description}</p>
+                  </div>
+                )}
+              </Col>
+            </Row>
+          </Container>
+        </section>
+      </Helmet>
+      {/* )} */}
     </>
   );
 };
