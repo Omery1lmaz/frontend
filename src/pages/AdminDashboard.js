@@ -32,7 +32,6 @@ const AdminDashboard = () => {
   const handleCloseFilter = () => setFilterOpen(false);
 
   const filterDateHandle = (e) => {
-    console.log(e.target.value);
     setFilter({ ...filter, date: { $gte: new Date(e.target.value) } });
   };
   const filterDateEndHandle = (e) => {

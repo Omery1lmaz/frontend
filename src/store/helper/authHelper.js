@@ -66,40 +66,28 @@ const register = async (user) => {
 };
 
 const resetPasswordLink = async (email) => {
-  console.log(email);
   const response = await axios.post(
     "http://localhost:4000/api/users/reset-password",
     { email }
   );
 
-  if (response.data) {
-    console.log(response.data + "data");
-  }
   return response.data;
 };
 
 const resetPasswordVerify = async ({ id, token, password }) => {
-  console.log(token + id + password);
   const response = await axios.post(
     `http://localhost:4000/api/users/reset-password/${id}/${token}`,
     { password }
   );
 
-  if (response.data) {
-    console.log(response.data + "data");
-  }
   return response.data;
 };
 
 const VerifyUser = async ({ id, token }) => {
-  console.log(token + id);
   const response = await axios.post(
     `http://localhost:4000/api/users/verify/${id}/${token}`
   );
 
-  if (response.data) {
-    console.log(response.data + "data");
-  }
   return response.data;
 };
 

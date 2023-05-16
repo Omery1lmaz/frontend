@@ -111,11 +111,6 @@ const cartSlice = createSlice({
       ) {
         state.cartItems = state.cartItems.filter((item) => {
           if (product.variation) {
-            console.log("Remove Item");
-            console.log(
-              item.variation !== product.variation ||
-                item.title !== product.title
-            );
             return (
               item.variation !== product.variation ||
               item.title !== product.title

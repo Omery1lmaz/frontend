@@ -46,7 +46,6 @@ const Routers = () => {
   );
   let sayac = 0;
   useEffect(async () => {
-    console.log("şsalmfklasm");
     const token = Cookies.get("connect.sid");
     if (user) {
       dispatch(GetUserDetails());

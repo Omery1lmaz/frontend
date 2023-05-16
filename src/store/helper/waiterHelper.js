@@ -27,7 +27,6 @@ const getWaitersBySellerIdHelper = async (id) => {
 
 // ADD WAITER HELPER
 const addWaiterHelper = async (waiter) => {
-  console.log(waiter);
   const { data } = await axios.post(
     `http://localhost:4000/api/waiters/`,
     { waiter },
@@ -40,7 +39,6 @@ const addWaiterHelper = async (waiter) => {
 
 // UPDATE WAITER HELPER
 const updateWaiterHelper = async (waiter) => {
-  console.log(waiter);
   const { data } = await axios.post(
     `http://localhost:4000/api/waiters/${waiter._id}`,
     { waiter },
@@ -53,7 +51,6 @@ const updateWaiterHelper = async (waiter) => {
 
 // DELETE WAITER HELPER
 const deleteWaiterHelper = async (id) => {
-  console.log(id);
   const { data } = await axios.delete(
     `http://localhost:4000/api/waiters/${id}`,
     {

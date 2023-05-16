@@ -27,65 +27,136 @@ const checkboxValues = [
 ];
 const maxSelection = 3;
 
-const ProductPromotions = ({
-  product,
-  handlePromotionChange,
+const RadioInputArray = ({
+  variation,
   maxSelection,
+  handlePromotionChange,
 }) => {
-  const { promotions } = product;
-  const [selectedCount, setSelectedCount] = useState(0);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const options = variation.variation;
+  const validationSchema = Yup.object().shape({
+    selectedOptions: Yup.array()
+      .min(1, "En az bir seçenek seçmelisiniz.")
+      .max(maxSelection, `En fazla ${maxSelection} seçenek seçebilirsiniz.`)
+      .required("En az bir seçenek seçmelisiniz."),
+  });
 
-  const handleCheckboxChange = (promotionId, productId) => {
-    const selectedPromotions = promotions.filter((promotion) => {
-      return promotion.variation.products.some((product) => product.isSelected);
+  useEffect(() => {
+    console.log(selectedOptions);
+    console.log(options, "options");
+    handlePromotionChange(selectedOptions, variation._id);
+  }, [selectedOptions]);
+  useEffect(() => {
+    const filteredSelect = options.products.filter((o) => o.isSelected);
+    console.log(filteredSelect, "filteredSelect");
+    filteredSelect.map((p) => {
+      console.log(p, "selected p");
+      setSelectedOptions([
+        ...selectedOptions,
+        {
+          name: p.name,
+          price: p.price,
+          _id: p._id,
+        },
+      ]);
     });
-    const totalSelected = selectedPromotions.length;
+  }, []);
+
+  const handleOptionChange = (event) => {
+    const value = JSON.parse(event.target.value);
 
     if (
-      totalSelected >= maxSelection &&
-      !promotions
-        .find((promotion) => promotion._id === promotionId)
-        .variation.products.find((product) => product._id === productId)
-        .isSelected
+      selectedOptions.some((selectedOption) => selectedOption._id === value._id)
     ) {
-      // Maksimum seçim sayısına ulaşıldı ve bu checkbox seçilmek isteniyor
-      return;
+      setSelectedOptions(
+        selectedOptions.filter((option) => option._id !== value._id)
+      );
+    } else if (selectedOptions.length < maxSelection) {
+      setSelectedOptions([...selectedOptions, value]);
     }
-
-    handlePromotionChange(promotionId, productId);
-
-    setSelectedCount((prevCount) =>
-      promotions
-        .find((promotion) => promotion._id === promotionId)
-        .variation.products.find((product) => product._id === productId)
-        .isSelected
-        ? prevCount + 1
-        : prevCount - 1
-    );
   };
-
   return (
     <div>
-      {promotions.map((promotion) => (
-        <div key={promotion._id}>
-          <h3>{promotion.variation.name}</h3>
-          {promotion.variation.products.map((product) => (
-            <label key={product._id}>
-              <input
-                type="checkbox"
-                name={`promotion-${promotion._id}`}
-                value={product._id}
-                // checked={product.isSelected}
-                onChange={() =>
-                  handleCheckboxChange(promotion._id, product._id)
-                }
-                disabled={!product.isSelected && selectedCount >= maxSelection}
-              />
-              {product.name}
-            </label>
-          ))}
-        </div>
+      {options.products.map((option, index) => (
+        <label key={index}>
+          <input
+            type="checkbox"
+            value={JSON.stringify({
+              name: option.name,
+              price: option.price,
+              _id: option._id,
+            })}
+            checked={selectedOptions.some(
+              (selectedOption) => selectedOption._id === option._id
+            )}
+            onChange={handleOptionChange}
+            disabled={
+              selectedOptions.length === maxSelection &&
+              !selectedOptions.some(
+                (selectedOption) => selectedOption._id === option._id
+              )
+            }
+          />
+
+          {option._id}
+        </label>
       ))}
+    </div>
+  );
+};
+
+const SelectComponent = ({
+  variation,
+  maxSelection,
+  handlePromotionChange,
+}) => {
+  const [selectedOption, setSelectedOption] = useState(null);
+  const options = variation.variation;
+
+  useEffect(() => {
+    if (selectedOption) {
+      handlePromotionChange(selectedOption, variation._id);
+    }
+  }, [selectedOption]);
+  useEffect(() => {
+    console.log(options, "options");
+    const index = options.products.findIndex((o) => o.isSelected);
+    if (index >= 0) {
+      const v = options.products[index];
+      console.log(v);
+      setSelectedOption({
+        name: v.name,
+        price: v.price,
+        _id: v._id,
+      });
+    }
+    console.log(selectedOption, "selcted option");
+  }, []);
+
+  const handleOptionChange = (event) => {
+    const value = JSON.parse(event.target.value);
+
+    if (selectedOption && selectedOption._id === value._id) {
+      setSelectedOption(null);
+    } else {
+      setSelectedOption(value);
+    }
+  };
+  return (
+    <div>
+      <select
+        value={selectedOption ? JSON.stringify(selectedOption) : ""}
+        onChange={handleOptionChange}
+      >
+        <option value="" disabled>
+          Select an option
+        </option>
+        {options.products.map((option, index) => (
+          <option key={index} value={JSON.stringify(option)}>
+            {option._id}
+          </option>
+        ))}
+      </select>
     </div>
   );
 };
@@ -151,14 +222,13 @@ const FoodDetails = () => {
 
   useEffect(() => {
     dispatch(getProduct({ id }));
-    console.log(product, "product");
-    if (variations && variations.length > 0) {
-      console.log("price startks");
-      console.log(variations[0].price, "variations default price");
-    } else {
-      product.variations &&
-        console.log(product.variations, "product variations");
-    }
+    // if (variations && variations.length > 0) {
+    //   console.log("price startks");
+    //   console.log(variations[0].price, "variations default price");
+    // } else {
+    //   product.variations &&
+    //     console.log(product.variations, "product variations");
+    // }
   }, []);
 
   const handleChange = (event) => {
@@ -175,62 +245,89 @@ const FoodDetails = () => {
     }
   }, [variations]);
 
-  const formik = useFormik({
-    initialValues: {
-      selectedItems: [],
-    },
-    validationSchema,
-    onSubmit: (values) => {
-      console.log(values.selectedItems);
-    },
-  });
+  const options = ["Seçenek 1", "Seçenek 2", "Seçenek 3", "Seçenek 4"];
+  const maxSelection = 2;
+  const [test, setTest] = useState([]);
+  useEffect(() => {
+    console.log(typeof test);
+    console.log(test);
+  }, [test]);
 
-  const handleCheckboxChange = (e) => {
-    const selectedValue = e.target.value;
-    const selectedIndex = formik.values.selectedItems.indexOf(selectedValue);
-
-    if (selectedIndex === -1) {
-      // Checkbox is selected
-      formik.setFieldValue("selectedItems", [
-        ...formik.values.selectedItems,
-        selectedValue,
-      ]);
+  const handlePromotionChange = (value, _id) => {
+    console.log(value, _id, "value _id");
+    if (value.length === 0) {
+      setTest(test.filter((item) => item._id !== _id));
+    } else if (test.some((selectedOption) => selectedOption._id === _id)) {
+      const copyArray = [...test];
+      const index = copyArray.findIndex((item) => item._id === _id);
+      if (index !== -1) {
+        copyArray[index] = { _id: _id, products: value };
+        setTest(copyArray);
+      }
     } else {
-      // Checkbox is deselected
-      formik.setFieldValue(
-        "selectedItems",
-        formik.values.selectedItems.filter((item) => item !== selectedValue)
-      );
+      test.push({ _id: _id, products: value });
+      setTest([...test]);
     }
   };
-  const disabledItems =
-    formik.values.selectedItems.length === maxSelection
-      ? checkboxValues.filter(
-          (value) => !formik.values.selectedItems.includes(value)
-        )
-      : [];
-  const handlePromotionChange = (promotionId, productId) => {
-    // Promotion ve product ID'lerini kullanarak gerekli işlemleri yapabilirsiniz
-    console.log(`Promotion ID: ${promotionId}, Product ID: ${productId}`);
-  };
+
   return (
     <>
       <div>
         <h1>{product.name}</h1>
         {/* Diğer ürün özelliklerini göstermek */}
-        {Array.isArray(product.promotions) && product.promotions.length > 0 && (
-          <ProductPromotions
-            product={product}
-            handlePromotionChange={handlePromotionChange}
-            maxSelection={2}
-          />
-        )}
+        <div>
+          <h1>{product.name}</h1>
+          {/* Diğer ürün özelliklerini göstermek */}
+          {
+            Array.isArray(product.promotions) &&
+              product.promotions.length > 0 &&
+              product.promotions?.map((v) => {
+                return (
+                  <>
+                    <h2>Radio Input Array</h2>
+                    {v.variation.maxValue > 1 ? (
+                      <RadioInputArray
+                        variation={v}
+                        maxSelection={v.variation.maxValue}
+                        handlePromotionChange={handlePromotionChange}
+                      />
+                    ) : (
+                      <SelectComponent
+                        variation={v}
+                        maxSelection={v.variation.maxValue}
+                        handlePromotionChange={handlePromotionChange}
+                      />
+                    )}
+                  </>
+                );
+              })
+            // <ProductPromotions
+            //   promotion={product.promotions[0]} // İlk promosyonu gönderiyoruz
+            //   handlePromotionChange={handlePromotionChange}
+            //   maxSelection={2}
+            // />
+          }
+        </div>
+
+        {/* {Array.isArray(product.promotions) &&
+          product.promotions.length > 0 &&
+          product.promotions.map((v) => {
+            console.log(v, "v");
+            return (
+              <div>Test</div>
+              // <ProductPromotions
+              //   product={product}
+              //   handlePromotionChange={handlePromotionChange}
+              //   maxSelection={2}
+              // />
+            );
+          })} */}
       </div>
 
       {/* /*{isLoadingP ? (
         <PageSpinner />
       ) : ( */}
-      <Helmet title="Product-details">
+      {/* <Helmet title="Product-details">
         <section>
           <Container>
             <Row>
@@ -309,7 +406,7 @@ const FoodDetails = () => {
                       <button type="submit">Submit</button>
                     </form>
  */}
-                  {Array.isArray(variations) &&
+      {/* {Array.isArray(variations) &&
                   variations &&
                   variations.length > 1 ? (
                     <div>
@@ -354,7 +451,7 @@ const FoodDetails = () => {
             </Row>
           </Container>
         </section>
-      </Helmet>
+      </Helmet>  */}
       {/* )} */}
     </>
   );
