@@ -30,11 +30,11 @@ const initialState = {
 const cartSlice = createSlice({
   name: "cart",
   initialState,
-
   reducers: {
     // =========== add item ============
     addItem(state, action) {
       const newItem = action.payload;
+      console.log(newItem, "new Item");
       const existingItem = state.cartItems.find((item) => {
         return item.id === newItem.id;
       });
@@ -47,10 +47,12 @@ const cartSlice = createSlice({
         return (
           item.id === newItem.id &&
           item.variation == newItem.variation &&
-          item.title == newItem.title
+          item.title == newItem.title &&
+          JSON.stringify(item.promotion) == JSON.stringify(newItem.promotion)
         );
       });
       if (!deneme) {
+        console.log("No deneme", newItem.price);
         // ===== note: if you use just redux you should not mute state array instead of clone the state array, but if you use redux toolkit that will not a problem because redux toolkit clone the array behind the scene
         state.cartItems.push({
           id: newItem.id,
@@ -61,6 +63,7 @@ const cartSlice = createSlice({
           totalPrice: newItem.price,
           seller: newItem.seller,
           variation: newItem.variation,
+          promotion: newItem.promotion,
           seller: newItem.seller ? newItem.seller : null,
         });
       } else {
@@ -92,28 +95,34 @@ const cartSlice = createSlice({
 
     removeItem(state, action) {
       const product = action.payload;
+      console.log("remove item");
       const existingItem = state.cartItems.find((item) => {
-        if (product.variation) {
+        if (product.variation || product.promotion) {
           return (
             item.id === product.id &&
             item.variation === product.variation &&
-            item.title === product.title
+            item.title === product.title &&
+            JSON.stringify(item.promotion) == JSON.stringify(product.promotion)
           );
         } else {
           return item.id === product.id;
         }
       });
 
-      if (
-        existingItem &&
-        existingItem.quantity &&
-        existingItem.quantity === 1
-      ) {
+      if (existingItem?.quantity && existingItem?.quantity === 1) {
+        console.log("asdakln");
         state.cartItems = state.cartItems.filter((item) => {
-          if (product.variation) {
+          if (product.variation || product.promotion) {
             return (
+              // item.variation !== product.variation ||
+              // item.title !== product.title ||
+              // JSON.stringify(item.promotion) ==
+              //   JSON.stringify(product.promotion)
+              item.id !== product.id ||
               item.variation !== product.variation ||
-              item.title !== product.title
+              item.title !== product.title ||
+              JSON.stringify(item.promotion) !==
+                JSON.stringify(product.promotion)
             );
           } else return item.id !== product.id;
         });
@@ -142,22 +151,34 @@ const cartSlice = createSlice({
 
     deleteItem(state, action) {
       const product = action.payload;
+      console.log("delete item", product);
       if (state.cartItems.length == 1) state.cartItems = [];
       const existingItem = state.cartItems.find((item) => {
-        if (product.variation && state.cartItems.length > 1) {
+        if (product.variation || product.promotion) {
           return (
-            item.id == product.id &&
-            item.variation == product.variation &&
-            item.title == product.title
+            item.id === product.id &&
+            item.variation === product.variation &&
+            item.title === product.title &&
+            JSON.stringify(item.promotion) == JSON.stringify(product.promotion)
           );
-        } else return item.id !== product.id;
+        } else {
+          return item.id === product.id;
+        }
       });
       if (existingItem) {
         state.cartItems = state.cartItems.filter((item) => {
-          if (product.variation) {
+          if (product.variation || product.promotion) {
+            console.log("şlsömaflşökas");
             return (
+              // item.variation !== product.variation ||
+              // item.title !== product.title ||
+              // JSON.stringify(item.promotion) ==
+              //   JSON.stringify(product.promotion)
+              item.id !== product.id ||
               item.variation !== product.variation ||
-              item.title !== product.title
+              item.title !== product.title ||
+              JSON.stringify(item.promotion) !==
+                JSON.stringify(product.promotion)
             );
           } else return item.id !== product.id;
         });

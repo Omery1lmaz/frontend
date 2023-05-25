@@ -70,7 +70,7 @@ const createOrder = async ({
   productsQnty,
   tip,
 }) => {
-  axios
+  return axios
     .post(
       "http://localhost:4000/api/orders/order",
       {
@@ -94,8 +94,6 @@ const createOrder = async ({
     .catch((err) => {
       return v.data;
     });
-
-  return response.data;
 };
 
 const createTip = async ({ tip, id, seller }) => {
@@ -111,7 +109,6 @@ const createTip = async ({ tip, id, seller }) => {
 };
 
 const deleteCategoryById = async ({ id, user }) => {
-
   const response = await axios.delete(
     `http://localhost:4000/api/categories/${id}`,
     {
@@ -125,7 +122,6 @@ const deleteCategoryById = async ({ id, user }) => {
 };
 
 const getProduct = async ({ id }) => {
-
   const response = await axios.get(`http://localhost:4000/api/products/${id}`);
 
   return response.data;
@@ -254,7 +250,6 @@ const getCatsHelper = async () => {
   return response.data;
 };
 const deleteProductById = async ({ id, user }) => {
-
   const response = await axios.delete(
     `http://localhost:4000/api/products/${id}`,
     {

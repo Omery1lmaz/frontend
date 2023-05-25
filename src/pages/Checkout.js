@@ -28,9 +28,6 @@ const style = {
   p: 4,
 };
 const Checkout = () => {
-  // const [enterName, setEnterName] = useState("");
-  // const [enterTable, setEnterTable] = useState();
-
   const [open, setOpen] = React.useState(false);
   const [deal, setDeal] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -41,7 +38,7 @@ const Checkout = () => {
   const dispatch = useDispatch();
   const totalAmount = cartTotalAmount + Number(shippingCost);
   const { cartItems } = useSelector((state) => state.cart);
-  const { orders } = useSelector((state) => state.product);
+  const { orders, isSuccessP } = useSelector((state) => state.product);
   const selectAllText = "Hepsi";
   const validate = Yup.object({
     Name: Yup.string()
@@ -63,11 +60,12 @@ const Checkout = () => {
   });
 
   useEffect(() => {
-    if (orders && orders.status && orders.status == "200") {
+    console.log("useeffects");
+    if (isSuccessP && isSuccessP.status && isSuccessP.status == "200") {
       console.log("first");
       dispatch(cartActions.removeAllItems());
     }
-  }, [orders]);
+  }, [isSuccessP]);
 
   const { user } = useSelector((state) => state.auth);
   const { waiters } = useSelector((state) => state.waiter);
@@ -79,6 +77,7 @@ const Checkout = () => {
       qty: item.quantity,
       name: item.title,
       variation: item.variation ? item.variation : null,
+      promotion: item.promotion ? item.promotion : null,
     };
   });
   const buttonDisabled = totalAmount > 0 ? false : true;

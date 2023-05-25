@@ -72,7 +72,8 @@ const Cart = () => {
 };
 
 const Tr = (props) => {
-  const { id, image01, title, price, quantity, variation, seller } = props.item;
+  const { id, image01, title, price, quantity, variation, seller, promotion } =
+    props.item;
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
@@ -87,6 +88,7 @@ const Tr = (props) => {
             image01,
             variation,
             seller: seller ? seller : null,
+            promotion,
           })
         )
       : infoNotification("Lütfen giriş yapınız");
@@ -100,6 +102,7 @@ const Tr = (props) => {
         price,
         image01,
         variation,
+        promotion,
       })
     );
   };
@@ -112,6 +115,7 @@ const Tr = (props) => {
         price,
         quantity,
         variation,
+        promotion,
       })
     );
   };
@@ -127,7 +131,7 @@ const Tr = (props) => {
       <td>
         <div
           className=" d-flex align-items-center justify-content-between increase__decrease-btn"
-          style={{ background: "#EFEFEF" }}
+          style={{ background: "#000" }}
         >
           <span className="increase__btn" onClick={incrementItem}>
             <i class="ri-add-line"></i>

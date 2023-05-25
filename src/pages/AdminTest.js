@@ -73,7 +73,7 @@ const AdminTest = () => {
 
   useEffect(() => {
     socket.emit("joinRoom", user?._id);
-    socket.on("orderNotification", (order) =>
+    socket.on("siparisBildirimi", (order) =>
       successNotification("Yeni sipariş id: " + order._id)
     );
   }, [socket]);

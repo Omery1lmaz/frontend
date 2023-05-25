@@ -9,6 +9,8 @@ import authService from "./helper/authHelper";
 import productService from "./helper/productHelper";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../helper/socketHelper";
+import { useDispatch } from "react-redux";
+import { cartActions } from "./shopping-cart/cartSlice";
 export const getCategories = createAsyncThunk(
   "/getCategories",
   async (thunkAPI) => {
@@ -102,7 +104,7 @@ export const createOrder = createAsyncThunk(
     thunkAPI
   ) => {
     try {
-      const response = await productService.createOrder({
+      productService.createOrder({
         name,
         products,
         user,
@@ -114,10 +116,6 @@ export const createOrder = createAsyncThunk(
         isTakeAway,
         tip,
       });
-      return {
-        response,
-        status: "200",
-      };
     } catch (error) {
       const message =
         (error.response &&
@@ -721,6 +719,9 @@ const productSlice = createSlice({
 
       .addCase(createOrder.fulfilled, (state, action) => {
         state.order = action.payload;
+        state.isSuccessP = {
+          status: "200",
+        };
         state.isLoadingP = false;
       })
       .addCase(createOrder.rejected, (state, action) => {
