@@ -36,7 +36,7 @@ const Layout = () => {
           </div>
         </div>
       </div>
-      {!isAdmin && <Footer />}
+      {/* {!isAdmin && <Footer />} */}
     </div>
   );
 };

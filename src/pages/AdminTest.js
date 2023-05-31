@@ -52,6 +52,11 @@ const seller_nav__links = [
     path: "/add-waiter",
     icon: "fa-solid fa-house text",
   },
+  {
+    display: "Add Device",
+    path: "/select-device",
+    icon: "fa-solid fa-house text",
+  },
 ];
 
 const seller_nav__links1 = [

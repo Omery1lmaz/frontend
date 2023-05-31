@@ -92,7 +92,8 @@ const createOrder = async ({
       return v.data;
     })
     .catch((err) => {
-      return v.data;
+      console.error(err);
+      return err;
     });
 };
 

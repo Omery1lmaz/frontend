@@ -1,15 +1,25 @@
 import React, { useEffect } from "react";
 import { ListGroupItem } from "reactstrap";
+import ShowMoreText from "react-show-more-text";
 
 import "../../../styles/cart-item.css";
 
 import { useDispatch, useSelector } from "react-redux";
 import { cartActions } from "../../../store/shopping-cart/cartSlice";
 import { infoNotification } from "../../../services/notification";
-
+import { Forward10Rounded } from "@mui/icons-material";
 const CartItem = ({ item }) => {
-  const { id, title, price, image01, quantity, totalPrice, variation, seller } =
-    item;
+  const {
+    id,
+    title,
+    price,
+    image01,
+    quantity,
+    totalPrice,
+    variation,
+    promotion,
+    seller,
+  } = item;
 
   const dispatch = useDispatch();
   const { user, isLoading, isError, isSuccess, message } = useSelector(
@@ -25,6 +35,7 @@ const CartItem = ({ item }) => {
             image01,
             variation,
             seller,
+            promotion,
           })
         )
       : infoNotification("Lütfen giriş yapınız");
@@ -38,6 +49,7 @@ const CartItem = ({ item }) => {
         price,
         image01,
         variation,
+        promotion,
       })
     );
   };
@@ -50,6 +62,7 @@ const CartItem = ({ item }) => {
         price,
         image01,
         variation,
+        promotion,
       })
     );
   };
@@ -79,15 +92,48 @@ const CartItem = ({ item }) => {
                   <i class="ri-subtract-line"></i>
                 </span>
               </div>
-              {variation && (
-                <div>
-                  <span>
-                    Size:
-                    <strong style={{ color: "var(--primary-color)" }}>
-                      {variation}
-                    </strong>
-                  </span>
-                </div>
+              {Array.isArray(promotion) && (
+                <>
+                  <span>Promotions</span>
+                  <ShowMoreText
+                    /* Default options */
+                    lines={1}
+                    more={<Forward10Rounded />}
+                    // more="Show More"
+                    less="Show less"
+                    className="content-css"
+                    anchorClass="show-more-less-clickable"
+                    // onClick={this.executeOnClick}
+                    expanded={false}
+                    truncatedEndingComponent={"... "}
+                  >
+                    {promotion.map((p) => {
+                      return p.products.map((product) => (
+                        <span>{product.name} </span>
+                      ));
+                    })}
+                  </ShowMoreText>
+                </>
+              )}
+              {Array.isArray(variation) && variation.length >= 0 && (
+                <ShowMoreText
+                  Default
+                  options
+                  lines={1}
+                  more={<Forward10Rounded />}
+                  // more="Show More"
+                  less="Show less"
+                  className="content-css"
+                  anchorClass="show-more-less-clickable"
+                  // onClick={this.executeOnClick}
+                  expanded={false}
+                  truncatedEndingComponent={"... "}
+                >
+                  <span className="text-sm font-medium">Variations: </span>
+                  {variation.map((i) => (
+                    <span>{`${i.product.name} `}</span>
+                  ))}
+                </ShowMoreText>
               )}
             </div>
           </div>

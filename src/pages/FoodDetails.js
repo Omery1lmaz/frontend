@@ -117,25 +117,23 @@ const RadioInputArray = ({
               )
             }
           />
-          {option._id}
+          {option.name}
         </label>
       ))}
     </div>
   );
 };
 
-const SelectComponent = ({
-  variation,
-  maxSelection,
-  handlePromotionChange,
-}) => {
-  const [selectedOption, setSelectedOption] = useState(null);
+const SelectComponent = ({ variation, secondId, handlePromotionChange }) => {
+  const [selectedOption, setSelectedOption] = useState();
   const options = variation.variation;
 
   useEffect(() => {
-    if (selectedOption) {
-      handlePromotionChange(selectedOption, variation._id);
-    }
+    handlePromotionChange(
+      selectedOption == null ? [] : [selectedOption],
+      variation._id,
+      secondId
+    );
   }, [selectedOption]);
   useEffect(() => {
     const index = options.products.findIndex((o) => o.isSelected);
@@ -150,28 +148,51 @@ const SelectComponent = ({
   }, []);
 
   const handleOptionChange = (event) => {
-    const value = JSON.parse(event.target.value);
-
-    if (selectedOption && selectedOption._id === value._id) {
-      setSelectedOption(null);
+    if (event.target.value == "") {
+      setSelectedOption();
     } else {
+      const value = JSON.parse(event.target.value);
       setSelectedOption(value);
     }
   };
   return (
     <div>
+      <h4>{variation._id}</h4>
       <select
         value={selectedOption ? JSON.stringify(selectedOption) : ""}
         onChange={handleOptionChange}
+        defaultValue={
+          selectedOption && {
+            name: selectedOption.name,
+            price: selectedOption.price,
+            _id: selectedOption._id,
+          }
+        }
       >
         {!options.iscompulsory && (
-          <option key={"no"}>Promosyon istemiyorum</option>
-        )}
-        {options.products.map((option, index) => (
-          <option key={index} value={JSON.stringify(option)}>
-            {option._id}
+          <option
+            selected={selectedOption && selectedOption._id === undefined}
+            key={"no"}
+            value={""}
+          >
+            Promosyon istemiyorum
           </option>
-        ))}
+        )}
+        {options.products.map((product, index) => {
+          const isSelected =
+            selectedOption &&
+            JSON.stringify(selectedOption._id) === JSON.stringify(product._id);
+          console.log(isSelected, "isselected");
+          return (
+            <option
+              key={index}
+              value={JSON.stringify(product)}
+              selected={index == 1}
+            >
+              {product.name + product.price}
+            </option>
+          );
+        })}
       </select>
     </div>
   );
@@ -188,12 +209,13 @@ const FoodDetails = () => {
   const [image, setImage] = useState("");
   const [description, setDescription] = useState("");
   const [variations, setVariations] = useState("");
-  const [promotions, setPromotions] = useState([1, 2, 3]);
+  const [promotions, setPromotions] = useState([]);
   const [user, setUser] = useState("");
   const [size, setSize] = useState();
   const [test, setTest] = useState([]);
   const [price, setPrice] = useState(defaultPrice);
   const [selectedVariation, setSelectedVariation] = useState([]);
+  const [toplam, setToplam] = useState(0);
   const auth = useSelector((state) => state.auth);
   const currentUser = auth.user;
   let sayac = 0;
@@ -255,7 +277,13 @@ const FoodDetails = () => {
             title: name,
             price: price,
             image01: image,
-            variation: size ? size : null,
+            variation:
+              (Array.isArray(selectedVariation) &&
+                selectedVariation.length == 0 &&
+                null) ||
+              selectedVariation
+                ? selectedVariation
+                : null,
             promotion: test.length > 0 ? test : null,
             seller: {
               name: user?.name,
@@ -266,6 +294,10 @@ const FoodDetails = () => {
         )
       : infoNotification("lütfen önce giriş yapınız");
   };
+  useEffect(() => {
+    dispatch(getProduct({ id }));
+  }, []);
+
   useEffect(() => {
     if (product && !name) {
       setName(product.name);
@@ -280,11 +312,26 @@ const FoodDetails = () => {
     }
   }, [product]);
   useEffect(() => {
-    dispatch(getProduct({ id }));
-  }, []);
-  useEffect(() => {
     const list = [];
     if (sayac == 0 && variations) {
+      variations.map((variation) => {
+        let thereIsNoSelectedProduct = true;
+        variation.products.map((product) => {
+          if (product.isSelected === true) {
+            thereIsNoSelectedProduct = false;
+          }
+        });
+        if (variation.isRequired && thereIsNoSelectedProduct) {
+          list.push({
+            _id: variation._id,
+            product: {
+              name: variation.products[0].name,
+              _id: variation.products[0]._id,
+              price: variation.products[0].price,
+            },
+          });
+        }
+      });
       variations.map((variation) => {
         variation.products.map((product) => {
           if (
@@ -349,22 +396,61 @@ const FoodDetails = () => {
     }
   };
 
-  const handlePromotionChange = (value, _id) => {
-    if (value.length === 0) {
+  const handlePromotionChange = (value, _id, key) => {
+    const singlePromotions = [];
+    if (promotions) {
+      const newPromotions = [promotions];
+      newPromotions.map((j) => {
+        j.map((y) => {
+          if (y.variation.maxValue <= 1) {
+            const index = singlePromotions.findIndex((i) => i._id == y._id);
+            index < 0
+              ? singlePromotions.push({ _id: y._id, qty: 1 })
+              : (singlePromotions[index] = {
+                  _id: y._id,
+                  qty: singlePromotions[index].qty + 1,
+                });
+          }
+        });
+      });
+    }
+    const index = singlePromotions.findIndex((i) => i._id == _id);
+    if (index >= 0 && key) {
+      if (value.length === 0 && key) {
+        setTest(test.filter((item) => item._id !== _id && item.index !== key));
+      } else {
+        const copyArray = [...test];
+        const indexItem = copyArray.findIndex(
+          (item) => item._id === _id && item.index == key
+        );
+        if (indexItem !== -1) {
+          copyArray[indexItem] = { _id: _id, index: key, products: value };
+          setTest(copyArray);
+        } else {
+          test.push({ _id: _id, index: key, products: value });
+          setTest([...test]);
+        }
+      }
+    }
+
+    if (value.length === 0 && !key) {
       setTest(test.filter((item) => item._id !== _id));
-    } else if (test.some((selectedOption) => selectedOption._id === _id)) {
+    } else if (
+      test.some((selectedOption) => selectedOption._id === _id) &&
+      !key
+    ) {
       const copyArray = [...test];
       const index = copyArray.findIndex((item) => item._id === _id);
       if (index !== -1) {
         copyArray[index] = { _id: _id, products: value };
         setTest(copyArray);
       }
-    } else {
+    } else if (value.length >= 1 && !key) {
       test.push({ _id: _id, products: value });
       setTest([...test]);
     }
   };
-  const [toplam, setToplam] = useState(0);
+
   useEffect(() => {
     let count = 0;
     test.map((a) => {
@@ -376,14 +462,10 @@ const FoodDetails = () => {
         count += a.products.price;
       }
     });
-
     selectedVariation.map((v) => {
       count += v.product.price;
     });
-
     setToplam(count);
-    console.log(selectedVariation, "selectedVariation");
-    console.log(test, "test");
   }, [test, selectedVariation]);
 
   useEffect(() => {
@@ -417,7 +499,7 @@ const FoodDetails = () => {
                         <div>
                           {Array.isArray(product.promotions) &&
                             product.promotions.length > 0 &&
-                            product.promotions?.map((v) => {
+                            product.promotions?.map((v, index) => {
                               return (
                                 <>
                                   {v.variation.maxValue > 1 ? (
@@ -431,7 +513,7 @@ const FoodDetails = () => {
                                   ) : (
                                     <SelectComponent
                                       variation={v}
-                                      maxSelection={v.variation.maxValue}
+                                      secondId={index}
                                       handlePromotionChange={
                                         handlePromotionChange
                                       }
@@ -470,6 +552,13 @@ const FoodDetails = () => {
                               Seçiniz
                             </option>
                             {v.products.map((item) => {
+                              const t = selectedVariation.some((variation) => {
+                                return (
+                                  variation._id == v._id &&
+                                  variation.product._id == item._id
+                                );
+                              });
+                              console.log(t, "t deneme");
                               return (
                                 <option
                                   key={item.id}
@@ -531,3 +620,41 @@ const FoodDetails = () => {
 };
 
 export default FoodDetails;
+{
+  /* <select
+        value={selectedOption ? JSON.stringify(selectedOption) : ""}
+        onChange={handleOptionChange}
+        defaultValue={
+          selectedOption && {
+            name: selectedOption.name,
+            price: selectedOption.price,
+            _id: selectedOption._id,
+          }
+        }
+      >
+        {!options.iscompulsory && (
+          <option
+            selected={selectedOption?._id == undefined}
+            key={"no"}
+            value={""}
+          >
+            Promosyon istemiyorum
+          </option>
+        )}
+        {options.products.map((product, index) => {
+          const isSelected =
+            selectedOption &&
+            JSON.stringify(selectedOption._id) == JSON.stringify(product._id);
+          console.log(isSelected, "isselected");
+          return (
+            <option
+              key={index}
+              value={JSON.stringify(product)}
+              selected={isSelected}
+            >
+              {product.name + product.price}
+            </option>
+          );
+        })}
+      </select> */
+}

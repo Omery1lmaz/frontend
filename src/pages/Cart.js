@@ -35,7 +35,10 @@ const Cart = () => {
                 </thead>
                 <tbody>
                   {cartItems.map((item) => (
-                    <Tr item={item} key={item.id} />
+                    <Tr
+                      item={item}
+                      key={item.id + Math.floor(Math.random() * 1000) + 1}
+                    />
                   ))}
                 </tbody>
               </table>

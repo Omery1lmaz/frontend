@@ -41,14 +41,12 @@ const cartSlice = createSlice({
       const deneme = state.cartItems.find((item) => {
         if (item.seller.id !== newItem.seller.id) {
           state.cartItems = [];
+          state.totalQuantity = 0;
         }
-        state.totalQuantity = 0;
-
         return (
-          item.id === newItem.id &&
-          item.variation == newItem.variation &&
-          item.title == newItem.title &&
-          JSON.stringify(item.promotion) == JSON.stringify(newItem.promotion)
+          JSON.stringify(item.promotion) == JSON.stringify(newItem.promotion) &&
+          JSON.stringify(item.variation) == JSON.stringify(newItem.variation) &&
+          item.id == newItem.id
         );
       });
       if (!deneme) {
@@ -67,6 +65,7 @@ const cartSlice = createSlice({
           seller: newItem.seller ? newItem.seller : null,
         });
       } else {
+        console.log("else");
         deneme.quantity++;
         deneme.totalPrice = Number(deneme.totalPrice) + Number(newItem.price);
       }
@@ -95,37 +94,18 @@ const cartSlice = createSlice({
 
     removeItem(state, action) {
       const product = action.payload;
-      console.log("remove item");
       const existingItem = state.cartItems.find((item) => {
-        if (product.variation || product.promotion) {
-          return (
-            item.id === product.id &&
-            item.variation === product.variation &&
-            item.title === product.title &&
-            JSON.stringify(item.promotion) == JSON.stringify(product.promotion)
-          );
-        } else {
-          return item.id === product.id;
-        }
+        return (
+          JSON.stringify(product.promotion) == JSON.stringify(item.promotion) &&
+          JSON.stringify(product.variation) == JSON.stringify(item.variation) &&
+          product.id == item.id
+        );
       });
-
       if (existingItem?.quantity && existingItem?.quantity === 1) {
-        console.log("asdakln");
-        state.cartItems = state.cartItems.filter((item) => {
-          if (product.variation || product.promotion) {
-            return (
-              // item.variation !== product.variation ||
-              // item.title !== product.title ||
-              // JSON.stringify(item.promotion) ==
-              //   JSON.stringify(product.promotion)
-              item.id !== product.id ||
-              item.variation !== product.variation ||
-              item.title !== product.title ||
-              JSON.stringify(item.promotion) !==
-                JSON.stringify(product.promotion)
-            );
-          } else return item.id !== product.id;
-        });
+        console.log("existing item quantity = 1", JSON.stringify(existingItem));
+        state.cartItems = state.cartItems.filter(
+          (item) => JSON.stringify(item) !== JSON.stringify(existingItem)
+        );
       } else {
         existingItem.quantity--;
         existingItem.totalPrice =
@@ -146,44 +126,63 @@ const cartSlice = createSlice({
         quantity
       );
     },
-
     //============ delete item ===========
 
     deleteItem(state, action) {
       const product = action.payload;
       console.log("delete item", product);
-      if (state.cartItems.length == 1) state.cartItems = [];
-      const existingItem = state.cartItems.find((item) => {
-        if (product.variation || product.promotion) {
+      if (state.cartItems.length == 1) {
+        state.cartItems = [];
+      } else {
+        const existingIndex = state.cartItems.findIndex((item) => {
           return (
-            item.id === product.id &&
-            item.variation === product.variation &&
-            item.title === product.title &&
-            JSON.stringify(item.promotion) == JSON.stringify(product.promotion)
+            JSON.stringify(product.promotion) ==
+              JSON.stringify(item.promotion) &&
+            JSON.stringify(product.variation) ==
+              JSON.stringify(item.variation) &&
+            product.id == item.id
           );
-        } else {
-          return item.id === product.id;
-        }
-      });
-      if (existingItem) {
-        state.cartItems = state.cartItems.filter((item) => {
-          if (product.variation || product.promotion) {
-            console.log("şlsömaflşökas");
-            return (
-              // item.variation !== product.variation ||
-              // item.title !== product.title ||
-              // JSON.stringify(item.promotion) ==
-              //   JSON.stringify(product.promotion)
-              item.id !== product.id ||
-              item.variation !== product.variation ||
-              item.title !== product.title ||
-              JSON.stringify(item.promotion) !==
-                JSON.stringify(product.promotion)
-            );
-          } else return item.id !== product.id;
         });
-        state.totalQuantity = state.totalQuantity - existingItem.quantity;
+        console.log(
+          existingIndex,
+          "existingIndex",
+          state.cartItems[existingIndex].quantity
+        );
+        state.totalQuantity =
+          state.totalQuantity - state.cartItems[existingIndex].quantity;
+        const newlist = [...state.cartItems];
+        newlist.splice(existingIndex, 1);
+        state.cartItems = newlist;
       }
+      // state.totalQuantity =
+      //   state.totalQuantity - state.cartItems[existingIndex].quantity;
+      // const existingItem = state.cartItems.find((item) => {
+      //   return (
+      //     JSON.stringify(product.promotion) == JSON.stringify(item.promotion) &&
+      //     JSON.stringify(product.variation) == JSON.stringify(item.variation) &&
+      //     product.id == item.id
+      //   );
+      // });
+      // if (existingItem) {
+      //   state.cartItems = state.cartItems.filter((item) => {
+      //     if (product.variation || product.promotion) {
+      //       console.log("şlsömaflşökas");
+      //       return (
+      //         // item.variation !== product.variation ||
+      //         // item.title !== product.title ||
+      //         // JSON.stringify(item.promotion) ==
+      //         //   JSON.stringify(product.promotion)
+      //         item.id !== product.id ||
+      //         item.variation !== product.variation ||
+      //         item.title !== product.title ||
+      //         JSON.stringify(item.promotion) !==
+      //           JSON.stringify(product.promotion)
+      //       );
+      //     } else return item.id !== product.id;
+      //   });
+      //   state.totalQuantity = state.totalQuantity - existingItem.quantity;
+      // }
+      // state.totalQuantity = state.totalQuantity - state.cartItems[existingItem].quantity existingItem.quantity;
 
       state.totalAmount = state.cartItems.reduce(
         (total, item) => total + Number(item.price) * Number(item.quantity),

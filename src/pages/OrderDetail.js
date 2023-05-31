@@ -9,6 +9,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import ShowMoreText from "react-show-more-text";
+import { Forward10Rounded } from "@mui/icons-material";
 
 import {
   deleteOrder,
@@ -93,6 +95,52 @@ const OrderDetail = () => {
                       <span>Price: {product.price}</span>
                       <span>Quantity: {product.qty}</span>
                       <span>Variation: M</span>
+                      {Array.isArray(product.promotion) && (
+                        <>
+                          <ShowMoreText
+                            /* Default options */
+                            lines={1}
+                            more={<Forward10Rounded />}
+                            // more="Show More"
+                            less="Show less"
+                            className="content-css"
+                            anchorClass="show-more-less-clickable"
+                            // onClick={this.executeOnClick}
+                            expanded={false}
+                            truncatedEndingComponent={"... "}
+                          >
+                            <span>Promotions: </span>
+                            {product.promotion.map((p) => {
+                              return p.products.map((product) => (
+                                <span>{product.name} </span>
+                              ));
+                            })}
+                          </ShowMoreText>
+                        </>
+                      )}
+                      {Array.isArray(product.variation) &&
+                        product.variation.length >= 0 && (
+                          <ShowMoreText
+                            Default
+                            options
+                            lines={1}
+                            more={<Forward10Rounded />}
+                            // more="Show More"
+                            less="Show less"
+                            className="content-css"
+                            anchorClass="show-more-less-clickable"
+                            // onClick={this.executeOnClick}
+                            expanded={false}
+                            truncatedEndingComponent={"... "}
+                          >
+                            <span className="text-sm font-medium">
+                              Variations: 
+                            </span>
+                            {product.variation.map((i) => (
+                              <span>{`${i.product.name} `}</span>
+                            ))}
+                          </ShowMoreText>
+                        )}
                     </div>
                   </div>
                 ))}

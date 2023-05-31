@@ -38,6 +38,7 @@ import AddWaiter from "../pages/AddWaiter";
 import EditWaiter from "../pages/EditWaiter";
 import WaiterList from "../pages/WaiterList";
 import Tip from "../pages/AddTip";
+import SelectDevice from "../pages/SelectDevice";
 
 const Routers = () => {
   const dispatch = useDispatch();
@@ -57,6 +58,7 @@ const Routers = () => {
       {/* <Route path="/" element={user?.isAdmin ? <AdminDashboard /> : <Home />} /> */}
       {/* <Route path="/" element={<Navigate to="/home/6335f47dd765bd4893812492" />} /> */}
       <Route path="/seller/:id" element={<SellerPage />} /> {/*OK*/}
+      <Route path="/select-device" element={<SelectDevice />} /> {/*OK*/}
       <Route path="/promotions" element={<Promotions />} /> {/*OK*/}
       <Route path="/seller/profile" element={<SellerProfile />} /> {/*OK*/}
       <Route path="/order" element={<UserOrderList />} /> {/*OK*/}
@@ -85,7 +87,7 @@ const Routers = () => {
       )}{" "}
       {/*Dont*/}
       {/* <GuardedRoute path='/register' component={Register} /> */}
-      <Route path="/register" element={<GuardedRoute component={Register} />} />
+      <Route path="/register" element={<Register />} />
       {user && <Route path="/category-list" element={<CategoryList />} />}{" "}
       {/*Dont*/}
       {user && (
